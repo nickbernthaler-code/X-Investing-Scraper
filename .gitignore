@@ -9,6 +9,11 @@ Thumbs.db
 # Node modules (if we add any packages later)
 node_modules/
 
+# Database files — contain user data, don't commit
+*.db
+*.sqlite
+db.json
+
 # Editor settings
 .vscode/
 .idea/
