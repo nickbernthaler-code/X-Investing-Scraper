@@ -1,0 +1,14 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment variables (keep API keys safe!)
+.env
+.env.local
+
+# Node modules (if we add any packages later)
+node_modules/
+
+# Editor settings
+.vscode/
+.idea/
