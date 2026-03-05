@@ -29,7 +29,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 // All API calls go through /api
 app.use('/api', apiRoutes);
 
+// --- Seed sample portfolio data if empty (so recommendations work out of the box) ---
+const portfolio = require('./agents/portfolio');
+if (portfolio.getAll().length === 0) {
+  portfolio.seedSampleData();
+}
+
 // --- Start Server ---
 app.listen(PORT, () => {
-  console.log(`✅ X Investing Scraper running at http://localhost:${PORT}`);
+  console.log(`✅ StockHolmes running at http://localhost:${PORT}`);
 });

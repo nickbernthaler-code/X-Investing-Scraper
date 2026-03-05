@@ -1,28 +1,41 @@
 /* ===================================================================
-   style.css — StockHolmes Investment Intelligence (Premium Dark UI)
+   style.css — StockHolmes Investment Intelligence (Baker Street After Dark)
+
+   Color palette:
+   - Background:  #08090e (deep ink)
+   - Surface:     #14151f (elevated dark)
+   - Surface 2:   #1a1b2e (raised panels)
+   - Border:      #252640 (subtle violet undertone)
+   - Text:        #e8e9ed (soft white)
+   - Muted:       #9294a8 (fog gray)
+   - Accent:      #10b981 (StockHolmes Emerald)
+   - Secondary:   #a78bfa (Case File Violet)
+   - Tertiary:    #d4a843 (Holmes Brass)
+   - Danger:      #f87171 (soft red)
 =================================================================== */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* Custom scrollbar — slim and dark */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #0a0a0f; }
-::-webkit-scrollbar-thumb { background: #1e1e2e; border-radius: 3px; }
+::-webkit-scrollbar-track { background: #08090e; }
+::-webkit-scrollbar-thumb { background: #252640; border-radius: 3px; }
 
 
 /* ====================================================================
    LOGO — detective icon with subtle green glow
 ==================================================================== */
 .logo-icon {
-  filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.4));
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.4));
   transition: filter 0.3s ease;
 }
 .logo-icon:hover {
-  filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.6));
+  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.6));
 }
 
 
 /* ====================================================================
-   BROKER BADGE PILLS
+   BROKER BADGE PILLS (small, for legacy support)
 ==================================================================== */
 .broker-badge {
   display: inline-flex;
@@ -38,6 +51,23 @@
 }
 .broker-badge:hover { opacity: 0.85; transform: translateY(-1px); }
 
+/* Large broker badges for the connect modal */
+.broker-badge-lg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+  width: 100%;
+}
+.broker-badge-lg:hover { opacity: 0.85; transform: translateY(-1px); }
+
 
 /* ====================================================================
    CAROUSEL WRAPPER + AMBIENT GLOW
@@ -45,7 +75,7 @@
 ==================================================================== */
 .cf-wrap {
   position: relative;
-  overflow: hidden; /* clips the glow orb at the section edges */
+  overflow: hidden;
   padding: 10px 0 30px;
 }
 
@@ -63,7 +93,8 @@
   opacity: 0.55;
 }
 
-.cf-glow-green  { background: radial-gradient(ellipse, rgba(34, 197, 94, 0.35) 0%, transparent 70%); }
+/* Updated glow colors to match refined palette */
+.cf-glow-green  { background: radial-gradient(ellipse, rgba(16, 185, 129, 0.35) 0%, transparent 70%); }
 .cf-glow-purple { background: radial-gradient(ellipse, rgba(167, 139, 250, 0.35) 0%, transparent 70%); }
 
 
@@ -74,9 +105,9 @@
   position: relative;
   width: 100%;
   height: 360px;
-  perspective: 1000px;      /* 3D camera distance */
+  perspective: 1000px;
 
-  /* Soft edge fade — much more premium than a hard overflow:hidden clip */
+  /* Soft edge fade — premium look, no hard clipping */
   mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -93,9 +124,7 @@
   );
 }
 
-/* Each card slot — CSS transition does ALL the animation work.
-   Spring easing (cubic-bezier with y > 1) gives a subtle overshoot
-   so the card "settles" into place like a physical object. */
+/* Each card slot — spring easing for smooth overshoot animation */
 .cf-slide {
   position: absolute;
   left: 50%;
@@ -124,18 +153,18 @@
   position: relative;
   overflow: hidden;
 
-  /* Rich dark gradient — not flat black */
+  /* Rich dark gradient with slight blue undertone */
   background: linear-gradient(
     145deg,
-    #1c1c35 0%,
-    #141425 50%,
-    #0f0f1e 100%
+    #1a1b2e 0%,
+    #14151f 50%,
+    #0e0f1a 100%
   );
 
-  /* Barely-visible top edge highlight */
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Subtle border */
+  border: 1px solid rgba(255, 255, 255, 0.06);
 
-  /* Multi-layer shadow — simulates real depth/light falloff */
+  /* Multi-layer shadow for realistic depth */
   box-shadow:
     0 1px 2px  rgba(0, 0, 0, 0.7),
     0 4px 8px  rgba(0, 0, 0, 0.55),
@@ -160,7 +189,7 @@
   pointer-events: none;
 }
 
-/* Top center glint line — like light hitting the top edge */
+/* Top center glint line */
 .stock-card::after {
   content: '';
   position: absolute;
@@ -172,12 +201,12 @@
   pointer-events: none;
 }
 
-/* Active stock card — green glow to signal it's selected */
+/* Active stock card — emerald glow */
 .stock-active {
-  border-color: rgba(34, 197, 94, 0.3);
+  border-color: rgba(16, 185, 129, 0.3);
   box-shadow:
-    0 0  20px rgba(34, 197, 94, 0.20),
-    0 0  60px rgba(34, 197, 94, 0.10),
+    0 0  20px rgba(16, 185, 129, 0.20),
+    0 0  60px rgba(16, 185, 129, 0.10),
     0 2px 4px  rgba(0, 0, 0, 0.9),
     0 8px 16px rgba(0, 0, 0, 0.7),
     0 20px 40px rgba(0, 0, 0, 0.5);
@@ -193,7 +222,7 @@
 .stock-card .rank-badge {
   font-size: 11px;
   font-weight: 700;
-  color: rgba(161, 161, 179, 0.6);
+  color: rgba(146, 148, 168, 0.6);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -220,13 +249,13 @@
   color: #fff;
 }
 
-.stock-card .stock-ticker   { font-size: 30px; font-weight: 900; color: #fff; letter-spacing: -1px; line-height: 1; }
-.stock-card .stock-name     { font-size: 11px; color: rgba(161,161,179,0.75); font-weight: 500; }
-.stock-card .stock-price    { font-size: 18px; font-weight: 700; color: #fff; }
+.stock-card .stock-ticker   { font-size: 30px; font-weight: 900; color: #e8e9ed; letter-spacing: -1px; line-height: 1; }
+.stock-card .stock-name     { font-size: 11px; color: rgba(146,148,168,0.75); font-weight: 500; }
+.stock-card .stock-price    { font-size: 18px; font-weight: 700; color: #e8e9ed; }
 .stock-card .stock-change   { font-size: 13px; font-weight: 700; }
-.stock-card .stock-change.positive { color: #22c55e; text-shadow: 0 0 12px rgba(34,197,94,0.5); }
-.stock-card .stock-change.negative { color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,0.5); }
-.stock-card .stock-mentions { font-size: 11px; color: rgba(75,75,106,0.9); font-weight: 500; }
+.stock-card .stock-change.positive { color: #10b981; text-shadow: 0 0 12px rgba(16,185,129,0.5); }
+.stock-card .stock-change.negative { color: #f87171; text-shadow: 0 0 12px rgba(248,113,113,0.5); }
+.stock-card .stock-mentions { font-size: 11px; color: rgba(92,94,115,0.9); font-weight: 500; }
 
 
 /* ====================================================================
@@ -246,8 +275,8 @@
   position: relative;
   overflow: hidden;
 
-  background: linear-gradient(145deg, #1c1c35 0%, #141425 50%, #0f0f1e 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, #1a1b2e 0%, #14151f 50%, #0e0f1a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow:
     0 1px 2px  rgba(0, 0, 0, 0.7),
     0 4px 8px  rgba(0, 0, 0, 0.55),
@@ -257,7 +286,7 @@
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Same shine highlight as stock cards */
+/* Shine highlight */
 .influencer-card::before {
   content: '';
   position: absolute;
@@ -276,7 +305,7 @@
   pointer-events: none;
 }
 
-/* Active influencer card — purple glow */
+/* Active influencer card — violet glow */
 .influencer-active {
   border-color: rgba(167, 139, 250, 0.3);
   box-shadow:
@@ -312,14 +341,14 @@
 }
 
 .influencer-card .influencer-handle { font-size: 13px; font-weight: 700; color: #a78bfa; }
-.influencer-card .influencer-name   { font-size: 14px; font-weight: 700; color: #fff; }
-.influencer-card .influencer-bio    { font-size: 11px; color: rgba(161,161,179,0.75); line-height: 1.5; }
+.influencer-card .influencer-name   { font-size: 14px; font-weight: 700; color: #e8e9ed; }
+.influencer-card .influencer-bio    { font-size: 11px; color: rgba(146,148,168,0.75); line-height: 1.5; }
 .influencer-card .influencer-stats  {
   display: flex;
   flex-direction: column;
   gap: 3px;
   margin-top: auto;
   font-size: 11px;
-  color: rgba(75,75,106,0.9);
+  color: rgba(92,94,115,0.9);
   font-weight: 500;
 }

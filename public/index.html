@@ -5,23 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StockHolmes — Investment Intelligence</title>
 
+  <!-- Google Fonts — DM Serif Display for headings, Inter for body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <!-- Tailwind for layout utilities -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- No Swiper needed — custom coverflow built below -->
+  <!-- Custom styles -->
   <link rel="stylesheet" href="style.css">
 
   <script>
+    /* Tailwind config — refined "Baker Street After Dark" palette */
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            surface: '#13131a',
-            border:  '#1e1e2e',
-            muted:   '#a1a1b3',
-            accent:  '#22c55e',
+            surface: '#14151f',
+            border:  '#252640',
+            muted:   '#9294a8',
+            accent:  '#10b981',
+            brass:   '#d4a843',
           },
           fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+            sans:  ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            serif: ['DM Serif Display', 'Georgia', 'serif'],
           }
         }
       }
@@ -29,45 +37,69 @@
   </script>
 </head>
 
-<body class="bg-[#0a0a0f] text-white font-sans min-h-screen antialiased">
+<body class="bg-[#08090e] text-[#e8e9ed] font-sans min-h-screen antialiased">
 
 
   <!-- ============================================================
        NAVIGATION BAR
   ============================================================ -->
-  <nav class="border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 bg-[#0a0a0f]/90 backdrop-blur-md z-50">
-    <div class="flex items-center gap-6">
-      <!-- StockHolmes detective logo — detective face SVG in green -->
+  <nav class="border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 bg-[#08090e]/90 backdrop-blur-md z-50">
+    <div class="flex items-center gap-5">
+      <!-- StockHolmes detective logo + name -->
       <div class="flex items-center gap-2.5">
         <img src="detective-face.svg" alt="StockHolmes logo" width="34" height="34" class="logo-icon">
-        <span class="text-white font-bold text-lg tracking-tight">StockHolmes</span>
+        <span class="text-[#e8e9ed] font-serif text-xl tracking-tight">StockHolmes</span>
       </div>
       <div class="h-5 w-px bg-border hidden sm:block"></div>
-      <div class="flex items-center gap-2">
-        <span class="text-muted text-xs font-medium hidden md:block">Connect</span>
-        <button class="broker-badge" style="background:#00c805;color:#000;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+      <!-- Search bar — primary discovery tool (Trade Republic/TradingView pattern) -->
+      <div class="hidden sm:flex items-center gap-2 bg-[#14151f] border border-border rounded-lg px-3 py-1.5">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9294a8" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search stocks or influencers..." class="bg-transparent text-sm text-[#e8e9ed] placeholder-[#5c5e73] outline-none w-48 lg:w-64">
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <!-- Connect Broker button — opens modal instead of cluttering navbar -->
+      <button onclick="document.getElementById('broker-modal').classList.remove('hidden')"
+        class="px-4 py-2 rounded-lg text-sm font-semibold border border-[#d4a843]/30 text-[#d4a843] hover:bg-[#d4a843]/10 transition-colors duration-200 hidden sm:block">
+        Connect Broker
+      </button>
+      <button class="px-4 py-2 rounded-lg text-sm font-semibold border border-border text-[#e8e9ed] hover:bg-surface transition-colors duration-200">
+        Login / Sign Up
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       BROKER CONNECT MODAL — hidden by default, opened from navbar
+  ============================================================ -->
+  <div id="broker-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div class="bg-[#14151f] border border-border rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="font-serif text-xl text-[#e8e9ed]">Connect Your Broker</h3>
+        <button onclick="document.getElementById('broker-modal').classList.add('hidden')" class="text-muted hover:text-[#e8e9ed] text-xl">&times;</button>
+      </div>
+      <p class="text-muted text-sm mb-6">Link your brokerage to get personalized portfolio gap analysis and recommendations.</p>
+      <div class="flex flex-col gap-3">
+        <button class="broker-badge-lg" style="background:#00c805;color:#000;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
           Robinhood
         </button>
-        <button class="broker-badge" style="background:#2bc4a0;color:#fff;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <button class="broker-badge-lg" style="background:#2bc4a0;color:#fff;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
           eToro
         </button>
-        <button class="broker-badge" style="background:#c8102e;color:#fff;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+        <button class="broker-badge-lg" style="background:#c8102e;color:#fff;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
           Trade Republic
         </button>
-        <button class="broker-badge" style="background:#2a2a3d;color:#a1a1b3;border:1px solid #1e1e2e;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        <button class="broker-badge-lg" style="background:#1a1b2e;color:#9294a8;border:1px solid #252640;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
           Manual Entry
         </button>
       </div>
-      <p class="text-muted text-xs hidden lg:block">Connect your account to get better recommendations.</p>
+      <p class="text-[#5c5e73] text-xs text-center mt-6">Read-only access. We never execute trades on your behalf.</p>
     </div>
-    <button class="px-4 py-2 rounded-lg text-sm font-semibold border border-border text-white hover:bg-surface transition-colors duration-200">
-      Login / Sign Up
-    </button>
-  </nav>
+  </div>
 
 
   <!-- ============================================================
@@ -75,13 +107,14 @@
   ============================================================ -->
   <section class="text-center px-6 pt-16 pb-10">
     <p class="text-xs uppercase tracking-widest text-muted mb-3 font-medium">Investment Intelligence</p>
-    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+    <!-- Serif heading for the "case file" detective feel -->
+    <h1 class="font-serif text-4xl sm:text-5xl text-[#e8e9ed] mb-4 leading-tight">
       What the smart money<br>
       <span class="text-accent">is talking about.</span>
     </h1>
     <p class="text-muted text-base max-w-md mx-auto mb-8">Real-time signals from top X investors, analyzed by AI.</p>
     <button id="run-btn" onclick="runScraper()"
-      class="px-6 py-3 bg-accent text-black font-bold rounded-xl text-sm hover:brightness-110 transition-all duration-200 shadow-lg shadow-accent/20">
+      class="px-6 py-3 bg-accent text-[#08090e] font-bold rounded-xl text-sm hover:brightness-110 transition-all duration-200 shadow-lg shadow-accent/20">
       Run Scraper
     </button>
   </section>
@@ -96,9 +129,9 @@
     <div class="px-6 mb-8">
       <div class="flex items-center gap-3">
         <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Trending</span>
-        <h2 class="text-xl font-bold text-white">Top 10 Assets</h2>
+        <h2 class="font-serif text-xl text-[#e8e9ed]">Top 10 Assets</h2>
       </div>
-      <p class="text-muted text-sm mt-1">Move mouse to left or right edge to browse</p>
+      <p class="text-muted text-sm mt-1">Use arrows to browse trending stocks</p>
     </div>
     <!-- Ambient glow orb — soft radial light behind the carousel -->
     <div class="cf-wrap">
@@ -115,9 +148,9 @@
     <div class="px-6 mb-8">
       <div class="flex items-center gap-3">
         <span class="text-xs font-bold uppercase tracking-widest text-[#a78bfa] bg-[#a78bfa]/10 px-3 py-1 rounded-full">Influencers</span>
-        <h2 class="text-xl font-bold text-white">Top 5 Voices</h2>
+        <h2 class="font-serif text-xl text-[#e8e9ed]">Top 5 Voices</h2>
       </div>
-      <p class="text-muted text-sm mt-1">Move mouse to left or right edge to browse</p>
+      <p class="text-muted text-sm mt-1">Use arrows to browse top influencers</p>
     </div>
     <div class="cf-wrap">
       <div class="cf-glow cf-glow-purple"></div>
@@ -132,11 +165,11 @@
   <section class="px-6 py-12 max-w-3xl mx-auto">
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center gap-3">
-        <span class="text-xs font-bold uppercase tracking-widest text-[#f59e0b] bg-[#f59e0b]/10 px-3 py-1 rounded-full">AI Studio</span>
-        <h2 class="text-xl font-bold text-white">Design Suggestions</h2>
+        <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">AI Studio</span>
+        <h2 class="font-serif text-xl text-[#e8e9ed]">Design Suggestions</h2>
       </div>
       <button id="ux-btn" onclick="runUXAgents()"
-        class="px-4 py-2 text-sm font-semibold rounded-xl border border-[#f59e0b]/40 text-[#f59e0b] hover:bg-[#f59e0b]/10 transition-colors duration-200">
+        class="px-4 py-2 text-sm font-semibold rounded-xl border border-brass/40 text-brass hover:bg-brass/10 transition-colors duration-200">
         Ask AI for Ideas
       </button>
     </div>
@@ -151,8 +184,8 @@
   ============================================================ -->
   <section class="px-6 py-12 max-w-3xl mx-auto">
     <div class="flex items-center gap-3 mb-6">
-      <span class="text-xs font-bold uppercase tracking-widest text-[#f59e0b] bg-[#f59e0b]/10 px-3 py-1 rounded-full">Live Feed</span>
-      <h2 class="text-xl font-bold text-white">Latest Posts</h2>
+      <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Live Feed</span>
+      <h2 class="font-serif text-xl text-[#e8e9ed]">Latest Posts</h2>
     </div>
     <div id="posts-container">
       <p class="text-center text-muted py-12 text-sm">Click "Run Scraper" to fetch the latest posts.</p>
@@ -234,7 +267,7 @@
         <div class="influencer-bio">${inf.bio}</div>
         <div class="influencer-stats">
           <span>${inf.followers} followers</span>
-          <span style="color:#22c55e;">${inf.posts} posts tracked</span>
+          <span style="color:#10b981;">${inf.posts} posts tracked</span>
         </div>`;
     }
 
@@ -347,13 +380,13 @@
         btn.innerHTML = html;
         btn.style.cssText = [
           'width:44px', 'height:44px', 'border-radius:50%',
-          'border:1px solid #1e1e2e', 'background:#13131a',
-          'color:#a1a1b3', 'font-size:26px', 'cursor:pointer',
+          'border:1px solid #252640', 'background:#14151f',
+          'color:#9294a8', 'font-size:26px', 'cursor:pointer',
           'transition:background 0.2s,color 0.2s',
           'display:flex', 'align-items:center', 'justify-content:center',
         ].join(';');
-        btn.onmouseenter = () => { btn.style.background='#1e1e2e'; btn.style.color='#fff'; };
-        btn.onmouseleave = () => { btn.style.background='#13131a'; btn.style.color='#a1a1b3'; };
+        btn.onmouseenter = () => { btn.style.background='#1a1b2e'; btn.style.color='#fff'; };
+        btn.onmouseleave = () => { btn.style.background='#14151f'; btn.style.color='#9294a8'; };
         return btn;
       }
     }
@@ -398,17 +431,27 @@
       container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Fetching posts from X...</p>';
 
       try {
-        const res = await fetch('/api/scrape');
+        /* Fixed: was calling /api/scrape (GET, doesn't exist). Correct endpoint is POST /api/run */
+        const res = await fetch('/api/run', { method: 'POST' });
         const data = await res.json();
-        if (data.posts && data.posts.length > 0) {
-          container.innerHTML = data.posts.map(post => `
-            <div class="bg-surface border border-border rounded-xl p-5 mb-4 hover:-translate-y-1 transition-transform duration-200">
-              <p class="text-accent text-sm font-semibold mb-2">@${post.username || 'unknown'}</p>
-              <p class="text-white text-sm leading-relaxed mb-3">${post.content || post.text || ''}</p>
-              <p class="text-muted text-xs">${post.date || ''}</p>
-            </div>`).join('');
+        /* /api/run returns { success, data: { posts_found, analyses_completed, recommendations } }
+           After running, fetch the actual posts from /api/posts */
+        if (data.success) {
+          const postsRes = await fetch('/api/posts');
+          const postsData = await postsRes.json();
+          const posts = postsData.data || [];
+          if (posts.length > 0) {
+            container.innerHTML = posts.map(post => `
+              <div class="bg-surface border border-border rounded-xl p-5 mb-4 hover:-translate-y-1 transition-transform duration-200">
+                <p class="text-accent text-sm font-semibold mb-2">@${post.username || 'unknown'}</p>
+                <p class="text-[#e8e9ed] text-sm leading-relaxed mb-3">${post.content || post.text || ''}</p>
+                <p class="text-muted text-xs">${post.scraped_at ? new Date(post.scraped_at).toLocaleString() : ''}</p>
+              </div>`).join('');
+          } else {
+            container.innerHTML = '<p class="text-center text-muted py-12 text-sm">No posts found.</p>';
+          }
         } else {
-          container.innerHTML = '<p class="text-center text-muted py-12 text-sm">No posts found.</p>';
+          container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Pipeline failed. Check server logs.</p>';
         }
       } catch (err) {
         container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Could not reach the server. Is it running?</p>';
@@ -429,7 +472,7 @@
       btn.disabled = true;
       container.innerHTML = `
         <div class="bg-surface border border-border rounded-xl p-6 text-center">
-          <div class="text-[#f59e0b] text-sm font-semibold mb-2">🔍 Agent 1: Researching competitor UIs...</div>
+          <div class="text-brass text-sm font-semibold mb-2">🔍 Agent 1: Researching competitor UIs...</div>
           <div class="text-muted text-xs">Then Agent 2 will generate specific suggestions for this dashboard.</div>
         </div>`;
 
@@ -444,35 +487,35 @@
             <div class="flex justify-between items-center">
               <div>
                 <p class="text-xs uppercase tracking-widest text-muted mb-1">AI Assessment</p>
-                <p class="text-white text-sm">${suggestions.overall_score?.comment || ''}</p>
+                <p class="text-[#e8e9ed] text-sm">${suggestions.overall_score?.comment || ''}</p>
               </div>
               <div class="text-right">
                 <p class="text-muted text-xs">Now → Potential</p>
-                <p class="text-[#f59e0b] text-xl font-bold">${suggestions.overall_score?.current || '?'} → ${suggestions.overall_score?.potential || '?'}</p>
+                <p class="text-brass text-xl font-bold">${suggestions.overall_score?.current || '?'} → ${suggestions.overall_score?.potential || '?'}</p>
               </div>
             </div>
           </div>
-          <p class="text-white font-semibold text-sm mb-3">Priority Improvements</p>
+          <p class="text-[#e8e9ed] font-semibold text-sm mb-3">Priority Improvements</p>
           ${(suggestions.priority_improvements || []).map(item => `
             <div class="bg-surface border border-border rounded-xl p-4 mb-3">
               <div class="flex gap-3">
-                <span class="text-[#f59e0b] text-lg">→</span>
+                <span class="text-brass text-lg">→</span>
                 <div>
-                  <p class="text-white text-sm font-semibold">${item.title}</p>
-                  <p class="text-xs text-[#f59e0b]/70 mb-1 uppercase tracking-wider">${item.area}</p>
+                  <p class="text-[#e8e9ed] text-sm font-semibold">${item.title}</p>
+                  <p class="text-xs text-brass/70 mb-1 uppercase tracking-wider">${item.area}</p>
                   <p class="text-muted text-xs leading-relaxed">${item.what_to_change}</p>
                   <p class="text-accent text-xs mt-1 italic">"${item.why}"</p>
                 </div>
               </div>
             </div>`).join('')}
-          <p class="text-white font-semibold text-sm mt-5 mb-3">Quick Wins</p>
+          <p class="text-[#e8e9ed] font-semibold text-sm mt-5 mb-3">Quick Wins</p>
           <div class="bg-surface border border-border rounded-xl p-4 mb-4">
             <ul class="space-y-2">
               ${(suggestions.quick_wins || []).map(w => `
                 <li class="text-muted text-xs flex gap-2"><span class="text-accent">✓</span>${w}</li>`).join('')}
             </ul>
           </div>
-          <p class="text-white font-semibold text-sm mb-3">Future Features</p>
+          <p class="text-[#e8e9ed] font-semibold text-sm mb-3">Future Features</p>
           <div class="bg-surface border border-border rounded-xl p-4">
             <ul class="space-y-2">
               ${(suggestions.future_features || []).map(f => `
