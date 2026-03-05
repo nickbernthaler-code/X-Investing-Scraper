@@ -166,6 +166,214 @@
 
 
   <!-- ============================================================
+       FEATURE SHOWCASE — Fey-style horizontal scrollable mockup cards
+       Shows key features: X tracking, stock discovery, security
+  ============================================================ -->
+  <section class="py-16 reveal">
+    <div class="text-center mb-10 px-6">
+      <h2 class="font-serif text-3xl text-[#e8e9ed] mb-3">See how it <span class="gradient-text-emerald">works</span></h2>
+      <p class="text-muted text-sm max-w-lg mx-auto">StockHolmes scans X accounts, surfaces the hottest stocks, and keeps your data safe — all in one dashboard.</p>
+    </div>
+
+    <!-- Horizontal scroll container with edge fade -->
+    <div class="feature-showcase-scroll">
+      <div class="feature-showcase-track">
+
+        <!-- CARD 1: X Account Tracking -->
+        <div class="showcase-card">
+          <div class="showcase-card-inner">
+            <!-- Browser chrome dots -->
+            <div class="flex gap-1.5 mb-5">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#f87171]/60"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#d4a843]/60"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#10b981]/60"></div>
+            </div>
+            <!-- Mock UI: tracked accounts -->
+            <p class="text-[#5c5e73] text-xs uppercase tracking-widest mb-4">Tracked Accounts</p>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">UW</div>
+                  <div>
+                    <p class="text-[#e8e9ed] text-sm font-semibold">@unusual_whales</p>
+                    <p class="text-muted text-xs">Options flow & dark pool data</p>
+                  </div>
+                </div>
+                <span class="text-accent text-xs font-bold bg-accent/10 px-2 py-0.5 rounded-full">Live</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:linear-gradient(135deg,#10b981,#14b8a6);">CP</div>
+                  <div>
+                    <p class="text-[#e8e9ed] text-sm font-semibold">@chamath</p>
+                    <p class="text-muted text-xs">VC & macro investor</p>
+                  </div>
+                </div>
+                <span class="text-accent text-xs font-bold bg-accent/10 px-2 py-0.5 rounded-full">Live</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:linear-gradient(135deg,#ef4444,#f97316);">ZH</div>
+                  <div>
+                    <p class="text-[#e8e9ed] text-sm font-semibold">@zerohedge</p>
+                    <p class="text-muted text-xs">Market commentary & macro</p>
+                  </div>
+                </div>
+                <span class="text-accent text-xs font-bold bg-accent/10 px-2 py-0.5 rounded-full">Live</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">TB</div>
+                  <div>
+                    <p class="text-[#e8e9ed] text-sm font-semibold">@TihoBrkan</p>
+                    <p class="text-muted text-xs">Global macro & cycles</p>
+                  </div>
+                </div>
+                <span class="text-accent text-xs font-bold bg-accent/10 px-2 py-0.5 rounded-full">Live</span>
+              </div>
+            </div>
+            <p class="text-[#5c5e73] text-xs mt-4 text-center">12 accounts tracked · Updated every 5 min</p>
+          </div>
+          <!-- Label below card -->
+          <p class="text-[#e8e9ed] text-base font-semibold text-center mt-5">X Account Tracking</p>
+          <p class="text-muted text-xs text-center mt-1">We monitor top investing voices on X in real-time</p>
+        </div>
+
+        <!-- CARD 2: Top Stocks Surfaced -->
+        <div class="showcase-card">
+          <div class="showcase-card-inner">
+            <!-- Browser chrome dots -->
+            <div class="flex gap-1.5 mb-5">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#f87171]/60"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#d4a843]/60"></div>
+              <div class="w-2.5 h-2.5 rounded-full bg-[#10b981]/60"></div>
+            </div>
+            <!-- Mock UI: trending stocks table -->
+            <div class="flex items-center justify-between mb-4">
+              <p class="text-[#5c5e73] text-xs uppercase tracking-widest">Trending Today</p>
+              <span class="text-accent text-xs font-bold">Top 10</span>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-[#76b900]/20 flex items-center justify-center text-[10px] font-bold text-[#76b900]">NV</div>
+                  <div>
+                    <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">NVDA</p>
+                    <p class="text-muted text-xs">NVIDIA Corp</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-[#e8e9ed] text-sm font-semibold tabular-nums">$875.50</p>
+                  <p class="text-accent text-xs font-bold tabular-nums">+2.34%</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-[#e31937]/20 flex items-center justify-center text-[10px] font-bold text-[#e31937]">TS</div>
+                  <div>
+                    <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">TSLA</p>
+                    <p class="text-muted text-xs">Tesla Inc</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-[#e8e9ed] text-sm font-semibold tabular-nums">$245.10</p>
+                  <p class="text-[#f87171] text-xs font-bold tabular-nums">-1.12%</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-[#555]/20 flex items-center justify-center text-[10px] font-bold text-[#999]">AA</div>
+                  <div>
+                    <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">AAPL</p>
+                    <p class="text-muted text-xs">Apple Inc</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-[#e8e9ed] text-sm font-semibold tabular-nums">$182.30</p>
+                  <p class="text-accent text-xs font-bold tabular-nums">+0.81%</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-[#0082fb]/20 flex items-center justify-center text-[10px] font-bold text-[#0082fb]">ME</div>
+                  <div>
+                    <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">META</p>
+                    <p class="text-muted text-xs">Meta Platforms</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-[#e8e9ed] text-sm font-semibold tabular-nums">$512.40</p>
+                  <p class="text-accent text-xs font-bold tabular-nums">+3.15%</p>
+                </div>
+              </div>
+            </div>
+            <p class="text-[#5c5e73] text-xs mt-4 text-center">AI-ranked by mention frequency & sentiment</p>
+          </div>
+          <!-- Label below card -->
+          <p class="text-[#e8e9ed] text-base font-semibold text-center mt-5">Top Stocks Surfaced</p>
+          <p class="text-muted text-xs text-center mt-1">The most talked-about stocks, ranked by AI</p>
+        </div>
+
+        <!-- CARD 3: Security & Privacy -->
+        <div class="showcase-card">
+          <div class="showcase-card-inner showcase-card-security">
+            <!-- Big lock icon -->
+            <div class="flex flex-col items-center justify-center h-full gap-6">
+              <div class="relative">
+                <!-- Lock body -->
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  <circle cx="12" cy="16" r="1" fill="rgba(16,185,129,0.6)"/>
+                </svg>
+                <!-- Subtle glow behind lock -->
+                <div class="absolute inset-0 blur-[40px] opacity-30 rounded-full" style="background: radial-gradient(circle, #10b981, transparent);"></div>
+              </div>
+              <div class="text-center">
+                <p class="text-[#e8e9ed] text-lg font-bold mb-2">Your data is safe</p>
+                <p class="text-muted text-xs leading-relaxed max-w-[220px]">Read-only access. We never store passwords or execute trades. All connections are encrypted end-to-end.</p>
+              </div>
+              <!-- Trust badges -->
+              <div class="flex gap-3">
+                <span class="text-[10px] text-muted border border-[#252640] rounded-full px-2.5 py-1 flex items-center gap-1">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  SSL Encrypted
+                </span>
+                <span class="text-[10px] text-muted border border-[#252640] rounded-full px-2.5 py-1 flex items-center gap-1">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  Read-only
+                </span>
+                <span class="text-[10px] text-muted border border-[#252640] rounded-full px-2.5 py-1 flex items-center gap-1">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  No trades
+                </span>
+              </div>
+            </div>
+          </div>
+          <!-- Label below card -->
+          <p class="text-[#e8e9ed] text-base font-semibold text-center mt-5">Secure & Private</p>
+          <p class="text-muted text-xs text-center mt-1">We never touch your money or store credentials</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Navigation arrows -->
+    <div class="flex justify-center gap-3 mt-6">
+      <button onclick="document.querySelector('.feature-showcase-scroll').scrollBy({left:-400,behavior:'smooth'})" class="w-10 h-10 rounded-full border border-[#252640] flex items-center justify-center text-muted hover:text-[#e8e9ed] hover:border-white/20 transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button onclick="document.querySelector('.feature-showcase-scroll').scrollBy({left:400,behavior:'smooth'})" class="w-10 h-10 rounded-full border border-[#252640] flex items-center justify-center text-muted hover:text-[#e8e9ed] hover:border-white/20 transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Gradient divider -->
+  <hr class="gradient-divider mb-6">
+
+
+  <!-- ============================================================
        C6: SECTION TAB NAVIGATION — jump to any section instantly
   ============================================================ -->
   <div class="flex justify-center gap-2 px-6 pb-8 sticky top-[65px] z-40 glass pt-3">

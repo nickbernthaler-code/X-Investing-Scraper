@@ -789,3 +789,85 @@
   .metrics-strip { gap: 24px; }
   .metric-value { font-size: 28px; }
 }
+
+
+/* ====================================================================
+   FEY-INSPIRED: Feature showcase — horizontal scroll cards
+   Dark glass mockup cards showing key product features
+==================================================================== */
+.feature-showcase-scroll {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 24px 12px;
+
+  /* Hide scrollbar but keep scrollable */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  /* Soft edge fade like Fey */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 6%,
+    black 94%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 6%,
+    black 94%,
+    transparent 100%
+  );
+}
+.feature-showcase-scroll::-webkit-scrollbar { display: none; }
+
+.feature-showcase-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  padding: 0 calc(50vw - 220px);
+}
+
+/* Each showcase card — fixed width, tall, with glass effect */
+.showcase-card {
+  flex-shrink: 0;
+  width: 360px;
+  scroll-snap-align: center;
+}
+
+.showcase-card-inner {
+  background: rgba(20, 21, 31, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 24px;
+  min-height: 380px;
+  box-shadow:
+    inset 1px 1px 0px rgba(255, 255, 255, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.showcase-card-inner:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 1px 1px 0px rgba(255, 255, 255, 0.08),
+    0 12px 40px rgba(0, 0, 0, 0.6);
+  transform: translateY(-4px);
+}
+
+/* Security card — centered content, slightly different feel */
+.showcase-card-security {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .showcase-card { width: 300px; }
+  .showcase-card-inner { min-height: 340px; padding: 20px; }
+  .feature-showcase-track { padding: 0 20px; }
+}
