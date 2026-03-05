@@ -256,7 +256,7 @@
             <div class="space-y-3">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <img src="https://assets.parqet.com/logos/symbol/NVDA" alt="NVDA" class="w-9 h-9 rounded-full object-contain bg-white/[0.92] p-1 ring-1 ring-white/10 shadow-md">
+                  <img src="https://assets.parqet.com/logos/symbol/NVDA" alt="NVDA" class="w-9 h-9 rounded-full object-contain" style="filter:drop-shadow(0 0 6px rgba(118,185,0,0.7)) drop-shadow(0 0 16px rgba(118,185,0,0.3));">
                   <div>
                     <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">NVDA</p>
                     <p class="text-muted text-xs">NVIDIA Corp</p>
@@ -269,7 +269,7 @@
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <img src="https://assets.parqet.com/logos/symbol/TSLA" alt="TSLA" class="w-9 h-9 rounded-full object-contain bg-white/[0.92] p-1 ring-1 ring-white/10 shadow-md">
+                  <img src="https://assets.parqet.com/logos/symbol/TSLA" alt="TSLA" class="w-9 h-9 rounded-full object-contain" style="filter:drop-shadow(0 0 6px rgba(227,25,55,0.7)) drop-shadow(0 0 16px rgba(227,25,55,0.3));">
                   <div>
                     <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">TSLA</p>
                     <p class="text-muted text-xs">Tesla Inc</p>
@@ -282,7 +282,7 @@
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <img src="https://assets.parqet.com/logos/symbol/AAPL" alt="AAPL" class="w-9 h-9 rounded-full object-contain bg-white/[0.92] p-1 ring-1 ring-white/10 shadow-md">
+                  <img src="https://assets.parqet.com/logos/symbol/AAPL" alt="AAPL" class="w-9 h-9 rounded-full object-contain" style="filter:drop-shadow(0 0 6px rgba(160,160,160,0.6)) drop-shadow(0 0 16px rgba(160,160,160,0.25));">
                   <div>
                     <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">AAPL</p>
                     <p class="text-muted text-xs">Apple Inc</p>
@@ -295,7 +295,7 @@
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <img src="https://assets.parqet.com/logos/symbol/META" alt="META" class="w-9 h-9 rounded-full object-contain bg-white/[0.92] p-1 ring-1 ring-white/10 shadow-md">
+                  <img src="https://assets.parqet.com/logos/symbol/META" alt="META" class="w-9 h-9 rounded-full object-contain" style="filter:drop-shadow(0 0 6px rgba(0,130,251,0.7)) drop-shadow(0 0 16px rgba(0,130,251,0.3));">
                   <div>
                     <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">META</p>
                     <p class="text-muted text-xs">Meta Platforms</p>
@@ -337,21 +337,21 @@
               <div class="space-y-2">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
-                    <img src="https://assets.parqet.com/logos/symbol/AAPL" alt="AAPL" class="w-6 h-6 rounded-full object-contain bg-white/90 p-0.5 ring-1 ring-white/[0.08] shadow">
+                    <img src="https://assets.parqet.com/logos/symbol/AAPL" alt="AAPL" class="w-6 h-6 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(160,160,160,0.5)) drop-shadow(0 0 10px rgba(160,160,160,0.2));">
                     <span class="text-[#e8e9ed] text-sm font-semibold">AAPL</span>
                   </div>
                   <span class="text-muted text-xs tabular-nums">42 shares · $7,656</span>
                 </div>
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
-                    <img src="https://assets.parqet.com/logos/symbol/MSFT" alt="MSFT" class="w-6 h-6 rounded-full object-contain bg-white/90 p-0.5 ring-1 ring-white/[0.08] shadow">
+                    <img src="https://assets.parqet.com/logos/symbol/MSFT" alt="MSFT" class="w-6 h-6 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(0,164,239,0.5)) drop-shadow(0 0 10px rgba(0,164,239,0.2));">
                     <span class="text-[#e8e9ed] text-sm font-semibold">MSFT</span>
                   </div>
                   <span class="text-muted text-xs tabular-nums">18 shares · $7,473</span>
                 </div>
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
-                    <img src="https://assets.parqet.com/logos/symbol/GOOGL" alt="GOOGL" class="w-6 h-6 rounded-full object-contain bg-white/90 p-0.5 ring-1 ring-white/[0.08] shadow">
+                    <img src="https://assets.parqet.com/logos/symbol/GOOGL" alt="GOOGL" class="w-6 h-6 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(66,133,244,0.5)) drop-shadow(0 0 10px rgba(66,133,244,0.2));">
                     <span class="text-[#e8e9ed] text-sm font-semibold">GOOGL</span>
                   </div>
                   <span class="text-muted text-xs tabular-nums">25 shares · $4,132</span>
@@ -838,12 +838,17 @@
       const isPos = s.change.startsWith('+');
       // A2: Arrow icon alongside the change percentage
       const arrow = isPos ? '↑' : '↓';
+      /* Build brand color CSS vars — full opacity for tight glow, 40% for soft aura */
+      const brandFull = s.color + 'cc';   /* ~80% opacity hex */
+      const brandSoft = s.color + '40';   /* ~25% opacity hex */
       return `
         <div class="stock-card-top">
           <span class="rank-badge">#${s.rank}</span>
-          <img class="stock-logo" src="https://assets.parqet.com/logos/symbol/${s.ticker}" alt="${s.ticker}"
-            onerror="this.src='https://logo.clearbit.com/${s.domain}';this.onerror=function(){this.style.display='none';this.nextElementSibling.style.display='flex';};">
-          <div class="stock-logo-fallback" style="display:none;background:${s.color};">${s.initials}</div>
+          <div class="stock-logo-wrap" style="--brand:${brandFull};--brand-soft:${brandSoft};">
+            <img class="stock-logo" src="https://assets.parqet.com/logos/symbol/${s.ticker}" alt="${s.ticker}"
+              onerror="this.src='https://logo.clearbit.com/${s.domain}';this.onerror=function(){this.style.display='none';this.nextElementSibling.style.display='flex';};">
+            <div class="stock-logo-fallback" style="display:none;color:${s.color};">${s.initials}</div>
+          </div>
         </div>
         <div class="stock-ticker">${s.ticker}</div>
         <div class="stock-name">${s.name}</div>
