@@ -250,7 +250,6 @@
         this.halfH       = halfH;
         this.spacing     = spacing;
         this.renderFn    = renderFn;
-        this._interval   = null;
 
         this.render();
         this.setupNav();
@@ -308,43 +307,44 @@
       }
 
       setupNav() {
-        // Create two invisible overlay divs that sit ABOVE the cards (z-index: 20).
-        // This guarantees mouse events are never blocked by the cards underneath.
-        const leftZone  = this._makeZone('left');
-        const rightZone = this._makeZone('right');
-        this.track.appendChild(leftZone);
-        this.track.appendChild(rightZone);
+        // Inject ‹ and › arrow buttons below the track
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;justify-content:center;gap:16px;margin-top:20px;';
 
-        const startSliding = (dir) => {
-          if (this._interval) return;       // already sliding
-          this.slide(dir);                  // fire IMMEDIATELY on hover enter
-          this._interval = setInterval(() => this.slide(dir), 620);
-        };
+        const prevBtn = this._makeArrow('&#8249;');
+        const nextBtn = this._makeArrow('&#8250;');
 
-        const stopSliding = () => {
-          clearInterval(this._interval);
-          this._interval = null;
-        };
+        prevBtn.addEventListener('click', () => this.slide(-1));
+        nextBtn.addEventListener('click', () => this.slide(+1));
 
-        leftZone.addEventListener('mouseenter',  () => startSliding(-1));
-        leftZone.addEventListener('mouseleave',  stopSliding);
-        rightZone.addEventListener('mouseenter', () => startSliding(+1));
-        rightZone.addEventListener('mouseleave', stopSliding);
+        wrap.appendChild(prevBtn);
+        wrap.appendChild(nextBtn);
+        // Insert the buttons after the track in the DOM
+        this.track.parentNode.insertBefore(wrap, this.track.nextSibling);
       }
 
-      // Builds a transparent hover zone div
-      _makeZone(side) {
-        const el = document.createElement('div');
-        el.style.cssText = [
-          'position:absolute',
-          `${side}:0`,
-          'top:0',
-          'width:22%',       // covers outer 22% on each side
-          'height:100%',
-          'z-index:20',      // above all cards (cards are z 1-4)
-          `cursor:${side === 'left' ? 'w-resize' : 'e-resize'}`,
+      // Builds a styled arrow button
+      _makeArrow(html) {
+        const btn = document.createElement('button');
+        btn.innerHTML = html;
+        btn.style.cssText = [
+          'width:44px',
+          'height:44px',
+          'border-radius:50%',
+          'border:1px solid #1e1e2e',
+          'background:#13131a',
+          'color:#a1a1b3',
+          'font-size:26px',
+          'line-height:1',
+          'cursor:pointer',
+          'transition:background 0.2s,color 0.2s',
+          'display:flex',
+          'align-items:center',
+          'justify-content:center',
         ].join(';');
-        return el;
+        btn.onmouseenter = () => { btn.style.background = '#1e1e2e'; btn.style.color = '#fff'; };
+        btn.onmouseleave = () => { btn.style.background = '#13131a'; btn.style.color = '#a1a1b3'; };
+        return btn;
       }
     }
 
