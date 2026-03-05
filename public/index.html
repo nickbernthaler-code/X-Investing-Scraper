@@ -5,27 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pulse — Investment Intelligence</title>
 
-  <!-- Tailwind CSS via CDN (no build step needed) -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Swiper.js for the Apple-style coverflow carousels -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-  <!-- Custom styles that Tailwind can't easily handle (Swiper overrides, fonts, etc.) -->
   <link rel="stylesheet" href="style.css">
 
-  <!-- Configure Tailwind with our custom dark color palette -->
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            surface:  '#13131a',  /* card backgrounds */
-            border:   '#1e1e2e',  /* subtle borders */
-            muted:    '#a1a1b3',  /* secondary text */
-            accent:   '#22c55e',  /* green for gains */
-            loss:     '#ef4444',  /* red for losses */
+            surface: '#13131a',
+            border:  '#1e1e2e',
+            muted:   '#a1a1b3',
+            accent:  '#22c55e',
+            loss:    '#ef4444',
           },
           fontFamily: {
             sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
@@ -36,72 +30,37 @@
   </script>
 </head>
 
-<!-- Dark base background -->
 <body class="bg-[#0a0a0f] text-white font-sans min-h-screen antialiased">
 
 
   <!-- ============================================================
        NAVIGATION BAR
-       Left: broker badges + connect CTA
-       Right: Login / Sign Up button
   ============================================================ -->
   <nav class="border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 bg-[#0a0a0f]/90 backdrop-blur-md z-50">
-
-    <!-- LEFT SIDE: Logo + Broker Badges + CTA -->
     <div class="flex items-center gap-6">
-
-      <!-- App name / brand -->
       <span class="text-white font-bold text-lg tracking-tight">Pulse</span>
-
-      <!-- Divider -->
       <div class="h-5 w-px bg-border hidden sm:block"></div>
-
-      <!-- Broker badges — SVG text pills styled per brand color -->
       <div class="flex items-center gap-2">
-
-        <!-- "Connect Accounts" label -->
         <span class="text-muted text-xs font-medium hidden md:block">Connect</span>
-
-        <!-- Robinhood badge (brand green) -->
-        <button class="broker-badge" style="background: #00c805; color: #000;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
-          </svg>
+        <button class="broker-badge" style="background:#00c805;color:#000;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
           Robinhood
         </button>
-
-        <!-- eToro badge (brand teal) -->
-        <button class="broker-badge" style="background: #2bc4a0; color: #fff;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-          </svg>
+        <button class="broker-badge" style="background:#2bc4a0;color:#fff;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
           eToro
         </button>
-
-        <!-- Trade Republic badge (brand dark red) -->
-        <button class="broker-badge" style="background: #c8102e; color: #fff;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1">
-            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
-          </svg>
+        <button class="broker-badge" style="background:#c8102e;color:#fff;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
           Trade Republic
         </button>
-
-        <!-- Manual Entry badge (neutral) -->
-        <button class="broker-badge" style="background: #2a2a3d; color: #a1a1b3; border: 1px solid #1e1e2e;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-          </svg>
+        <button class="broker-badge" style="background:#2a2a3d;color:#a1a1b3;border:1px solid #1e1e2e;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
           Manual Entry
         </button>
       </div>
-
-      <!-- CTA text — hidden on small screens -->
-      <p class="text-muted text-xs hidden lg:block">
-        Connect your account to get better recommendations.
-      </p>
+      <p class="text-muted text-xs hidden lg:block">Connect your account to get better recommendations.</p>
     </div>
-
-    <!-- RIGHT SIDE: Login / Sign Up button -->
     <button class="px-4 py-2 rounded-lg text-sm font-semibold border border-border text-white hover:bg-surface transition-colors duration-200">
       Login / Sign Up
     </button>
@@ -109,8 +68,7 @@
 
 
   <!-- ============================================================
-       HERO SECTION
-       Brief headline so the page doesn't feel empty
+       HERO
   ============================================================ -->
   <section class="text-center px-6 pt-16 pb-10">
     <p class="text-xs uppercase tracking-widest text-muted mb-3 font-medium">Investment Intelligence</p>
@@ -118,13 +76,8 @@
       What the smart money<br>
       <span class="text-accent">is talking about.</span>
     </h1>
-    <p class="text-muted text-base max-w-md mx-auto mb-8">
-      Real-time signals from top X investors, analyzed by AI.
-    </p>
-    <!-- Run scraper button — still wired to the backend -->
-    <button
-      id="run-btn"
-      onclick="runScraper()"
+    <p class="text-muted text-base max-w-md mx-auto mb-8">Real-time signals from top X investors, analyzed by AI.</p>
+    <button id="run-btn" onclick="runScraper()"
       class="px-6 py-3 bg-accent text-black font-bold rounded-xl text-sm hover:brightness-110 transition-all duration-200 shadow-lg shadow-accent/20">
       Run Scraper
     </button>
@@ -133,25 +86,34 @@
 
   <!-- ============================================================
        SECTION A: TRENDING ASSETS — COVERFLOW CAROUSEL
-       Top 10 most discussed stocks, centered card scales up
+       Mouse left/right to navigate. No arrow buttons.
+       Logos from Clearbit's free logo API (no key required).
   ============================================================ -->
   <section class="py-12">
     <div class="px-6 mb-8">
       <div class="flex items-center gap-3">
-        <!-- Section pill label -->
         <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Trending</span>
         <h2 class="text-xl font-bold text-white">Top 10 Assets</h2>
       </div>
-      <p class="text-muted text-sm mt-1">Most discussed stocks on X in the last 24h</p>
+      <p class="text-muted text-sm mt-1">Most discussed stocks on X in the last 24h — move mouse left or right to browse</p>
     </div>
 
-    <!-- Swiper carousel container -->
-    <div class="swiper assets-swiper overflow-visible px-4">
+    <!-- The swiper container. 'relative' is needed so the mouse zones can be positioned inside it. -->
+    <div class="swiper assets-swiper relative">
       <div class="swiper-wrapper">
 
-        <!-- STOCK CARD: NVDA -->
+        <!-- ---- NVDA ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#1</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#1</span>
+            <!-- Logo image — falls back to a colored circle with the ticker initial if it fails to load -->
+            <img
+              class="stock-logo"
+              src="https://logo.clearbit.com/nvidia.com"
+              alt="NVDA logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#76b900;">NV</div>
+          </div>
           <div class="stock-ticker">NVDA</div>
           <div class="stock-name">NVIDIA Corp</div>
           <div class="stock-price">$875.50</div>
@@ -159,9 +121,14 @@
           <div class="stock-mentions">234 mentions</div>
         </div>
 
-        <!-- STOCK CARD: TSLA -->
+        <!-- ---- TSLA ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#2</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#2</span>
+            <img class="stock-logo" src="https://logo.clearbit.com/tesla.com" alt="TSLA logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#e31937;">TS</div>
+          </div>
           <div class="stock-ticker">TSLA</div>
           <div class="stock-name">Tesla Inc</div>
           <div class="stock-price">$245.10</div>
@@ -169,9 +136,14 @@
           <div class="stock-mentions">198 mentions</div>
         </div>
 
-        <!-- STOCK CARD: AAPL -->
+        <!-- ---- AAPL ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#3</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#3</span>
+            <img class="stock-logo" src="https://logo.clearbit.com/apple.com" alt="AAPL logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#555;">AA</div>
+          </div>
           <div class="stock-ticker">AAPL</div>
           <div class="stock-name">Apple Inc</div>
           <div class="stock-price">$182.30</div>
@@ -179,9 +151,14 @@
           <div class="stock-mentions">165 mentions</div>
         </div>
 
-        <!-- STOCK CARD: MSFT -->
+        <!-- ---- MSFT ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#4</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#4</span>
+            <img class="stock-logo" src="https://logo.clearbit.com/microsoft.com" alt="MSFT logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#00a4ef;">MS</div>
+          </div>
           <div class="stock-ticker">MSFT</div>
           <div class="stock-name">Microsoft</div>
           <div class="stock-price">$415.20</div>
@@ -189,9 +166,14 @@
           <div class="stock-mentions">143 mentions</div>
         </div>
 
-        <!-- STOCK CARD: META -->
+        <!-- ---- META ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#5</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#5</span>
+            <img class="stock-logo" src="https://logo.clearbit.com/meta.com" alt="META logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#0082fb;">ME</div>
+          </div>
           <div class="stock-ticker">META</div>
           <div class="stock-name">Meta Platforms</div>
           <div class="stock-price">$512.40</div>
@@ -199,9 +181,14 @@
           <div class="stock-mentions">128 mentions</div>
         </div>
 
-        <!-- STOCK CARD: AMZN -->
+        <!-- ---- AMZN ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#6</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#6</span>
+            <img class="stock-logo" src="https://logo.clearbit.com/amazon.com" alt="AMZN logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#ff9900;">AM</div>
+          </div>
           <div class="stock-ticker">AMZN</div>
           <div class="stock-name">Amazon</div>
           <div class="stock-price">$178.90</div>
@@ -209,9 +196,14 @@
           <div class="stock-mentions">112 mentions</div>
         </div>
 
-        <!-- STOCK CARD: GOOGL -->
+        <!-- ---- GOOGL ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#7</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#7</span>
+            <img class="stock-logo" src="https://logo.clearbit.com/google.com" alt="GOOGL logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#4285f4;">GO</div>
+          </div>
           <div class="stock-ticker">GOOGL</div>
           <div class="stock-name">Alphabet</div>
           <div class="stock-price">$165.30</div>
@@ -219,9 +211,14 @@
           <div class="stock-mentions">98 mentions</div>
         </div>
 
-        <!-- STOCK CARD: AMD -->
+        <!-- ---- AMD ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#8</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#8</span>
+            <img class="stock-logo" src="https://logo.clearbit.com/amd.com" alt="AMD logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#ed1c24;">AM</div>
+          </div>
           <div class="stock-ticker">AMD</div>
           <div class="stock-name">Advanced Micro</div>
           <div class="stock-price">$165.80</div>
@@ -229,9 +226,14 @@
           <div class="stock-mentions">87 mentions</div>
         </div>
 
-        <!-- STOCK CARD: PLTR -->
+        <!-- ---- PLTR ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#9</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#9</span>
+            <img class="stock-logo" src="https://logo.clearbit.com/palantir.com" alt="PLTR logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#6d6d6d;">PL</div>
+          </div>
           <div class="stock-ticker">PLTR</div>
           <div class="stock-name">Palantir</div>
           <div class="stock-price">$22.40</div>
@@ -239,9 +241,14 @@
           <div class="stock-mentions">76 mentions</div>
         </div>
 
-        <!-- STOCK CARD: COIN -->
+        <!-- ---- COIN ---- -->
         <div class="swiper-slide stock-card">
-          <div class="rank-badge">#10</div>
+          <div class="stock-card-top">
+            <span class="rank-badge">#10</span>
+            <img class="stock-logo" src="https://logo.clearbit.com/coinbase.com" alt="COIN logo"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="stock-logo-fallback" style="display:none; background:#0052ff;">CO</div>
+          </div>
           <div class="stock-ticker">COIN</div>
           <div class="stock-name">Coinbase</div>
           <div class="stock-price">$245.90</div>
@@ -251,16 +258,17 @@
 
       </div><!-- end swiper-wrapper -->
 
-      <!-- Navigation arrows -->
-      <div class="swiper-button-prev assets-prev"></div>
-      <div class="swiper-button-next assets-next"></div>
+      <!-- Mouse navigation zones — invisible overlays covering the left and right thirds.
+           Moving your cursor into these areas triggers a slide. No buttons needed. -->
+      <div class="nav-zone nav-zone-left"  id="assets-left"></div>
+      <div class="nav-zone nav-zone-right" id="assets-right"></div>
     </div>
   </section>
 
 
   <!-- ============================================================
        SECTION B: TOP INFLUENCERS — COVERFLOW CAROUSEL
-       Top 5 X accounts tracked by this platform
+       Profile pictures from unavatar.io (free social avatar service).
   ============================================================ -->
   <section class="py-12">
     <div class="px-6 mb-8">
@@ -268,67 +276,91 @@
         <span class="text-xs font-bold uppercase tracking-widest text-[#a78bfa] bg-[#a78bfa]/10 px-3 py-1 rounded-full">Influencers</span>
         <h2 class="text-xl font-bold text-white">Top 5 Voices</h2>
       </div>
-      <p class="text-muted text-sm mt-1">Most insightful investing accounts on X</p>
+      <p class="text-muted text-sm mt-1">Most insightful investing accounts on X — move mouse left or right to browse</p>
     </div>
 
-    <!-- Swiper carousel container -->
-    <div class="swiper influencers-swiper overflow-visible px-4">
+    <div class="swiper influencers-swiper relative">
       <div class="swiper-wrapper">
 
-        <!-- INFLUENCER: unusual_whales -->
+        <!-- ---- unusual_whales ---- -->
         <div class="swiper-slide influencer-card">
-          <div class="influencer-avatar" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6);">UW</div>
+          <!-- Profile picture — unavatar.io fetches the real X/Twitter avatar.
+               Falls back to the gradient circle with initials if image fails. -->
+          <div class="influencer-avatar-wrap">
+            <img
+              class="influencer-photo"
+              src="https://unavatar.io/twitter/unusual_whales"
+              alt="unusual_whales avatar"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="influencer-avatar" style="display:none; background:linear-gradient(135deg,#3b82f6,#8b5cf6);">UW</div>
+          </div>
           <div class="influencer-handle">@unusual_whales</div>
           <div class="influencer-name">Unusual Whales</div>
-          <div class="influencer-bio">Real-time options flow & dark pool data</div>
+          <div class="influencer-bio">Real-time options flow &amp; dark pool data</div>
           <div class="influencer-stats">
             <span>1.2M followers</span>
             <span class="text-accent">48 posts tracked</span>
           </div>
         </div>
 
-        <!-- INFLUENCER: chamath -->
+        <!-- ---- chamath ---- -->
         <div class="swiper-slide influencer-card">
-          <div class="influencer-avatar" style="background: linear-gradient(135deg, #22c55e, #14b8a6);">CP</div>
+          <div class="influencer-avatar-wrap">
+            <img class="influencer-photo" src="https://unavatar.io/twitter/chamath" alt="chamath avatar"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="influencer-avatar" style="display:none; background:linear-gradient(135deg,#22c55e,#14b8a6);">CP</div>
+          </div>
           <div class="influencer-handle">@chamath</div>
           <div class="influencer-name">Chamath Palihapitiya</div>
-          <div class="influencer-bio">VC, macro investor & tech bull</div>
+          <div class="influencer-bio">VC, macro investor &amp; tech bull</div>
           <div class="influencer-stats">
             <span>1.5M followers</span>
             <span class="text-accent">31 posts tracked</span>
           </div>
         </div>
 
-        <!-- INFLUENCER: zerohedge -->
+        <!-- ---- zerohedge ---- -->
         <div class="swiper-slide influencer-card">
-          <div class="influencer-avatar" style="background: linear-gradient(135deg, #ef4444, #f97316);">ZH</div>
+          <div class="influencer-avatar-wrap">
+            <img class="influencer-photo" src="https://unavatar.io/twitter/zerohedge" alt="zerohedge avatar"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="influencer-avatar" style="display:none; background:linear-gradient(135deg,#ef4444,#f97316);">ZH</div>
+          </div>
           <div class="influencer-handle">@zerohedge</div>
           <div class="influencer-name">ZeroHedge</div>
-          <div class="influencer-bio">Financial news, market commentary & macro</div>
+          <div class="influencer-bio">Financial news, market commentary &amp; macro</div>
           <div class="influencer-stats">
             <span>1.1M followers</span>
             <span class="text-accent">72 posts tracked</span>
           </div>
         </div>
 
-        <!-- INFLUENCER: TihoBrkan -->
+        <!-- ---- TihoBrkan ---- -->
         <div class="swiper-slide influencer-card">
-          <div class="influencer-avatar" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">TB</div>
+          <div class="influencer-avatar-wrap">
+            <img class="influencer-photo" src="https://unavatar.io/twitter/TihoBrkan" alt="TihoBrkan avatar"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="influencer-avatar" style="display:none; background:linear-gradient(135deg,#f59e0b,#ef4444);">TB</div>
+          </div>
           <div class="influencer-handle">@TihoBrkan</div>
           <div class="influencer-name">Tiho Brkan</div>
-          <div class="influencer-bio">Global macro research & cycle analysis</div>
+          <div class="influencer-bio">Global macro research &amp; cycle analysis</div>
           <div class="influencer-stats">
             <span>127K followers</span>
             <span class="text-accent">19 posts tracked</span>
           </div>
         </div>
 
-        <!-- INFLUENCER: StockMoe -->
+        <!-- ---- StockMoe ---- -->
         <div class="swiper-slide influencer-card">
-          <div class="influencer-avatar" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">SM</div>
+          <div class="influencer-avatar-wrap">
+            <img class="influencer-photo" src="https://unavatar.io/twitter/StockMoe" alt="StockMoe avatar"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="influencer-avatar" style="display:none; background:linear-gradient(135deg,#8b5cf6,#ec4899);">SM</div>
+          </div>
           <div class="influencer-handle">@StockMoe</div>
           <div class="influencer-name">StockMoe</div>
-          <div class="influencer-bio">Retail investor ideas & momentum picks</div>
+          <div class="influencer-bio">Retail investor ideas &amp; momentum picks</div>
           <div class="influencer-stats">
             <span>456K followers</span>
             <span class="text-accent">27 posts tracked</span>
@@ -337,17 +369,14 @@
 
       </div><!-- end swiper-wrapper -->
 
-      <!-- Navigation arrows -->
-      <div class="swiper-button-prev influencers-prev"></div>
-      <div class="swiper-button-next influencers-next"></div>
+      <div class="nav-zone nav-zone-left"  id="influencers-left"></div>
+      <div class="nav-zone nav-zone-right" id="influencers-right"></div>
     </div>
   </section>
 
 
   <!-- ============================================================
-       AI DESIGN SUGGESTIONS PANEL
-       Triggered by button — calls the two-agent UX chain on the backend
-       and renders the suggestions in a clean card layout
+       AI DESIGN SUGGESTIONS
   ============================================================ -->
   <section class="px-6 py-12 max-w-3xl mx-auto">
     <div class="flex items-center justify-between mb-6">
@@ -355,27 +384,21 @@
         <span class="text-xs font-bold uppercase tracking-widest text-[#f59e0b] bg-[#f59e0b]/10 px-3 py-1 rounded-full">AI Studio</span>
         <h2 class="text-xl font-bold text-white">Design Suggestions</h2>
       </div>
-      <!-- Button that triggers the UX agent chain -->
-      <button
-        id="ux-btn"
-        onclick="runUXAgents()"
+      <button id="ux-btn" onclick="runUXAgents()"
         class="px-4 py-2 text-sm font-semibold rounded-xl border border-[#f59e0b]/40 text-[#f59e0b] hover:bg-[#f59e0b]/10 transition-colors duration-200">
         Ask AI for Ideas
       </button>
     </div>
-
-    <!-- Results area — populated by runUXAgents() below -->
     <div id="ux-container">
       <p class="text-center text-muted py-8 text-sm">
-        Click "Ask AI for Ideas" — two AI agents will research competitor UIs and suggest specific improvements for this dashboard.
+        Click "Ask AI for Ideas" — two AI agents will research competitor UIs and suggest specific improvements.
       </p>
     </div>
   </section>
 
 
   <!-- ============================================================
-       LATEST POSTS — Dynamic feed from backend
-       Still connected to the API, just restyled
+       LATEST POSTS
   ============================================================ -->
   <section class="px-6 py-12 max-w-3xl mx-auto">
     <div class="flex items-center gap-3 mb-6">
@@ -401,39 +424,35 @@
 
   <!-- ============================================================
        JAVASCRIPT
-       1. Initialize both Swiper coverflow carousels
-       2. Keep the existing runScraper() function for the backend
   ============================================================ -->
   <script>
 
-    // ---- SWIPER: Trending Assets (Stock Cards) ----
-    // coverflowEffect settings recreate the Apple Music 3D carousel feel
+    // ---- Initialize Swiper: Trending Assets ----
+    // initialSlide: 4 puts META in the center — 4 cards visible on each side
     const assetsSwiper = new Swiper('.assets-swiper', {
-      effect: 'coverflow',          // use the built-in 3D coverflow mode
-      grabCursor: true,             // show a grab cursor when hovering
-      centeredSlides: true,         // always keep active slide in the center
-      slidesPerView: 'auto',        // let slides determine their own width
-      initialSlide: 0,              // start on the first slide
+      effect: 'coverflow',
+      grabCursor: true,
+      centeredSlides: true,
+      slidesPerView: 'auto',
+      initialSlide: 4,
       coverflowEffect: {
-        rotate: 25,                 // how many degrees to tilt non-active cards
-        stretch: 0,                 // horizontal stretch between cards
-        depth: 280,                 // z-depth of the 3D effect (higher = more dramatic)
-        modifier: 1,                // multiplier for the coverflow transform
-        slideShadows: true,         // dark shadow on tilted cards for depth
+        rotate: 25,
+        stretch: 0,
+        depth: 280,
+        modifier: 1,
+        slideShadows: true,
       },
-      navigation: {
-        prevEl: '.assets-prev',     // wire up our custom arrow buttons
-        nextEl: '.assets-next',
-      },
+      // No 'navigation' config — we handle it manually with mouse zones below
     });
 
-    // ---- SWIPER: Top Influencers (Profile Cards) ----
+    // ---- Initialize Swiper: Top Influencers ----
+    // initialSlide: 2 puts zerohedge in the center — 2 cards on each side
     const influencersSwiper = new Swiper('.influencers-swiper', {
       effect: 'coverflow',
       grabCursor: true,
       centeredSlides: true,
       slidesPerView: 'auto',
-      initialSlide: 2,              // center on the middle card (index 2 of 5)
+      initialSlide: 2,
       coverflowEffect: {
         rotate: 30,
         stretch: 0,
@@ -441,31 +460,55 @@
         modifier: 1,
         slideShadows: true,
       },
-      navigation: {
-        prevEl: '.influencers-prev',
-        nextEl: '.influencers-next',
-      },
     });
 
 
-    // ---- EXISTING BACKEND INTEGRATION ----
-    // This function calls the /api/scrape endpoint on our Express server
-    // It's the same logic as before, just with updated DOM rendering
+    // ---- Mouse Zone Navigation ----
+    // When the cursor enters the left zone → slide previous.
+    // When it enters the right zone → slide next.
+    // A 500ms throttle prevents it from sliding too fast if you hold the mouse there.
+
+    function setupMouseNav(leftZoneId, rightZoneId, swiperInstance) {
+      const leftZone  = document.getElementById(leftZoneId);
+      const rightZone = document.getElementById(rightZoneId);
+
+      let cooldown = false; // prevents slides from firing too rapidly
+
+      function trySlide(direction) {
+        if (cooldown) return;
+        cooldown = true;
+        if (direction === 'prev') swiperInstance.slidePrev(400);
+        if (direction === 'next') swiperInstance.slideNext(400);
+        // After 500ms the next mouse-enter can trigger again
+        setTimeout(() => { cooldown = false; }, 500);
+      }
+
+      // mouseenter fires once when the cursor first moves into the zone
+      leftZone.addEventListener('mouseenter',  () => trySlide('prev'));
+      rightZone.addEventListener('mouseenter', () => trySlide('next'));
+
+      // mousemove inside the zone fires continuously — handles slow drags
+      // We let the cooldown timer control the rate
+      leftZone.addEventListener('mousemove',  () => trySlide('prev'));
+      rightZone.addEventListener('mousemove', () => trySlide('next'));
+    }
+
+    // Wire up both carousels
+    setupMouseNav('assets-left',      'assets-right',      assetsSwiper);
+    setupMouseNav('influencers-left', 'influencers-right', influencersSwiper);
+
+
+    // ---- Run Scraper (backend integration) ----
     async function runScraper() {
       const btn = document.getElementById('run-btn');
       const container = document.getElementById('posts-container');
-
-      // Show loading state
       btn.textContent = 'Running...';
       btn.disabled = true;
       container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Fetching posts from X...</p>';
 
       try {
-        // Call the backend scraper route
         const res = await fetch('/api/scrape');
         const data = await res.json();
-
-        // Render each post as a styled card
         if (data.posts && data.posts.length > 0) {
           container.innerHTML = data.posts.map(post => `
             <div class="bg-surface border border-border rounded-xl p-5 mb-4 hover:-translate-y-1 transition-transform duration-200">
@@ -475,48 +518,36 @@
             </div>
           `).join('');
         } else {
-          container.innerHTML = '<p class="text-center text-muted py-12 text-sm">No posts found. Check your tracked accounts.</p>';
+          container.innerHTML = '<p class="text-center text-muted py-12 text-sm">No posts found.</p>';
         }
       } catch (err) {
-        // Show a friendly error if the backend isn't running
         container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Could not reach the server. Is it running?</p>';
       }
 
-      // Reset button
       btn.textContent = 'Run Scraper';
       btn.disabled = false;
     }
 
-    // ---- UX AGENT CHAIN ----
-    // Calls GET /api/ux-suggestions which runs uxResearcher → uxDesigner
-    // Then renders the suggestions as cards in #ux-container
+
+    // ---- UX Agent Chain ----
     async function runUXAgents() {
       const btn = document.getElementById('ux-btn');
       const container = document.getElementById('ux-container');
-
-      // Show a loading state with step labels so the user knows agents are thinking
       btn.textContent = 'Agents thinking...';
       btn.disabled = true;
       container.innerHTML = `
         <div class="bg-surface border border-border rounded-xl p-6 text-center">
           <div class="text-[#f59e0b] text-sm font-semibold mb-2">🔍 Agent 1: Researching competitor UIs...</div>
           <div class="text-muted text-xs">Then Agent 2 will generate specific suggestions for this dashboard.</div>
-        </div>
-      `;
+        </div>`;
 
       try {
-        // Hit the backend endpoint that runs both agents in sequence
         const res = await fetch('/api/ux-suggestions');
         const data = await res.json();
-
         if (!data.success) throw new Error(data.error);
-
         const { research, suggestions } = data.data;
 
-        // Build the HTML output from the suggestions JSON
         container.innerHTML = `
-
-          <!-- Overall Score Card -->
           <div class="bg-surface border border-border rounded-xl p-5 mb-4">
             <div class="flex justify-between items-center">
               <div>
@@ -529,8 +560,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Priority Improvements -->
           <p class="text-white font-semibold text-sm mb-3">Priority Improvements</p>
           ${(suggestions.priority_improvements || []).map(item => `
             <div class="bg-surface border border-border rounded-xl p-4 mb-3">
@@ -543,37 +572,24 @@
                   <p class="text-accent text-xs mt-1 italic">"${item.why}"</p>
                 </div>
               </div>
-            </div>
-          `).join('')}
-
-          <!-- Quick Wins -->
+            </div>`).join('')}
           <p class="text-white font-semibold text-sm mt-5 mb-3">Quick Wins</p>
           <div class="bg-surface border border-border rounded-xl p-4">
             <ul class="space-y-2">
-              ${(suggestions.quick_wins || []).map(win => `
-                <li class="text-muted text-xs flex gap-2">
-                  <span class="text-accent">✓</span> ${win}
-                </li>
-              `).join('')}
+              ${(suggestions.quick_wins || []).map(w => `
+                <li class="text-muted text-xs flex gap-2"><span class="text-accent">✓</span> ${w}</li>`).join('')}
             </ul>
           </div>
-
-          <!-- Future Features -->
           <p class="text-white font-semibold text-sm mt-5 mb-3">Future Features</p>
           <div class="bg-surface border border-border rounded-xl p-4">
             <ul class="space-y-2">
-              ${(suggestions.future_features || []).map(feat => `
-                <li class="text-muted text-xs flex gap-2">
-                  <span class="text-[#a78bfa]">◆</span> ${feat}
-                </li>
-              `).join('')}
+              ${(suggestions.future_features || []).map(f => `
+                <li class="text-muted text-xs flex gap-2"><span class="text-[#a78bfa]">◆</span> ${f}</li>`).join('')}
             </ul>
           </div>
-
           ${data.data.research?.is_mock || data.data.suggestions?.is_mock
             ? '<p class="text-muted text-xs text-center mt-4">Using mock data — add ANTHROPIC_API_KEY to .env for live AI analysis</p>'
-            : ''}
-        `;
+            : ''}`;
 
       } catch (err) {
         container.innerHTML = `<p class="text-center text-muted py-8 text-sm">Could not reach the server. Is it running?</p>`;

@@ -72,26 +72,41 @@
 
 
 /* ====================================================================
+   MOUSE NAVIGATION ZONES
+   Invisible left/right overlay zones inside each swiper container.
+   Moving your cursor into one of these triggers a slide.
+==================================================================== */
+.nav-zone {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 30%;        /* covers the outer 30% on each side */
+  z-index: 10;       /* sits above the cards so it captures mouse events */
+  cursor: pointer;   /* shows a hand cursor so the user knows it's interactive */
+}
+
+.nav-zone-left  { left: 0;  cursor: w-resize; }   /* ← arrow cursor on left */
+.nav-zone-right { right: 0; cursor: e-resize; }   /* → arrow cursor on right */
+
+
+/* ====================================================================
    STOCK CARDS (Trending Assets coverflow)
    Fixed size so coverflow has something to rotate
 ==================================================================== */
 .swiper-slide.stock-card {
   /* Fixed width is required for 'slidesPerView: auto' coverflow */
   width: 200px;
-  height: 260px;
+  height: 290px;   /* slightly taller to fit the logo */
 
-  /* Dark glass-morphism card style */
   background: linear-gradient(145deg, #16162a, #1a1a2e);
   border: 1px solid #1e1e2e;
   border-radius: 20px;
-  padding: 24px 20px;
+  padding: 20px;
 
-  /* Stack content vertically */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
-  /* Smooth hover interaction */
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
@@ -100,7 +115,14 @@
   border-color: #22c55e44;
 }
 
-/* "#1" rank label in top-left */
+/* Top row of the card: rank badge on the left, logo on the right */
+.stock-card .stock-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* "#1" rank label */
 .stock-card .rank-badge {
   font-size: 11px;
   font-weight: 700;
@@ -109,39 +131,62 @@
   text-transform: uppercase;
 }
 
+/* Company logo image — square, with rounded corners */
+.stock-card .stock-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #fff;     /* white bg so dark logos are still visible */
+  padding: 3px;
+}
+
+/* Fallback colored circle shown if the logo image fails to load */
+.stock-card .stock-logo-fallback {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+}
+
 /* Large ticker symbol e.g. "NVDA" */
 .stock-card .stock-ticker {
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 800;
   color: #ffffff;
   letter-spacing: -0.5px;
   line-height: 1;
 }
 
-/* Company name e.g. "NVIDIA Corp" */
+/* Company name */
 .stock-card .stock-name {
-  font-size: 12px;
+  font-size: 11px;
   color: #a1a1b3;
   font-weight: 500;
 }
 
-/* Price e.g. "$875.50" */
+/* Price */
 .stock-card .stock-price {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   color: #ffffff;
 }
 
-/* % change — color depends on positive/negative class */
+/* % change */
 .stock-card .stock-change {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
 
-.stock-card .stock-change.positive { color: #22c55e; }  /* green */
-.stock-card .stock-change.negative { color: #ef4444; }  /* red */
+.stock-card .stock-change.positive { color: #22c55e; }
+.stock-card .stock-change.negative { color: #ef4444; }
 
-/* Mention count at the bottom */
+/* Mention count */
 .stock-card .stock-mentions {
   font-size: 11px;
   color: #4b4b6a;
@@ -154,7 +199,7 @@
 ==================================================================== */
 .swiper-slide.influencer-card {
   width: 220px;
-  height: 280px;
+  height: 300px;
 
   background: linear-gradient(145deg, #16162a, #1a1a2e);
   border: 1px solid #1e1e2e;
@@ -175,10 +220,24 @@
   border-color: #a78bfa44;
 }
 
-/* Circular avatar with gradient background and initials */
+/* Wrapper that holds either the photo or the fallback avatar */
+.influencer-card .influencer-avatar-wrap {
+  margin-bottom: 4px;
+}
+
+/* Real profile photo — circular crop, same size as the old avatar */
+.influencer-card .influencer-photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1e1e2e;
+}
+
+/* Fallback gradient circle shown if photo fails to load */
 .influencer-card .influencer-avatar {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -186,8 +245,6 @@
   font-size: 18px;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 4px;
-  /* Individual gradients are set inline on each card */
 }
 
 /* @handle in purple */
