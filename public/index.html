@@ -230,13 +230,13 @@
 
 
     // =================================================================
-    // COVERFLOW CLASS
-    // Always renders 7 visible slots: -3, -2, -1, 0, +1, +2, +3
-    // Modulo math makes it loop perfectly — after stock 10, stock 1 appears.
+    // COVERFLOW CLASS — persistent DOM nodes for smooth CSS transitions
     //
-    // Navigation: two transparent overlay divs (z-index above cards) sit on
-    // the left and right edges. mouseenter → slide immediately + start interval.
-    // mouseleave → stop interval. No clicking, no mousemove coordinate math.
+    // The key insight: instead of replacing innerHTML on every slide
+    // (which destroys and recreates nodes, killing transitions), we
+    // create one <div> per item upfront and only update their CSS
+    // transform/opacity/z-index. The browser then smoothly animates
+    // each card from its old position to its new one.
     // =================================================================
 
     class CoverFlow {
@@ -251,99 +251,97 @@
         this.spacing     = spacing;
         this.renderFn    = renderFn;
 
-        this.render();
+        // Slot definitions — includes ±4 at opacity:0 so cards that
+        // enter/exit the visible range still animate smoothly in/out
+        this.SLOTS = {
+          '-4': { tx: spacing * -4, ry:  48, scale: 0.40, opacity: 0,    z: 0 },
+          '-3': { tx: spacing * -3, ry:  36, scale: 0.52, opacity: 0.28, z: 1 },
+          '-2': { tx: spacing * -2, ry:  24, scale: 0.67, opacity: 0.55, z: 2 },
+          '-1': { tx: spacing * -1, ry:  13, scale: 0.83, opacity: 0.80, z: 3 },
+           '0': { tx: 0,            ry:   0, scale: 1.00, opacity: 1.00, z: 4 },
+           '1': { tx: spacing *  1, ry: -13, scale: 0.83, opacity: 0.80, z: 3 },
+           '2': { tx: spacing *  2, ry: -24, scale: 0.67, opacity: 0.55, z: 2 },
+           '3': { tx: spacing *  3, ry: -36, scale: 0.52, opacity: 0.28, z: 1 },
+           '4': { tx: spacing *  4, ry: -48, scale: 0.40, opacity: 0,    z: 0 },
+        };
+
+        // Create one persistent DOM element per item.
+        // Content is set once here and never changed — only the CSS moves.
+        this.cardEls = this.items.map((item, i) => {
+          const el = document.createElement('div');
+          el.className = `cf-slide ${cardClass}`;
+          // Start off-screen right; render() will place them correctly
+          el.style.cssText = [
+            'position:absolute',
+            'left:50%',
+            'top:50%',
+            `margin-left:-${halfW}px`,
+            `margin-top:-${halfH}px`,
+            'opacity:0',
+            'transform:translateX(0) rotateY(0deg) scale(1)',
+          ].join(';');
+          el.innerHTML = renderFn(item, false);
+          this.track.appendChild(el);
+          return el;
+        });
+
+        // Let the browser register the initial styles before we trigger transitions
+        requestAnimationFrame(() => this.render());
         this.setupNav();
       }
 
-      // Safe modulo — handles negative offsets correctly
-      idx(offset) {
+      // Returns the shortest-path offset of item i relative to current center
+      offsetFor(i) {
         const n = this.items.length;
-        return ((this.current + offset) % n + n) % n;
+        let off = ((i - this.current) % n + n) % n;
+        if (off > Math.floor(n / 2)) off -= n;
+        return off;
       }
 
       slide(dir) {
-        this.current = this.idx(dir);
+        const n = this.items.length;
+        this.current = ((this.current + dir) % n + n) % n;
         this.render();
       }
 
       render() {
-        // 7 visible slots: 3 left, center, 3 right
-        const OFFSETS = [-3, -2, -1, 0, 1, 2, 3];
-
-        // Pre-defined transform for each slot
-        // tx = horizontal shift from center (px)
-        // ry = Y-axis rotation (degrees) for depth illusion
-        // scale / opacity / z decrease as you move away from center
-        const SLOT = {
-          '-3': { tx: -this.spacing * 3, ry:  38, scale: 0.50, opacity: 0.30, z: 1 },
-          '-2': { tx: -this.spacing * 2, ry:  26, scale: 0.66, opacity: 0.55, z: 2 },
-          '-1': { tx: -this.spacing,     ry:  14, scale: 0.82, opacity: 0.80, z: 3 },
-           '0': { tx:  0,                ry:   0, scale: 1.00, opacity: 1.00, z: 4 },
-           '1': { tx:  this.spacing,     ry: -14, scale: 0.82, opacity: 0.80, z: 3 },
-           '2': { tx:  this.spacing * 2, ry: -26, scale: 0.66, opacity: 0.55, z: 2 },
-           '3': { tx:  this.spacing * 3, ry: -38, scale: 0.50, opacity: 0.30, z: 1 },
-        };
-
-        this.track.innerHTML = OFFSETS.map(off => {
-          const item     = this.items[this.idx(off)];
-          const s        = SLOT[String(off)];
+        this.cardEls.forEach((el, i) => {
+          const off     = this.offsetFor(i);
+          const key     = String(Math.max(-4, Math.min(4, off))); // clamp to defined slots
+          const s       = this.SLOTS[key];
           const isActive = off === 0;
 
-          const style = [
-            'position:absolute',
-            'left:50%',
-            'top:50%',
-            `margin-left:-${this.halfW}px`,
-            `margin-top:-${this.halfH}px`,
-            `transform:translateX(${s.tx}px) rotateY(${s.ry}deg) scale(${s.scale})`,
-            `opacity:${s.opacity}`,
-            `z-index:${s.z}`,
-          ].join(';');
-
-          return `<div class="cf-slide ${this.cardClass} ${isActive ? this.activeClass : ''}" style="${style}">
-            ${this.renderFn(item, isActive)}
-          </div>`;
-        }).join('');
+          el.style.transform = `translateX(${s.tx}px) rotateY(${s.ry}deg) scale(${s.scale})`;
+          el.style.opacity   = String(s.opacity);
+          el.style.zIndex    = String(s.z);
+          el.className = `cf-slide ${this.cardClass}${isActive ? ' ' + this.activeClass : ''}`;
+        });
       }
 
       setupNav() {
-        // Inject ‹ and › arrow buttons below the track
-        const wrap = document.createElement('div');
+        const wrap    = document.createElement('div');
         wrap.style.cssText = 'display:flex;justify-content:center;gap:16px;margin-top:20px;';
-
         const prevBtn = this._makeArrow('&#8249;');
         const nextBtn = this._makeArrow('&#8250;');
-
         prevBtn.addEventListener('click', () => this.slide(-1));
         nextBtn.addEventListener('click', () => this.slide(+1));
-
         wrap.appendChild(prevBtn);
         wrap.appendChild(nextBtn);
-        // Insert the buttons after the track in the DOM
         this.track.parentNode.insertBefore(wrap, this.track.nextSibling);
       }
 
-      // Builds a styled arrow button
       _makeArrow(html) {
         const btn = document.createElement('button');
         btn.innerHTML = html;
         btn.style.cssText = [
-          'width:44px',
-          'height:44px',
-          'border-radius:50%',
-          'border:1px solid #1e1e2e',
-          'background:#13131a',
-          'color:#a1a1b3',
-          'font-size:26px',
-          'line-height:1',
-          'cursor:pointer',
+          'width:44px', 'height:44px', 'border-radius:50%',
+          'border:1px solid #1e1e2e', 'background:#13131a',
+          'color:#a1a1b3', 'font-size:26px', 'cursor:pointer',
           'transition:background 0.2s,color 0.2s',
-          'display:flex',
-          'align-items:center',
-          'justify-content:center',
+          'display:flex', 'align-items:center', 'justify-content:center',
         ].join(';');
-        btn.onmouseenter = () => { btn.style.background = '#1e1e2e'; btn.style.color = '#fff'; };
-        btn.onmouseleave = () => { btn.style.background = '#13131a'; btn.style.color = '#a1a1b3'; };
+        btn.onmouseenter = () => { btn.style.background='#1e1e2e'; btn.style.color='#fff'; };
+        btn.onmouseleave = () => { btn.style.background='#13131a'; btn.style.color='#a1a1b3'; };
         return btn;
       }
     }

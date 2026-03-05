@@ -44,11 +44,13 @@
   position: absolute;
   left: 50%;
   top: 50%;
+  /* Longer duration + ease-in-out so you can actually watch the card glide */
   transition:
-    transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    opacity   0.38s ease;
+    transform 0.55s cubic-bezier(0.4, 0.0, 0.2, 1),
+    opacity   0.55s ease;
   will-change: transform;
   backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 
