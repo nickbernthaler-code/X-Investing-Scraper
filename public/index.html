@@ -258,10 +258,6 @@
 
       </div><!-- end swiper-wrapper -->
 
-      <!-- Mouse navigation zones — invisible overlays covering the left and right thirds.
-           Moving your cursor into these areas triggers a slide. No buttons needed. -->
-      <div class="nav-zone nav-zone-left"  id="assets-left"></div>
-      <div class="nav-zone nav-zone-right" id="assets-right"></div>
     </div>
   </section>
 
@@ -369,8 +365,6 @@
 
       </div><!-- end swiper-wrapper -->
 
-      <div class="nav-zone nav-zone-left"  id="influencers-left"></div>
-      <div class="nav-zone nav-zone-right" id="influencers-right"></div>
     </div>
   </section>
 
@@ -428,12 +422,13 @@
   <script>
 
     // ---- Initialize Swiper: Trending Assets ----
-    // initialSlide: 4 puts META in the center — 4 cards visible on each side
+    // loop: true makes it infinite — after the 10th card it wraps back to the 1st
     const assetsSwiper = new Swiper('.assets-swiper', {
       effect: 'coverflow',
       grabCursor: true,
       centeredSlides: true,
       slidesPerView: 'auto',
+      loop: true,               // infinite loop — wraps from last card back to first
       initialSlide: 4,
       coverflowEffect: {
         rotate: 25,
@@ -442,16 +437,15 @@
         modifier: 1,
         slideShadows: true,
       },
-      // No 'navigation' config — we handle it manually with mouse zones below
     });
 
     // ---- Initialize Swiper: Top Influencers ----
-    // initialSlide: 2 puts zerohedge in the center — 2 cards on each side
     const influencersSwiper = new Swiper('.influencers-swiper', {
       effect: 'coverflow',
       grabCursor: true,
       centeredSlides: true,
       slidesPerView: 'auto',
+      loop: true,               // infinite loop
       initialSlide: 2,
       coverflowEffect: {
         rotate: 30,
@@ -463,39 +457,73 @@
     });
 
 
-    // ---- Mouse Zone Navigation ----
-    // When the cursor enters the left zone → slide previous.
-    // When it enters the right zone → slide next.
-    // A 500ms throttle prevents it from sliding too fast if you hold the mouse there.
+    // ---- Hover-Only Mouse Navigation ----
+    // Listen to mousemove on the entire swiper container (not overlay divs —
+    // those get blocked by the cards sitting on top of them).
+    //
+    // How it works:
+    //   - Mouse in left 30%  → start sliding backward every 700ms
+    //   - Mouse in right 30% → start sliding forward every 700ms
+    //   - Mouse in middle    → stop sliding
+    //   - Mouse leaves       → stop sliding
+    // No clicking required — just hover your mouse to the side.
 
-    function setupMouseNav(leftZoneId, rightZoneId, swiperInstance) {
-      const leftZone  = document.getElementById(leftZoneId);
-      const rightZone = document.getElementById(rightZoneId);
+    function setupMouseNav(swiperEl, swiperInstance) {
+      let slideInterval = null;  // holds the repeating timer
+      let currentDir   = null;  // 'prev' | 'next' | null
 
-      let cooldown = false; // prevents slides from firing too rapidly
+      function startSliding(direction) {
+        // If we're already sliding in this direction, do nothing
+        if (currentDir === direction) return;
 
-      function trySlide(direction) {
-        if (cooldown) return;
-        cooldown = true;
+        stopSliding(); // clear any existing interval first
+        currentDir = direction;
+
+        // Slide once immediately so there's no perceived delay
         if (direction === 'prev') swiperInstance.slidePrev(400);
-        if (direction === 'next') swiperInstance.slideNext(400);
-        // After 500ms the next mouse-enter can trigger again
-        setTimeout(() => { cooldown = false; }, 500);
+        else                      swiperInstance.slideNext(400);
+
+        // Then repeat every 700ms while the cursor stays in the zone
+        slideInterval = setInterval(() => {
+          if (direction === 'prev') swiperInstance.slidePrev(400);
+          else                      swiperInstance.slideNext(400);
+        }, 700);
       }
 
-      // mouseenter fires once when the cursor first moves into the zone
-      leftZone.addEventListener('mouseenter',  () => trySlide('prev'));
-      rightZone.addEventListener('mouseenter', () => trySlide('next'));
+      function stopSliding() {
+        if (slideInterval) {
+          clearInterval(slideInterval);
+          slideInterval = null;
+        }
+        currentDir = null;
+        swiperEl.style.cursor = 'default';
+      }
 
-      // mousemove inside the zone fires continuously — handles slow drags
-      // We let the cooldown timer control the rate
-      leftZone.addEventListener('mousemove',  () => trySlide('prev'));
-      rightZone.addEventListener('mousemove', () => trySlide('next'));
+      swiperEl.addEventListener('mousemove', (e) => {
+        const rect  = swiperEl.getBoundingClientRect();
+        const ratio = (e.clientX - rect.left) / rect.width;
+
+        if (ratio < 0.30) {
+          // Left zone — slide backward
+          swiperEl.style.cursor = 'w-resize';
+          startSliding('prev');
+        } else if (ratio > 0.70) {
+          // Right zone — slide forward
+          swiperEl.style.cursor = 'e-resize';
+          startSliding('next');
+        } else {
+          // Middle — stop sliding, normal cursor
+          stopSliding();
+        }
+      });
+
+      // Stop when mouse leaves the carousel entirely
+      swiperEl.addEventListener('mouseleave', stopSliding);
     }
 
-    // Wire up both carousels
-    setupMouseNav('assets-left',      'assets-right',      assetsSwiper);
-    setupMouseNav('influencers-left', 'influencers-right', influencersSwiper);
+    // Wire up both carousels — pass the DOM element and the Swiper instance
+    setupMouseNav(document.querySelector('.assets-swiper'),      assetsSwiper);
+    setupMouseNav(document.querySelector('.influencers-swiper'), influencersSwiper);
 
 
     // ---- Run Scraper (backend integration) ----

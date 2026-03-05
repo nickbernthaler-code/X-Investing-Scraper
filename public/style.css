@@ -71,23 +71,6 @@
 }
 
 
-/* ====================================================================
-   MOUSE NAVIGATION ZONES
-   Invisible left/right overlay zones inside each swiper container.
-   Moving your cursor into one of these triggers a slide.
-==================================================================== */
-.nav-zone {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 30%;        /* covers the outer 30% on each side */
-  z-index: 10;       /* sits above the cards so it captures mouse events */
-  cursor: pointer;   /* shows a hand cursor so the user knows it's interactive */
-}
-
-.nav-zone-left  { left: 0;  cursor: w-resize; }   /* ← arrow cursor on left */
-.nav-zone-right { right: 0; cursor: e-resize; }   /* → arrow cursor on right */
-
 
 /* ====================================================================
    STOCK CARDS (Trending Assets coverflow)
