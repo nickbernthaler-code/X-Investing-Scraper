@@ -12,6 +12,8 @@ const db = require('../database/db');
 // Import agents
 const orchestrator = require('../agents/orchestrator');
 const portfolio = require('../agents/portfolio');
+const uxResearcher = require('../agents/uxResearcher');
+const uxDesigner = require('../agents/uxDesigner');
 
 // --- Health Check ---
 // GET /api/health → confirms the server is running
@@ -92,6 +94,38 @@ router.post('/accounts', (req, res) => {
     }).write();
 
     res.json({ success: true, message: `Now tracking @${username}` });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// --- UX Agent Chain ---
+// GET /api/ux-suggestions
+// Runs the two-agent UX chain:
+//   1. uxResearcher studies competitor investment UIs
+//   2. uxDesigner takes those notes and outputs specific improvements for our dashboard
+// This can take a few seconds if the API key is set (Claude calls happen sequentially)
+router.get('/ux-suggestions', async (req, res) => {
+  try {
+    console.log('\n🎨 UX Agent Chain: Starting...');
+
+    // Step 1: Research agent studies competitor UIs
+    console.log('🔍 Step 1: UX Researcher analyzing investment dashboards...');
+    const researchNotes = await uxResearcher.research();
+
+    // Step 2: Designer agent takes those notes and generates specific suggestions
+    console.log('✏️  Step 2: UX Designer generating improvement suggestions...');
+    const suggestions = await uxDesigner.suggest(researchNotes);
+
+    console.log('✅ UX Agent Chain complete!\n');
+
+    res.json({
+      success: true,
+      data: {
+        research: researchNotes,
+        suggestions,
+      },
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
