@@ -291,26 +291,37 @@
   text-transform: uppercase;
 }
 
+/* "Frosted Token" — circular logos with semi-transparent bg and layered shadows */
 .stock-card .stock-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   object-fit: contain;
-  background: #fff;
-  padding: 3px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.5),
+    0 4px 16px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stock-card .stock-logo-fallback {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
   color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.5),
+    0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 .stock-card .stock-ticker   { font-size: 30px; font-weight: 900; color: #e8e9ed; letter-spacing: -1px; line-height: 1; }
