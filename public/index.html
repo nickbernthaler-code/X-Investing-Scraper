@@ -3,57 +3,462 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>X Investing Scraper</title>
-  <!-- Link to external stylesheet for all visual styling -->
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <title>Pulse — Investment Intelligence</title>
 
-  <!-- Header section: main title and run button -->
-  <header>
-    <h1>X Investing Scraper</h1>
-    <p>Stock ideas from top X accounts, re-analyzed with AI</p>
-    <!-- Button that triggers the full scraping + analysis pipeline -->
-    <button id="run-btn" onclick="runScraper()" style="margin-top:12px; padding:10px 24px; background:#0f3460; color:white; border:none; border-radius:6px; cursor:pointer; font-size:1rem;">
+  <!-- Tailwind CSS via CDN (no build step needed) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Swiper.js for the Apple-style coverflow carousels -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- Custom styles that Tailwind can't easily handle (Swiper overrides, fonts, etc.) -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Configure Tailwind with our custom dark color palette -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface:  '#13131a',  /* card backgrounds */
+            border:   '#1e1e2e',  /* subtle borders */
+            muted:    '#a1a1b3',  /* secondary text */
+            accent:   '#22c55e',  /* green for gains */
+            loss:     '#ef4444',  /* red for losses */
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<!-- Dark base background -->
+<body class="bg-[#0a0a0f] text-white font-sans min-h-screen antialiased">
+
+
+  <!-- ============================================================
+       NAVIGATION BAR
+       Left: broker badges + connect CTA
+       Right: Login / Sign Up button
+  ============================================================ -->
+  <nav class="border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 bg-[#0a0a0f]/90 backdrop-blur-md z-50">
+
+    <!-- LEFT SIDE: Logo + Broker Badges + CTA -->
+    <div class="flex items-center gap-6">
+
+      <!-- App name / brand -->
+      <span class="text-white font-bold text-lg tracking-tight">Pulse</span>
+
+      <!-- Divider -->
+      <div class="h-5 w-px bg-border hidden sm:block"></div>
+
+      <!-- Broker badges — SVG text pills styled per brand color -->
+      <div class="flex items-center gap-2">
+
+        <!-- "Connect Accounts" label -->
+        <span class="text-muted text-xs font-medium hidden md:block">Connect</span>
+
+        <!-- Robinhood badge (brand green) -->
+        <button class="broker-badge" style="background: #00c805; color: #000;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+          </svg>
+          Robinhood
+        </button>
+
+        <!-- eToro badge (brand teal) -->
+        <button class="broker-badge" style="background: #2bc4a0; color: #fff;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1">
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+          </svg>
+          eToro
+        </button>
+
+        <!-- Trade Republic badge (brand dark red) -->
+        <button class="broker-badge" style="background: #c8102e; color: #fff;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1">
+            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+          </svg>
+          Trade Republic
+        </button>
+
+        <!-- Manual Entry badge (neutral) -->
+        <button class="broker-badge" style="background: #2a2a3d; color: #a1a1b3; border: 1px solid #1e1e2e;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="inline-block mr-1">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+          </svg>
+          Manual Entry
+        </button>
+      </div>
+
+      <!-- CTA text — hidden on small screens -->
+      <p class="text-muted text-xs hidden lg:block">
+        Connect your account to get better recommendations.
+      </p>
+    </div>
+
+    <!-- RIGHT SIDE: Login / Sign Up button -->
+    <button class="px-4 py-2 rounded-lg text-sm font-semibold border border-border text-white hover:bg-surface transition-colors duration-200">
+      Login / Sign Up
+    </button>
+  </nav>
+
+
+  <!-- ============================================================
+       HERO SECTION
+       Brief headline so the page doesn't feel empty
+  ============================================================ -->
+  <section class="text-center px-6 pt-16 pb-10">
+    <p class="text-xs uppercase tracking-widest text-muted mb-3 font-medium">Investment Intelligence</p>
+    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+      What the smart money<br>
+      <span class="text-accent">is talking about.</span>
+    </h1>
+    <p class="text-muted text-base max-w-md mx-auto mb-8">
+      Real-time signals from top X investors, analyzed by AI.
+    </p>
+    <!-- Run scraper button — still wired to the backend -->
+    <button
+      id="run-btn"
+      onclick="runScraper()"
+      class="px-6 py-3 bg-accent text-black font-bold rounded-xl text-sm hover:brightness-110 transition-all duration-200 shadow-lg shadow-accent/20">
       Run Scraper
     </button>
-  </header>
+  </section>
 
-  <main>
 
-    <!-- Latest Posts feed — populated dynamically by app.js -->
-    <section>
-      <h2>Latest Posts</h2>
-      <div id="posts-container">
-        <p class="empty-state">Click "Run Scraper" to fetch posts.</p>
+  <!-- ============================================================
+       SECTION A: TRENDING ASSETS — COVERFLOW CAROUSEL
+       Top 10 most discussed stocks, centered card scales up
+  ============================================================ -->
+  <section class="py-12">
+    <div class="px-6 mb-8">
+      <div class="flex items-center gap-3">
+        <!-- Section pill label -->
+        <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Trending</span>
+        <h2 class="text-xl font-bold text-white">Top 10 Assets</h2>
       </div>
-    </section>
+      <p class="text-muted text-sm mt-1">Most discussed stocks on X in the last 24h</p>
+    </div>
 
-    <!-- Portfolio section — populated dynamically by app.js -->
-    <section style="margin-top: 40px;">
-      <h2>My Portfolio</h2>
-      <div id="portfolio-container">
-        <p class="empty-state">No positions yet. Add stocks via the API.</p>
+    <!-- Swiper carousel container -->
+    <div class="swiper assets-swiper overflow-visible px-4">
+      <div class="swiper-wrapper">
+
+        <!-- STOCK CARD: NVDA -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#1</div>
+          <div class="stock-ticker">NVDA</div>
+          <div class="stock-name">NVIDIA Corp</div>
+          <div class="stock-price">$875.50</div>
+          <div class="stock-change positive">+2.34%</div>
+          <div class="stock-mentions">234 mentions</div>
+        </div>
+
+        <!-- STOCK CARD: TSLA -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#2</div>
+          <div class="stock-ticker">TSLA</div>
+          <div class="stock-name">Tesla Inc</div>
+          <div class="stock-price">$245.10</div>
+          <div class="stock-change negative">-1.12%</div>
+          <div class="stock-mentions">198 mentions</div>
+        </div>
+
+        <!-- STOCK CARD: AAPL -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#3</div>
+          <div class="stock-ticker">AAPL</div>
+          <div class="stock-name">Apple Inc</div>
+          <div class="stock-price">$182.30</div>
+          <div class="stock-change positive">+0.81%</div>
+          <div class="stock-mentions">165 mentions</div>
+        </div>
+
+        <!-- STOCK CARD: MSFT -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#4</div>
+          <div class="stock-ticker">MSFT</div>
+          <div class="stock-name">Microsoft</div>
+          <div class="stock-price">$415.20</div>
+          <div class="stock-change positive">+1.23%</div>
+          <div class="stock-mentions">143 mentions</div>
+        </div>
+
+        <!-- STOCK CARD: META -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#5</div>
+          <div class="stock-ticker">META</div>
+          <div class="stock-name">Meta Platforms</div>
+          <div class="stock-price">$512.40</div>
+          <div class="stock-change positive">+3.15%</div>
+          <div class="stock-mentions">128 mentions</div>
+        </div>
+
+        <!-- STOCK CARD: AMZN -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#6</div>
+          <div class="stock-ticker">AMZN</div>
+          <div class="stock-name">Amazon</div>
+          <div class="stock-price">$178.90</div>
+          <div class="stock-change positive">+0.52%</div>
+          <div class="stock-mentions">112 mentions</div>
+        </div>
+
+        <!-- STOCK CARD: GOOGL -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#7</div>
+          <div class="stock-ticker">GOOGL</div>
+          <div class="stock-name">Alphabet</div>
+          <div class="stock-price">$165.30</div>
+          <div class="stock-change negative">-0.31%</div>
+          <div class="stock-mentions">98 mentions</div>
+        </div>
+
+        <!-- STOCK CARD: AMD -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#8</div>
+          <div class="stock-ticker">AMD</div>
+          <div class="stock-name">Advanced Micro</div>
+          <div class="stock-price">$165.80</div>
+          <div class="stock-change positive">+4.21%</div>
+          <div class="stock-mentions">87 mentions</div>
+        </div>
+
+        <!-- STOCK CARD: PLTR -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#9</div>
+          <div class="stock-ticker">PLTR</div>
+          <div class="stock-name">Palantir</div>
+          <div class="stock-price">$22.40</div>
+          <div class="stock-change positive">+5.83%</div>
+          <div class="stock-mentions">76 mentions</div>
+        </div>
+
+        <!-- STOCK CARD: COIN -->
+        <div class="swiper-slide stock-card">
+          <div class="rank-badge">#10</div>
+          <div class="stock-ticker">COIN</div>
+          <div class="stock-name">Coinbase</div>
+          <div class="stock-price">$245.90</div>
+          <div class="stock-change positive">+7.24%</div>
+          <div class="stock-mentions">65 mentions</div>
+        </div>
+
+      </div><!-- end swiper-wrapper -->
+
+      <!-- Navigation arrows -->
+      <div class="swiper-button-prev assets-prev"></div>
+      <div class="swiper-button-next assets-next"></div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SECTION B: TOP INFLUENCERS — COVERFLOW CAROUSEL
+       Top 5 X accounts tracked by this platform
+  ============================================================ -->
+  <section class="py-12">
+    <div class="px-6 mb-8">
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-bold uppercase tracking-widest text-[#a78bfa] bg-[#a78bfa]/10 px-3 py-1 rounded-full">Influencers</span>
+        <h2 class="text-xl font-bold text-white">Top 5 Voices</h2>
       </div>
-    </section>
+      <p class="text-muted text-sm mt-1">Most insightful investing accounts on X</p>
+    </div>
 
-    <!-- Tracked Accounts section — populated dynamically by app.js -->
-    <section style="margin-top: 40px;">
-      <h2>Tracked Accounts</h2>
-      <div id="accounts-container">
-        <p class="empty-state">No accounts tracked yet.</p>
-      </div>
-    </section>
+    <!-- Swiper carousel container -->
+    <div class="swiper influencers-swiper overflow-visible px-4">
+      <div class="swiper-wrapper">
 
-  </main>
+        <!-- INFLUENCER: unusual_whales -->
+        <div class="swiper-slide influencer-card">
+          <div class="influencer-avatar" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6);">UW</div>
+          <div class="influencer-handle">@unusual_whales</div>
+          <div class="influencer-name">Unusual Whales</div>
+          <div class="influencer-bio">Real-time options flow & dark pool data</div>
+          <div class="influencer-stats">
+            <span>1.2M followers</span>
+            <span class="text-accent">48 posts tracked</span>
+          </div>
+        </div>
 
-  <!-- Footer -->
-  <footer style="margin-top:60px; text-align:center; color:#7a7a8e; padding:20px 0; border-top: 1px solid #0f3460;">
-    <p>X Investing Scraper — Powered by Claude AI</p>
+        <!-- INFLUENCER: chamath -->
+        <div class="swiper-slide influencer-card">
+          <div class="influencer-avatar" style="background: linear-gradient(135deg, #22c55e, #14b8a6);">CP</div>
+          <div class="influencer-handle">@chamath</div>
+          <div class="influencer-name">Chamath Palihapitiya</div>
+          <div class="influencer-bio">VC, macro investor & tech bull</div>
+          <div class="influencer-stats">
+            <span>1.5M followers</span>
+            <span class="text-accent">31 posts tracked</span>
+          </div>
+        </div>
+
+        <!-- INFLUENCER: zerohedge -->
+        <div class="swiper-slide influencer-card">
+          <div class="influencer-avatar" style="background: linear-gradient(135deg, #ef4444, #f97316);">ZH</div>
+          <div class="influencer-handle">@zerohedge</div>
+          <div class="influencer-name">ZeroHedge</div>
+          <div class="influencer-bio">Financial news, market commentary & macro</div>
+          <div class="influencer-stats">
+            <span>1.1M followers</span>
+            <span class="text-accent">72 posts tracked</span>
+          </div>
+        </div>
+
+        <!-- INFLUENCER: TihoBrkan -->
+        <div class="swiper-slide influencer-card">
+          <div class="influencer-avatar" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">TB</div>
+          <div class="influencer-handle">@TihoBrkan</div>
+          <div class="influencer-name">Tiho Brkan</div>
+          <div class="influencer-bio">Global macro research & cycle analysis</div>
+          <div class="influencer-stats">
+            <span>127K followers</span>
+            <span class="text-accent">19 posts tracked</span>
+          </div>
+        </div>
+
+        <!-- INFLUENCER: StockMoe -->
+        <div class="swiper-slide influencer-card">
+          <div class="influencer-avatar" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">SM</div>
+          <div class="influencer-handle">@StockMoe</div>
+          <div class="influencer-name">StockMoe</div>
+          <div class="influencer-bio">Retail investor ideas & momentum picks</div>
+          <div class="influencer-stats">
+            <span>456K followers</span>
+            <span class="text-accent">27 posts tracked</span>
+          </div>
+        </div>
+
+      </div><!-- end swiper-wrapper -->
+
+      <!-- Navigation arrows -->
+      <div class="swiper-button-prev influencers-prev"></div>
+      <div class="swiper-button-next influencers-next"></div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       LATEST POSTS — Dynamic feed from backend
+       Still connected to the API, just restyled
+  ============================================================ -->
+  <section class="px-6 py-12 max-w-3xl mx-auto">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#f59e0b] bg-[#f59e0b]/10 px-3 py-1 rounded-full">Live Feed</span>
+      <h2 class="text-xl font-bold text-white">Latest Posts</h2>
+    </div>
+    <div id="posts-container">
+      <p class="text-center text-muted py-12 text-sm">Click "Run Scraper" to fetch the latest posts.</p>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="border-t border-border px-6 py-8 mt-8">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      <span class="text-muted text-sm">Pulse — Powered by Claude AI</span>
+      <span class="text-muted text-xs">Mock data for demo purposes. Not financial advice.</span>
+    </div>
   </footer>
 
-  <!-- Frontend JavaScript — loaded last so the HTML is ready first -->
-  <script src="app.js"></script>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       1. Initialize both Swiper coverflow carousels
+       2. Keep the existing runScraper() function for the backend
+  ============================================================ -->
+  <script>
+
+    // ---- SWIPER: Trending Assets (Stock Cards) ----
+    // coverflowEffect settings recreate the Apple Music 3D carousel feel
+    const assetsSwiper = new Swiper('.assets-swiper', {
+      effect: 'coverflow',          // use the built-in 3D coverflow mode
+      grabCursor: true,             // show a grab cursor when hovering
+      centeredSlides: true,         // always keep active slide in the center
+      slidesPerView: 'auto',        // let slides determine their own width
+      initialSlide: 0,              // start on the first slide
+      coverflowEffect: {
+        rotate: 25,                 // how many degrees to tilt non-active cards
+        stretch: 0,                 // horizontal stretch between cards
+        depth: 280,                 // z-depth of the 3D effect (higher = more dramatic)
+        modifier: 1,                // multiplier for the coverflow transform
+        slideShadows: true,         // dark shadow on tilted cards for depth
+      },
+      navigation: {
+        prevEl: '.assets-prev',     // wire up our custom arrow buttons
+        nextEl: '.assets-next',
+      },
+    });
+
+    // ---- SWIPER: Top Influencers (Profile Cards) ----
+    const influencersSwiper = new Swiper('.influencers-swiper', {
+      effect: 'coverflow',
+      grabCursor: true,
+      centeredSlides: true,
+      slidesPerView: 'auto',
+      initialSlide: 2,              // center on the middle card (index 2 of 5)
+      coverflowEffect: {
+        rotate: 30,
+        stretch: 0,
+        depth: 250,
+        modifier: 1,
+        slideShadows: true,
+      },
+      navigation: {
+        prevEl: '.influencers-prev',
+        nextEl: '.influencers-next',
+      },
+    });
+
+
+    // ---- EXISTING BACKEND INTEGRATION ----
+    // This function calls the /api/scrape endpoint on our Express server
+    // It's the same logic as before, just with updated DOM rendering
+    async function runScraper() {
+      const btn = document.getElementById('run-btn');
+      const container = document.getElementById('posts-container');
+
+      // Show loading state
+      btn.textContent = 'Running...';
+      btn.disabled = true;
+      container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Fetching posts from X...</p>';
+
+      try {
+        // Call the backend scraper route
+        const res = await fetch('/api/scrape');
+        const data = await res.json();
+
+        // Render each post as a styled card
+        if (data.posts && data.posts.length > 0) {
+          container.innerHTML = data.posts.map(post => `
+            <div class="bg-surface border border-border rounded-xl p-5 mb-4 hover:-translate-y-1 transition-transform duration-200">
+              <p class="text-accent text-sm font-semibold mb-2">@${post.username || 'unknown'}</p>
+              <p class="text-white text-sm leading-relaxed mb-3">${post.content || post.text || ''}</p>
+              <p class="text-muted text-xs">${post.date || ''}</p>
+            </div>
+          `).join('');
+        } else {
+          container.innerHTML = '<p class="text-center text-muted py-12 text-sm">No posts found. Check your tracked accounts.</p>';
+        }
+      } catch (err) {
+        // Show a friendly error if the backend isn't running
+        container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Could not reach the server. Is it running?</p>';
+      }
+
+      // Reset button
+      btn.textContent = 'Run Scraper';
+      btn.disabled = false;
+    }
+
+  </script>
 
 </body>
 </html>

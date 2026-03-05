@@ -1,100 +1,238 @@
-/* ===== Reset & Base Styles ===== */
-/* Remove default browser margins/padding and set the dark background */
+/* ===================================================================
+   style.css — Custom styles for Pulse Investment Intelligence UI
+   Tailwind handles most layout/spacing; this file handles:
+   - Swiper coverflow card styles
+   - Broker badge pills
+   - Animation polish
+=================================================================== */
+
+
+/* ---- BASE RESET ---- */
+/* Remove default browser margins/padding */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  background-color: #1a1a2e;
-  color: #e0e0e0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  line-height: 1.6;
-  padding: 20px;
+
+/* ---- SCROLLBAR ---- */
+/* Dark minimal scrollbar to match the theme */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: #1e1e2e; border-radius: 3px; }
+
+
+/* ====================================================================
+   BROKER BADGE PILLS
+   Small colored pill buttons in the nav bar
+==================================================================== */
+.broker-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;  /* fully rounded pill shape */
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 
-/* ===== Header ===== */
-/* Main title area with a bottom border to separate it from content */
-header {
-  text-align: center;
-  padding: 20px 0;
-  margin-bottom: 30px;
-  border-bottom: 2px solid #0f3460;
+.broker-badge:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
 }
 
-header h1 {
-  font-size: 1.8rem;
+
+/* ====================================================================
+   SWIPER GLOBAL OVERRIDES
+   Remove Swiper's default arrow colors and size to match our dark theme
+==================================================================== */
+
+/* Override Swiper's built-in arrow color */
+.swiper-button-prev,
+.swiper-button-next {
+  color: rgba(255, 255, 255, 0.3) !important;
+  transition: color 0.2s ease;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Make arrows slightly smaller */
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 18px !important;
+}
+
+
+/* ====================================================================
+   STOCK CARDS (Trending Assets coverflow)
+   Fixed size so coverflow has something to rotate
+==================================================================== */
+.swiper-slide.stock-card {
+  /* Fixed width is required for 'slidesPerView: auto' coverflow */
+  width: 200px;
+  height: 260px;
+
+  /* Dark glass-morphism card style */
+  background: linear-gradient(145deg, #16162a, #1a1a2e);
+  border: 1px solid #1e1e2e;
+  border-radius: 20px;
+  padding: 24px 20px;
+
+  /* Stack content vertically */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  /* Smooth hover interaction */
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.stock-card:hover {
+  border-color: #22c55e44;
+}
+
+/* "#1" rank label in top-left */
+.stock-card .rank-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a1a1b3;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Large ticker symbol e.g. "NVDA" */
+.stock-card .stock-ticker {
+  font-size: 32px;
+  font-weight: 800;
   color: #ffffff;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+/* Company name e.g. "NVIDIA Corp" */
+.stock-card .stock-name {
+  font-size: 12px;
+  color: #a1a1b3;
+  font-weight: 500;
+}
+
+/* Price e.g. "$875.50" */
+.stock-card .stock-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* % change — color depends on positive/negative class */
+.stock-card .stock-change {
+  font-size: 14px;
   font-weight: 600;
 }
 
-header p {
-  color: #a0a0b0;
-  font-size: 0.95rem;
-  margin-top: 6px;
+.stock-card .stock-change.positive { color: #22c55e; }  /* green */
+.stock-card .stock-change.negative { color: #ef4444; }  /* red */
+
+/* Mention count at the bottom */
+.stock-card .stock-mentions {
+  font-size: 11px;
+  color: #4b4b6a;
+  font-weight: 500;
 }
 
-/* ===== Container ===== */
-/* Centers content and limits max width for readability */
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-}
 
-/* ===== Post Cards ===== */
-/* Each post/tweet is displayed as a card with a lighter background */
-.post-card {
-  background-color: #16213e;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+/* ====================================================================
+   INFLUENCER CARDS (Top Voices coverflow)
+==================================================================== */
+.swiper-slide.influencer-card {
+  width: 220px;
+  height: 280px;
 
-/* Hover effect: slight lift and glow to show interactivity */
-.post-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 15px rgba(15, 52, 96, 0.5);
-}
+  background: linear-gradient(145deg, #16162a, #1a1a2e);
+  border: 1px solid #1e1e2e;
+  border-radius: 20px;
+  padding: 28px 20px;
 
-/* Username styling inside a post card */
-.post-card .username {
-  font-weight: 600;
-  color: #5ce1e6;
-  margin-bottom: 8px;
-  font-size: 0.95rem;
-}
-
-/* The main text content of a post */
-.post-card .content {
-  color: #e0e0e0;
-  font-size: 1rem;
-  margin-bottom: 10px;
-}
-
-/* Timestamp or date shown at the bottom of a post */
-.post-card .date {
-  color: #7a7a8e;
-  font-size: 0.8rem;
-}
-
-/* ===== Links ===== */
-/* Style links to match the accent color */
-a {
-  color: #5ce1e6;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* ===== Loading / Empty State ===== */
-/* Message shown when no posts are loaded yet */
-.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  color: #7a7a8e;
-  padding: 40px 0;
-  font-size: 1.1rem;
+  gap: 8px;
+
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.influencer-card:hover {
+  border-color: #a78bfa44;
+}
+
+/* Circular avatar with gradient background and initials */
+.influencer-card .influencer-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+  /* Individual gradients are set inline on each card */
+}
+
+/* @handle in purple */
+.influencer-card .influencer-handle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #a78bfa;
+}
+
+/* Full name */
+.influencer-card .influencer-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Short bio */
+.influencer-card .influencer-bio {
+  font-size: 11px;
+  color: #a1a1b3;
+  line-height: 1.4;
+}
+
+/* Stats row at bottom */
+.influencer-card .influencer-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+  font-size: 11px;
+  color: #4b4b6a;
+  font-weight: 500;
+}
+
+
+/* ====================================================================
+   ACTIVE SLIDE HIGHLIGHT
+   The centered (active) slide gets a glowing border to emphasize focus
+==================================================================== */
+.swiper-slide-active.stock-card {
+  border-color: #22c55e55;
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.12), 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.swiper-slide-active.influencer-card {
+  border-color: #a78bfa55;
+  box-shadow: 0 0 30px rgba(167, 139, 250, 0.12), 0 20px 60px rgba(0,0,0,0.5);
 }
