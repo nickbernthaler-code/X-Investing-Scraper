@@ -139,8 +139,6 @@
       class="section-tab" data-tab="consensus">Consensus</button>
     <button onclick="document.getElementById('sec-feed').scrollIntoView({behavior:'smooth'})"
       class="section-tab" data-tab="feed">Live Feed</button>
-    <button onclick="document.getElementById('sec-ai').scrollIntoView({behavior:'smooth'})"
-      class="section-tab" data-tab="ai">AI Studio</button>
   </div>
 
 
@@ -340,24 +338,6 @@
   </section>
 
 
-  <!-- ============================================================
-       AI DESIGN SUGGESTIONS — moved below feed
-  ============================================================ -->
-  <section id="sec-ai" class="px-6 py-12 max-w-3xl mx-auto">
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-3">
-        <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">AI Studio</span>
-        <h2 class="font-serif text-xl text-[#e8e9ed]">Design Suggestions</h2>
-      </div>
-      <button id="ux-btn" onclick="runUXAgents()"
-        class="px-4 py-2 text-sm font-semibold rounded-xl border border-brass/40 text-brass hover:bg-brass/10 transition-colors duration-200">
-        Ask AI for Ideas
-      </button>
-    </div>
-    <div id="ux-container">
-      <p class="text-center text-muted py-8 text-sm">Click "Ask AI for Ideas" — two AI agents will research competitor UIs and suggest specific improvements.</p>
-    </div>
-  </section>
 
 
   <!-- ============================================================
@@ -506,7 +486,6 @@
           <h4 class="text-[#e8e9ed] text-sm font-semibold mb-4">Resources</h4>
           <ul class="space-y-2.5">
             <li><a href="#sec-how" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">How it Works</a></li>
-            <li><a href="#sec-ai" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">AI Studio</a></li>
             <li><a href="#" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">API Docs</a></li>
             <li><a href="#" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">Blog</a></li>
           </ul>
@@ -930,72 +909,6 @@
     // =================================================================
     // BACKEND: UX Agent Chain
     // =================================================================
-    async function runUXAgents() {
-      const btn = document.getElementById('ux-btn');
-      const container = document.getElementById('ux-container');
-      btn.textContent = 'Agents thinking...';
-      btn.disabled = true;
-      container.innerHTML = `
-        <div class="bg-surface border border-border rounded-xl p-6 text-center">
-          <div class="text-brass text-sm font-semibold mb-2">🔍 Agent 1: Researching competitor UIs...</div>
-          <div class="text-muted text-xs">Then Agent 2 will generate specific suggestions for this dashboard.</div>
-        </div>`;
-
-      try {
-        const res = await fetch('/api/ux-suggestions');
-        const data = await res.json();
-        if (!data.success) throw new Error(data.error);
-        const { suggestions } = data.data;
-
-        container.innerHTML = `
-          <div class="bg-surface border border-border rounded-xl p-5 mb-4">
-            <div class="flex justify-between items-center">
-              <div>
-                <p class="text-xs uppercase tracking-widest text-muted mb-1">AI Assessment</p>
-                <p class="text-[#e8e9ed] text-sm">${suggestions.overall_score?.comment || ''}</p>
-              </div>
-              <div class="text-right">
-                <p class="text-muted text-xs">Now → Potential</p>
-                <p class="text-brass text-xl font-bold">${suggestions.overall_score?.current || '?'} → ${suggestions.overall_score?.potential || '?'}</p>
-              </div>
-            </div>
-          </div>
-          <p class="text-[#e8e9ed] font-semibold text-sm mb-3">Priority Improvements</p>
-          ${(suggestions.priority_improvements || []).map(item => `
-            <div class="bg-surface border border-border rounded-xl p-4 mb-3">
-              <div class="flex gap-3">
-                <span class="text-brass text-lg">→</span>
-                <div>
-                  <p class="text-[#e8e9ed] text-sm font-semibold">${item.title}</p>
-                  <p class="text-xs text-brass/70 mb-1 uppercase tracking-wider">${item.area}</p>
-                  <p class="text-muted text-xs leading-relaxed">${item.what_to_change}</p>
-                  <p class="text-accent text-xs mt-1 italic">"${item.why}"</p>
-                </div>
-              </div>
-            </div>`).join('')}
-          <p class="text-[#e8e9ed] font-semibold text-sm mt-5 mb-3">Quick Wins</p>
-          <div class="bg-surface border border-border rounded-xl p-4 mb-4">
-            <ul class="space-y-2">
-              ${(suggestions.quick_wins || []).map(w => `
-                <li class="text-muted text-xs flex gap-2"><span class="text-accent">✓</span>${w}</li>`).join('')}
-            </ul>
-          </div>
-          <p class="text-[#e8e9ed] font-semibold text-sm mb-3">Future Features</p>
-          <div class="bg-surface border border-border rounded-xl p-4">
-            <ul class="space-y-2">
-              ${(suggestions.future_features || []).map(f => `
-                <li class="text-muted text-xs flex gap-2"><span class="text-[#a78bfa]">◆</span>${f}</li>`).join('')}
-            </ul>
-          </div>
-          ${data.data.suggestions?.is_mock ? '<p class="text-muted text-xs text-center mt-4">Mock data — add ANTHROPIC_API_KEY to .env for live AI</p>' : ''}`;
-
-      } catch (err) {
-        container.innerHTML = `<p class="text-center text-muted py-8 text-sm">Could not reach the server.</p>`;
-      }
-
-      btn.textContent = 'Refresh Ideas';
-      btn.disabled = false;
-    }
 
   </script>
 
