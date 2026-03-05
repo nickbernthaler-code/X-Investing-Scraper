@@ -14,6 +14,7 @@ const orchestrator = require('../agents/orchestrator');
 const portfolio = require('../agents/portfolio');
 const uxResearcher = require('../agents/uxResearcher');
 const uxDesigner = require('../agents/uxDesigner');
+const instagramPoster = require('../agents/instagramPoster');
 
 // --- Health Check ---
 // GET /api/health → confirms the server is running
@@ -94,6 +95,37 @@ router.post('/accounts', (req, res) => {
     }).write();
 
     res.json({ success: true, message: `Now tracking @${username}` });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// --- Instagram: Post Manually ---
+// POST /api/instagram/post
+// Lets you trigger an Instagram post manually from the dashboard without
+// running the full pipeline. Useful for testing or on-demand posting.
+// Body (optional): { "recommendations": [...] }
+// If no recommendations are provided in the body, it pulls the latest from the DB.
+router.post('/instagram/post', async (req, res) => {
+  try {
+    console.log('\n📸 Manual Instagram post triggered via API...');
+
+    // Use recommendations from the request body, or fall back to recent posts in the DB
+    let recommendations = req.body.recommendations;
+
+    if (!recommendations || recommendations.length === 0) {
+      // Pull recent analyses from DB as a fallback
+      const recentPosts = db.get('posts').value().slice(-10);
+      recommendations = recentPosts.map(p => ({
+        ticker: p.ticker || 'MARKET',
+        analysis_summary: p.content || 'Interesting market activity today',
+        confidence: 7,
+      }));
+    }
+
+    const result = await instagramPoster.run(recommendations);
+    res.json({ success: true, data: result });
+
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

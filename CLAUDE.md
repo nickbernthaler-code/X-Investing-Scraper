@@ -28,3 +28,4 @@ A tool that scrapes X (formerly Twitter) for posts from specific users who share
 - Before making changes, briefly describe what you plan to do.
 - Prefer simple solutions over clever ones.
 - If you are unsure what the user wants, ask a clarifying question before writing code.
+- **Always git commit after completing a big change or task.** Use a clear, descriptive commit message. This protects the user's work so they can always roll back if needed.

@@ -50,7 +50,7 @@ async function suggest(researchNotes) {
 Here is research on what makes great investment dashboards:
 ${researchContext}
 
-Our current dashboard ("Pulse") has:
+Our current dashboard ("StockHolmes") has:
 - A dark navbar with broker connect badges and a Login button
 - A hero headline section
 - A horizontal Swiper.js coverflow carousel showing Top 10 stocks

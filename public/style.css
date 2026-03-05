@@ -1,5 +1,5 @@
 /* ===================================================================
-   style.css — Pulse Investment Intelligence (Premium Dark UI)
+   style.css — StockHolmes Investment Intelligence (Premium Dark UI)
 =================================================================== */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -7,6 +7,18 @@
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #0a0a0f; }
 ::-webkit-scrollbar-thumb { background: #1e1e2e; border-radius: 3px; }
+
+
+/* ====================================================================
+   LOGO — detective icon with subtle green glow
+==================================================================== */
+.logo-icon {
+  filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.4));
+  transition: filter 0.3s ease;
+}
+.logo-icon:hover {
+  filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.6));
+}
 
 
 /* ====================================================================

@@ -8,6 +8,7 @@
  *   1. Scraper + Market Data run in PARALLEL (they're independent)
  *   2. Analyst takes both outputs and evaluates each post
  *   3. Recommender compares analyst results against the user's portfolio
+ *   4. Instagram Poster shares the top picks on Instagram (or mocks it)
  */
 
 const scraper = require('./scraper');
@@ -15,6 +16,7 @@ const marketData = require('./marketData');
 const analyst = require('./analyst');
 const portfolioAgent = require('./portfolio');
 const recommender = require('./recommender');
+const instagramPoster = require('./instagramPoster');
 
 /**
  * run() — Executes the full pipeline from scraping to recommendations.
@@ -48,12 +50,26 @@ async function run() {
   const recommendations = recommender.generate(analyses, portfolio);
   console.log(`✅ Generated ${recommendations.length} recommendations\n`);
 
+  // --- Step 5: Instagram Poster shares the top picks ---
+  // This runs after recommendations so it has the best picks to post about.
+  // If no Instagram credentials are set, it runs in mock mode and just logs the caption.
+  console.log('📸 Instagram Poster Agent: Creating and posting content...');
+  const instagramResult = await instagramPoster.run(recommendations);
+  if (instagramResult.mock) {
+    console.log('⚠️  Instagram: Mock mode (add credentials to .env to post for real)\n');
+  } else if (instagramResult.success) {
+    console.log(`✅ Instagram: Posted successfully! Post ID: ${instagramResult.post_id}\n`);
+  } else {
+    console.log(`❌ Instagram: Post failed — ${instagramResult.error}\n`);
+  }
+
   console.log('🏁 Orchestrator: Pipeline complete!\n');
 
   return {
     posts_found: posts.length,
     analyses_completed: analyses.length,
     recommendations,
+    instagram: instagramResult,
   };
 }
 
