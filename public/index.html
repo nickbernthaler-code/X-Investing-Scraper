@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="scroll-behavior:smooth;">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,7 +51,13 @@
         <span class="text-[#e8e9ed] font-serif text-xl tracking-tight">StockHolmes</span>
       </div>
       <div class="h-5 w-px bg-border hidden sm:block"></div>
-      <!-- Search bar — primary discovery tool (Trade Republic/TradingView pattern) -->
+      <!-- Nav links — How it Works and Pricing -->
+      <div class="hidden md:flex items-center gap-4">
+        <a href="#sec-how" class="text-muted text-sm font-medium hover:text-[#e8e9ed] transition-colors cursor-pointer">How it Works</a>
+        <a href="#sec-pricing" class="text-muted text-sm font-medium hover:text-[#e8e9ed] transition-colors cursor-pointer">Pricing</a>
+      </div>
+      <div class="h-5 w-px bg-border hidden md:block"></div>
+      <!-- Search bar -->
       <div class="hidden sm:flex items-center gap-2 bg-[#14151f] border border-border rounded-lg px-3 py-1.5">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9294a8" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" placeholder="Search stocks or influencers..." class="bg-transparent text-sm text-[#e8e9ed] placeholder-[#5c5e73] outline-none w-48 lg:w-64">
@@ -351,6 +357,108 @@
     <div id="ux-container">
       <p class="text-center text-muted py-8 text-sm">Click "Ask AI for Ideas" — two AI agents will research competitor UIs and suggest specific improvements.</p>
     </div>
+  </section>
+
+
+  <!-- ============================================================
+       HOW IT WORKS
+  ============================================================ -->
+  <section id="sec-how" class="px-6 py-16 max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">How it Works</span>
+      <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Three steps to smarter investing</h2>
+      <p class="text-muted text-sm mt-2 max-w-md mx-auto">StockHolmes does the detective work so you don't have to.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Step 1 -->
+      <div class="bg-surface border border-border rounded-2xl p-6 text-center">
+        <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3 class="font-serif text-lg text-[#e8e9ed] mb-2">1. Investigate</h3>
+        <p class="text-muted text-sm leading-relaxed">Our AI scrapes X/Twitter for posts from top investment accounts and filters for stock-related content.</p>
+      </div>
+      <!-- Step 2 -->
+      <div class="bg-surface border border-border rounded-2xl p-6 text-center">
+        <div class="w-12 h-12 rounded-xl bg-brass/10 flex items-center justify-center mx-auto mb-4">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4a843" stroke-width="2" stroke-linecap="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+        </div>
+        <h3 class="font-serif text-lg text-[#e8e9ed] mb-2">2. Analyze</h3>
+        <p class="text-muted text-sm leading-relaxed">Claude AI evaluates each post for sentiment, confidence, and extracts ticker mentions to build a consensus view.</p>
+      </div>
+      <!-- Step 3 -->
+      <div class="bg-surface border border-border rounded-2xl p-6 text-center">
+        <div class="w-12 h-12 rounded-xl bg-[#a78bfa]/10 flex items-center justify-center mx-auto mb-4">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3 class="font-serif text-lg text-[#e8e9ed] mb-2">3. Act</h3>
+        <p class="text-muted text-sm leading-relaxed">Get signal alerts, consensus picks, and portfolio gap analysis so you can make informed decisions — faster.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PRICING
+  ============================================================ -->
+  <section id="sec-pricing" class="px-6 py-16 max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Pricing</span>
+      <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Simple, transparent plans</h2>
+      <p class="text-muted text-sm mt-2">Start free. Upgrade when you need more signals.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Free tier -->
+      <div class="bg-surface border border-border rounded-2xl p-6 flex flex-col">
+        <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Starter</h3>
+        <p class="text-muted text-sm mb-4">For curious investors</p>
+        <p class="text-3xl font-bold text-[#e8e9ed] mb-1">$0<span class="text-muted text-sm font-normal">/mo</span></p>
+        <p class="text-[#5c5e73] text-xs mb-6">Free forever</p>
+        <ul class="space-y-3 mb-8 flex-grow">
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Top 10 trending stocks</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Top 5 influencers</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Live post feed</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> Signal alerts</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> Consensus radar</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> Holmes Score history</li>
+        </ul>
+        <button class="w-full py-2.5 rounded-xl text-sm font-semibold border border-border text-[#e8e9ed] hover:bg-[#1a1b2e] transition-colors">Get Started</button>
+      </div>
+      <!-- Pro tier (highlighted) -->
+      <div class="bg-surface border-2 border-accent rounded-2xl p-6 flex flex-col relative">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-[#08090e] text-xs font-bold px-3 py-1 rounded-full">Most Popular</div>
+        <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Detective</h3>
+        <p class="text-muted text-sm mb-4">For active investors</p>
+        <p class="text-3xl font-bold text-[#e8e9ed] mb-1">$19<span class="text-muted text-sm font-normal">/mo</span></p>
+        <p class="text-[#5c5e73] text-xs mb-6">Billed monthly</p>
+        <ul class="space-y-3 mb-8 flex-grow">
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Everything in Starter</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Real-time signal alerts</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Consensus radar</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Holmes Score tracking</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Portfolio gap analysis</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> AI thesis reports</li>
+        </ul>
+        <button class="w-full py-2.5 rounded-xl text-sm font-bold bg-accent text-[#08090e] hover:brightness-110 transition-all shadow-lg shadow-accent/20">Start Free Trial</button>
+      </div>
+      <!-- Premium tier -->
+      <div class="bg-surface border border-border rounded-2xl p-6 flex flex-col">
+        <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Holmes Pro</h3>
+        <p class="text-muted text-sm mb-4">For serious traders</p>
+        <p class="text-3xl font-bold text-[#e8e9ed] mb-1">$49<span class="text-muted text-sm font-normal">/mo</span></p>
+        <p class="text-[#5c5e73] text-xs mb-6">Billed monthly</p>
+        <ul class="space-y-3 mb-8 flex-grow">
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Everything in Detective</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> AI thesis reports (unlimited)</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Broker integration</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Auto Instagram posts</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> API access</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Priority support</li>
+        </ul>
+        <button class="w-full py-2.5 rounded-xl text-sm font-semibold border border-brass/30 text-brass hover:bg-brass/10 transition-colors">Contact Sales</button>
+      </div>
+    </div>
+    <p class="text-[#5c5e73] text-xs text-center mt-6">All plans include a 14-day free trial. No credit card required. Not financial advice.</p>
   </section>
 
 
