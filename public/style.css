@@ -23,6 +23,72 @@
 
 
 /* ====================================================================
+   FEY-INSPIRED: SVG noise texture overlay for glass surfaces
+   Creates a subtle film-grain feel on top of blurred elements
+==================================================================== */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+
+/* ====================================================================
+   FEY-INSPIRED: Gradient text for headings — premium accent shine
+==================================================================== */
+.gradient-text-emerald {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-brass {
+  background: linear-gradient(135deg, #d4a843 0%, #f0c760 50%, #d4a843 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* ====================================================================
+   FEY-INSPIRED: Glassmorphism for nav, modals, and panels
+   Semi-transparent bg + backdrop blur + inset light border
+==================================================================== */
+.glass {
+  background: rgba(20, 21, 31, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  /* Inset light border — subtle inner glow like Fey */
+  box-shadow: inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.06);
+}
+
+.glass-strong {
+  background: rgba(20, 21, 31, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 0.5px solid rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.08);
+}
+
+
+/* ====================================================================
+   FEY-INSPIRED: Tabular (monospace) numbers for financial data
+   Makes prices and percentages align properly
+==================================================================== */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+
+/* ====================================================================
    LOGO — detective icon with subtle green glow
 ==================================================================== */
 .logo-icon {
@@ -153,19 +219,17 @@
   position: relative;
   overflow: hidden;
 
-  /* Rich dark gradient with slight blue undertone */
-  background: linear-gradient(
-    145deg,
-    #1a1b2e 0%,
-    #14151f 50%,
-    #0e0f1a 100%
-  );
+  /* Fey-style glassmorphism — semi-transparent with blur */
+  background: rgba(26, 27, 46, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 
-  /* Subtle border */
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  /* Thin Fey-style inset light border */
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
 
-  /* Multi-layer shadow for realistic depth */
+  /* Multi-layer shadow + inset glow for depth */
   box-shadow:
+    inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.06),
     0 1px 2px  rgba(0, 0, 0, 0.7),
     0 4px 8px  rgba(0, 0, 0, 0.55),
     0 16px 32px rgba(0, 0, 0, 0.45),
@@ -251,8 +315,9 @@
 
 .stock-card .stock-ticker   { font-size: 30px; font-weight: 900; color: #e8e9ed; letter-spacing: -1px; line-height: 1; }
 .stock-card .stock-name     { font-size: 11px; color: rgba(146,148,168,0.75); font-weight: 500; }
-.stock-card .stock-price    { font-size: 18px; font-weight: 700; color: #e8e9ed; }
-.stock-card .stock-change   { font-size: 13px; font-weight: 700; }
+/* Tabular nums so price digits align nicely (Fey-style) */
+.stock-card .stock-price    { font-size: 18px; font-weight: 700; color: #e8e9ed; font-variant-numeric: tabular-nums; }
+.stock-card .stock-change   { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .stock-card .stock-change.positive { color: #10b981; text-shadow: 0 0 12px rgba(16,185,129,0.5); }
 .stock-card .stock-change.negative { color: #f87171; text-shadow: 0 0 12px rgba(248,113,113,0.5); }
 .stock-card .stock-mentions { font-size: 11px; color: rgba(92,94,115,0.9); font-weight: 500; }
@@ -275,9 +340,13 @@
   position: relative;
   overflow: hidden;
 
-  background: linear-gradient(145deg, #1a1b2e 0%, #14151f 50%, #0e0f1a 100%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  /* Fey-style glassmorphism */
+  background: rgba(26, 27, 46, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
   box-shadow:
+    inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.06),
     0 1px 2px  rgba(0, 0, 0, 0.7),
     0 4px 8px  rgba(0, 0, 0, 0.55),
     0 16px 32px rgba(0, 0, 0, 0.45),
@@ -441,4 +510,85 @@
   background: #10b981;
   width: 18px;
   border-radius: 3px;
+}
+
+
+/* ====================================================================
+   FEY-INSPIRED: Pill CTA buttons — fully rounded with blur bg
+   Used for hero button and pricing CTA
+==================================================================== */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  border-radius: 99px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-pill-accent {
+  background: #10b981;
+  color: #08090e;
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.25), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+.btn-pill-accent:hover {
+  box-shadow: 0 0 36px rgba(16, 185, 129, 0.35), 0 6px 16px rgba(0, 0, 0, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-pill-outline {
+  background: rgba(20, 21, 31, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #e8e9ed;
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.06);
+}
+.btn-pill-outline:hover {
+  background: rgba(20, 21, 31, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+
+/* ====================================================================
+   FEY-INSPIRED: Gradient shimmer border on card hover
+   Conic gradient creates a rotating-light effect on the border
+==================================================================== */
+.stock-card:hover,
+.influencer-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0.5px 0.5px 1px rgba(255, 255, 255, 0.1),
+    0 1px 2px  rgba(0, 0, 0, 0.7),
+    0 4px 8px  rgba(0, 0, 0, 0.55),
+    0 16px 32px rgba(0, 0, 0, 0.45),
+    0 32px 56px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ====================================================================
+   FEY-INSPIRED: Glass panels for content sections
+   Signal alerts, consensus, feed sections get the frosted look
+==================================================================== */
+.glass-panel {
+  background: rgba(20, 21, 31, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+}
+
+
+/* ====================================================================
+   FEY-INSPIRED: Section spacing — more breathing room
+==================================================================== */
+.section-spacer {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }

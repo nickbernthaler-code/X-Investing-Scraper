@@ -39,11 +39,14 @@
 
 <body class="bg-[#08090e] text-[#e8e9ed] font-sans min-h-screen antialiased">
 
+  <!-- Fey-style noise texture overlay — very subtle grain for premium feel -->
+  <div class="noise-overlay"></div>
+
 
   <!-- ============================================================
        NAVIGATION BAR
   ============================================================ -->
-  <nav class="border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 bg-[#08090e]/90 backdrop-blur-md z-50">
+  <nav class="glass-strong px-6 py-4 flex items-center justify-between sticky top-0 z-50 border-b border-white/[0.06]">
     <div class="flex items-center gap-5">
       <!-- StockHolmes detective logo + name -->
       <div class="flex items-center gap-2.5">
@@ -58,18 +61,19 @@
       </div>
       <div class="h-5 w-px bg-border hidden md:block"></div>
       <!-- Search bar -->
-      <div class="hidden sm:flex items-center gap-2 bg-[#14151f] border border-border rounded-lg px-3 py-1.5">
+      <div class="hidden sm:flex items-center gap-2 bg-white/[0.04] border border-white/[0.08] rounded-full px-3 py-1.5">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9294a8" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" placeholder="Search stocks or influencers..." class="bg-transparent text-sm text-[#e8e9ed] placeholder-[#5c5e73] outline-none w-48 lg:w-64">
       </div>
     </div>
     <div class="flex items-center gap-3">
       <!-- Connect Broker button — opens modal instead of cluttering navbar -->
+      <!-- Fey-style pill buttons in the nav -->
       <button onclick="document.getElementById('broker-modal').classList.remove('hidden')"
-        class="px-4 py-2 rounded-lg text-sm font-semibold border border-[#d4a843]/30 text-[#d4a843] hover:bg-[#d4a843]/10 transition-colors duration-200 hidden sm:block">
+        class="px-4 py-2 rounded-full text-sm font-semibold border border-[#d4a843]/30 text-[#d4a843] hover:bg-[#d4a843]/10 transition-colors duration-200 hidden sm:block">
         Connect Broker
       </button>
-      <button class="px-4 py-2 rounded-lg text-sm font-semibold border border-border text-[#e8e9ed] hover:bg-surface transition-colors duration-200">
+      <button class="px-4 py-2 rounded-full text-sm font-semibold bg-white/[0.06] border border-white/[0.1] text-[#e8e9ed] hover:bg-white/[0.1] transition-colors duration-200 backdrop-blur-sm">
         Login / Sign Up
       </button>
     </div>
@@ -79,7 +83,7 @@
        BROKER CONNECT MODAL — hidden by default, opened from navbar
   ============================================================ -->
   <div id="broker-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-    <div class="bg-[#14151f] border border-border rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+    <div class="glass-strong rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
       <div class="flex justify-between items-center mb-6">
         <h3 class="font-serif text-xl text-[#e8e9ed]">Connect Your Broker</h3>
         <button onclick="document.getElementById('broker-modal').classList.add('hidden')" class="text-muted hover:text-[#e8e9ed] text-xl">&times;</button>
@@ -111,15 +115,17 @@
   <!-- ============================================================
        HERO
   ============================================================ -->
-  <section class="text-center px-6 pt-16 pb-10">
-    <p class="text-xs uppercase tracking-widest text-muted mb-3 font-medium">Investment Intelligence</p>
-    <h1 class="font-serif text-4xl sm:text-5xl text-[#e8e9ed] mb-4 leading-tight">
+  <section class="text-center px-6 pt-20 pb-14">
+    <p class="text-xs uppercase tracking-widest text-muted mb-4 font-medium">Investment Intelligence</p>
+    <h1 class="font-serif text-4xl sm:text-5xl text-[#e8e9ed] mb-5 leading-tight">
       What the smart money<br>
-      <span class="text-accent">is talking about.</span>
+      <!-- Fey-style gradient text on the accent phrase -->
+      <span class="gradient-text-emerald">is talking about.</span>
     </h1>
-    <p class="text-muted text-base max-w-md mx-auto mb-8">Real-time signals from top X investors, analyzed by AI.</p>
+    <p class="text-muted text-base max-w-md mx-auto mb-10">Real-time signals from top X investors, analyzed by AI.</p>
+    <!-- Fey-style pill button with glow shadow -->
     <button id="run-btn" onclick="runScraper()"
-      class="px-6 py-3 bg-accent text-[#08090e] font-bold rounded-xl text-sm hover:brightness-110 transition-all duration-200 shadow-lg shadow-accent/20">
+      class="btn-pill btn-pill-accent">
       Run Scraper
     </button>
   </section>
@@ -128,7 +134,7 @@
   <!-- ============================================================
        C6: SECTION TAB NAVIGATION — jump to any section instantly
   ============================================================ -->
-  <div class="flex justify-center gap-2 px-6 pb-8 sticky top-[65px] z-40 bg-[#08090e]/90 backdrop-blur-sm pt-3">
+  <div class="flex justify-center gap-2 px-6 pb-8 sticky top-[65px] z-40 glass pt-3">
     <button onclick="document.getElementById('sec-trending').scrollIntoView({behavior:'smooth'})"
       class="section-tab section-tab-active" data-tab="trending">Trending</button>
     <button onclick="document.getElementById('sec-influencers').scrollIntoView({behavior:'smooth'})"
@@ -172,7 +178,7 @@
 
   <!-- A3: Click-to-expand detail panel (hidden, shown when center card clicked) -->
   <div id="stock-detail-panel" class="hidden px-6 max-w-2xl mx-auto mb-8">
-    <div class="bg-surface border border-border rounded-2xl p-6">
+    <div class="glass-panel rounded-2xl p-6">
       <div class="flex justify-between items-start mb-4">
         <div>
           <h3 id="detail-ticker" class="font-serif text-2xl text-[#e8e9ed]"></h3>
@@ -226,14 +232,14 @@
   <!-- ============================================================
        E12: SIGNAL ALERTS — high-confidence AI picks
   ============================================================ -->
-  <section id="sec-signals" class="px-6 py-12 max-w-3xl mx-auto">
+  <section id="sec-signals" class="px-6 section-spacer max-w-3xl mx-auto">
     <div class="flex items-center gap-3 mb-6">
       <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Signals</span>
       <h2 class="font-serif text-xl text-[#e8e9ed]">Signal Alerts</h2>
     </div>
     <div id="signals-container" class="grid gap-3">
       <!-- Mock signal alerts — will be replaced with real data when scraper runs -->
-      <div class="bg-surface border border-border rounded-xl p-4 flex items-center justify-between">
+      <div class="glass-panel p-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
           <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">NV</div>
           <div>
@@ -242,11 +248,11 @@
           </div>
         </div>
         <div class="text-right">
-          <p class="text-accent text-sm font-bold">9/10</p>
+          <p class="text-accent text-sm font-bold tabular-nums">9/10</p>
           <p class="text-muted text-xs">Confidence</p>
         </div>
       </div>
-      <div class="bg-surface border border-border rounded-xl p-4 flex items-center justify-between">
+      <div class="glass-panel p-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
           <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">TS</div>
           <div>
@@ -255,11 +261,11 @@
           </div>
         </div>
         <div class="text-right">
-          <p class="text-brass text-sm font-bold">7/10</p>
+          <p class="text-brass text-sm font-bold tabular-nums">7/10</p>
           <p class="text-muted text-xs">Confidence</p>
         </div>
       </div>
-      <div class="bg-surface border border-border rounded-xl p-4 flex items-center justify-between">
+      <div class="glass-panel p-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
           <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">PL</div>
           <div>
@@ -268,7 +274,7 @@
           </div>
         </div>
         <div class="text-right">
-          <p class="text-accent text-sm font-bold">8/10</p>
+          <p class="text-accent text-sm font-bold tabular-nums">8/10</p>
           <p class="text-muted text-xs">Confidence</p>
         </div>
       </div>
@@ -280,7 +286,7 @@
   <!-- ============================================================
        E11: CONSENSUS RADAR — stocks mentioned by 3+ influencers
   ============================================================ -->
-  <section id="sec-consensus" class="px-6 py-12 max-w-3xl mx-auto">
+  <section id="sec-consensus" class="px-6 section-spacer max-w-3xl mx-auto">
     <div class="flex items-center gap-3 mb-6">
       <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Consensus</span>
       <h2 class="font-serif text-xl text-[#e8e9ed]">Consensus Radar</h2>
@@ -288,13 +294,13 @@
     <p class="text-muted text-sm mb-4">When 3+ influencers independently mention the same stock within 24 hours, it surfaces here.</p>
     <div class="grid gap-3">
       <!-- Mock consensus data -->
-      <div class="bg-surface border border-accent/20 rounded-xl p-5">
+      <div class="glass-panel p-5 border-accent/20">
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-3">
             <span class="text-[#e8e9ed] font-bold text-lg">NVDA</span>
             <span class="text-accent text-xs font-bold bg-accent/10 px-2 py-0.5 rounded-full">4 influencers</span>
           </div>
-          <span class="text-accent text-sm font-bold">+2.34%</span>
+          <span class="text-accent text-sm font-bold tabular-nums">+2.34%</span>
         </div>
         <div class="flex gap-2 flex-wrap">
           <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@unusual_whales</span>
@@ -304,13 +310,13 @@
         </div>
         <p class="text-muted text-xs mt-3">Consensus sentiment: <span class="text-accent font-semibold">Bullish</span> — all 4 voices positive</p>
       </div>
-      <div class="bg-surface border border-border rounded-xl p-5">
+      <div class="glass-panel p-5">
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-3">
             <span class="text-[#e8e9ed] font-bold text-lg">META</span>
             <span class="text-brass text-xs font-bold bg-brass/10 px-2 py-0.5 rounded-full">3 influencers</span>
           </div>
-          <span class="text-accent text-sm font-bold">+3.15%</span>
+          <span class="text-accent text-sm font-bold tabular-nums">+3.15%</span>
         </div>
         <div class="flex gap-2 flex-wrap">
           <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@chamath</span>
@@ -327,7 +333,7 @@
   <!-- ============================================================
        C8: LATEST POSTS — moved above AI suggestions (core differentiator)
   ============================================================ -->
-  <section id="sec-feed" class="px-6 py-12 max-w-3xl mx-auto">
+  <section id="sec-feed" class="px-6 section-spacer max-w-3xl mx-auto">
     <div class="flex items-center gap-3 mb-6">
       <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Live Feed</span>
       <h2 class="font-serif text-xl text-[#e8e9ed]">Latest Posts</h2>
@@ -343,15 +349,15 @@
   <!-- ============================================================
        HOW IT WORKS
   ============================================================ -->
-  <section id="sec-how" class="px-6 py-16 max-w-4xl mx-auto">
+  <section id="sec-how" class="px-6 section-spacer max-w-4xl mx-auto">
     <div class="text-center mb-12">
       <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">How it Works</span>
-      <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Three steps to smarter investing</h2>
+      <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Three steps to <span class="gradient-text-emerald">smarter investing</span></h2>
       <p class="text-muted text-sm mt-2 max-w-md mx-auto">StockHolmes does the detective work so you don't have to.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Step 1 -->
-      <div class="bg-surface border border-border rounded-2xl p-6 text-center">
+      <div class="glass-panel p-6 text-center rounded-2xl">
         <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </div>
@@ -359,7 +365,7 @@
         <p class="text-muted text-sm leading-relaxed">Our AI scrapes X/Twitter for posts from top investment accounts and filters for stock-related content.</p>
       </div>
       <!-- Step 2 -->
-      <div class="bg-surface border border-border rounded-2xl p-6 text-center">
+      <div class="glass-panel p-6 text-center rounded-2xl">
         <div class="w-12 h-12 rounded-xl bg-brass/10 flex items-center justify-center mx-auto mb-4">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4a843" stroke-width="2" stroke-linecap="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
         </div>
@@ -367,7 +373,7 @@
         <p class="text-muted text-sm leading-relaxed">Claude AI evaluates each post for sentiment, confidence, and extracts ticker mentions to build a consensus view.</p>
       </div>
       <!-- Step 3 -->
-      <div class="bg-surface border border-border rounded-2xl p-6 text-center">
+      <div class="glass-panel p-6 text-center rounded-2xl">
         <div class="w-12 h-12 rounded-xl bg-[#a78bfa]/10 flex items-center justify-center mx-auto mb-4">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         </div>
@@ -381,18 +387,18 @@
   <!-- ============================================================
        PRICING
   ============================================================ -->
-  <section id="sec-pricing" class="px-6 py-16 max-w-4xl mx-auto">
+  <section id="sec-pricing" class="px-6 section-spacer max-w-4xl mx-auto">
     <div class="text-center mb-12">
       <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Pricing</span>
-      <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Simple, transparent plans</h2>
+      <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Simple, <span class="gradient-text-brass">transparent</span> plans</h2>
       <p class="text-muted text-sm mt-2">Start free. Upgrade when you need more signals.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Free tier -->
-      <div class="bg-surface border border-border rounded-2xl p-6 flex flex-col">
+      <div class="glass-panel rounded-2xl p-6 flex flex-col">
         <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Starter</h3>
         <p class="text-muted text-sm mb-4">For curious investors</p>
-        <p class="text-3xl font-bold text-[#e8e9ed] mb-1">$0<span class="text-muted text-sm font-normal">/mo</span></p>
+        <p class="text-3xl font-bold text-[#e8e9ed] mb-1 tabular-nums">$0<span class="text-muted text-sm font-normal">/mo</span></p>
         <p class="text-[#5c5e73] text-xs mb-6">Free forever</p>
         <ul class="space-y-3 mb-8 flex-grow">
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Top 10 trending stocks</li>
@@ -402,14 +408,14 @@
           <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> Consensus radar</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> Holmes Score history</li>
         </ul>
-        <button class="w-full py-2.5 rounded-xl text-sm font-semibold border border-border text-[#e8e9ed] hover:bg-[#1a1b2e] transition-colors">Get Started</button>
+        <button class="btn-pill btn-pill-outline w-full">Get Started</button>
       </div>
       <!-- Pro tier (highlighted) -->
-      <div class="bg-surface border-2 border-accent rounded-2xl p-6 flex flex-col relative">
+      <div class="glass-panel rounded-2xl p-6 flex flex-col relative border-accent/40">
         <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-[#08090e] text-xs font-bold px-3 py-1 rounded-full">Most Popular</div>
         <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Detective</h3>
         <p class="text-muted text-sm mb-4">For active investors</p>
-        <p class="text-3xl font-bold text-[#e8e9ed] mb-1">$19<span class="text-muted text-sm font-normal">/mo</span></p>
+        <p class="text-3xl font-bold text-[#e8e9ed] mb-1 tabular-nums">$19<span class="text-muted text-sm font-normal">/mo</span></p>
         <p class="text-[#5c5e73] text-xs mb-6">Billed monthly</p>
         <ul class="space-y-3 mb-8 flex-grow">
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Everything in Starter</li>
@@ -419,13 +425,13 @@
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Portfolio gap analysis</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> AI thesis reports</li>
         </ul>
-        <button class="w-full py-2.5 rounded-xl text-sm font-bold bg-accent text-[#08090e] hover:brightness-110 transition-all shadow-lg shadow-accent/20">Start Free Trial</button>
+        <button class="btn-pill btn-pill-accent w-full">Start Free Trial</button>
       </div>
       <!-- Premium tier -->
-      <div class="bg-surface border border-border rounded-2xl p-6 flex flex-col">
+      <div class="glass-panel rounded-2xl p-6 flex flex-col">
         <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Holmes Pro</h3>
         <p class="text-muted text-sm mb-4">For serious traders</p>
-        <p class="text-3xl font-bold text-[#e8e9ed] mb-1">$49<span class="text-muted text-sm font-normal">/mo</span></p>
+        <p class="text-3xl font-bold text-[#e8e9ed] mb-1 tabular-nums">$49<span class="text-muted text-sm font-normal">/mo</span></p>
         <p class="text-[#5c5e73] text-xs mb-6">Billed monthly</p>
         <ul class="space-y-3 mb-8 flex-grow">
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Everything in Detective</li>
@@ -435,7 +441,7 @@
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> API access</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Priority support</li>
         </ul>
-        <button class="w-full py-2.5 rounded-xl text-sm font-semibold border border-brass/30 text-brass hover:bg-brass/10 transition-colors">Contact Sales</button>
+        <button class="btn-pill btn-pill-outline w-full border-brass/30 text-brass">Contact Sales</button>
       </div>
     </div>
     <p class="text-[#5c5e73] text-xs text-center mt-6">All plans include a 14-day free trial. No credit card required. Not financial advice.</p>
