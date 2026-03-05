@@ -113,22 +113,56 @@
 
 
   <!-- ============================================================
-       HERO
+       HERO — with ambient gradient orbs behind (Fey-style)
   ============================================================ -->
-  <section class="text-center px-6 pt-20 pb-14">
-    <p class="text-xs uppercase tracking-widest text-muted mb-4 font-medium">Investment Intelligence</p>
-    <h1 class="font-serif text-4xl sm:text-5xl text-[#e8e9ed] mb-5 leading-tight">
-      What the smart money<br>
-      <!-- Fey-style gradient text on the accent phrase -->
-      <span class="gradient-text-emerald">is talking about.</span>
-    </h1>
-    <p class="text-muted text-base max-w-md mx-auto mb-10">Real-time signals from top X investors, analyzed by AI.</p>
-    <!-- Fey-style pill button with glow shadow -->
-    <button id="run-btn" onclick="runScraper()"
-      class="btn-pill btn-pill-accent">
-      Run Scraper
-    </button>
+  <section class="text-center px-6 pt-20 pb-14 relative overflow-hidden">
+    <!-- Ambient glow orbs — give glassmorphism something to blur through -->
+    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full opacity-20 blur-[120px] pointer-events-none" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
+    <div class="absolute top-10 right-1/4 w-[400px] h-[400px] rounded-full opacity-15 blur-[100px] pointer-events-none" style="background: radial-gradient(circle, #a78bfa 0%, transparent 70%);"></div>
+
+    <div class="relative z-10">
+      <p class="text-xs uppercase tracking-widest text-muted mb-4 font-medium">Investment Intelligence</p>
+      <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#e8e9ed] mb-5 leading-tight">
+        What the smart money<br>
+        <!-- Fey-style gradient text on the accent phrase -->
+        <span class="gradient-text-emerald">is talking about.</span>
+      </h1>
+      <p class="text-muted text-base max-w-md mx-auto mb-10">Real-time signals from top X investors, analyzed by AI.</p>
+      <!-- Fey-style pill button with glow shadow -->
+      <button id="run-btn" onclick="runScraper()"
+        class="btn-pill btn-pill-accent">
+        Run Scraper
+      </button>
+    </div>
   </section>
+
+
+  <!-- ============================================================
+       METRICS STRIP — key stats in big numbers (Fey-style)
+  ============================================================ -->
+  <div class="px-6 pb-12 reveal">
+    <div class="metrics-strip">
+      <div class="metric-item">
+        <div class="metric-value text-accent">234</div>
+        <div class="metric-label">Stocks Tracked</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value text-[#a78bfa]">12</div>
+        <div class="metric-label">Influencers</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value text-brass">1.2K</div>
+        <div class="metric-label">Signals Today</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value text-[#e8e9ed]">97%</div>
+        <div class="metric-label">Uptime</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gradient divider -->
+  <hr class="gradient-divider mb-6">
 
 
   <!-- ============================================================
@@ -152,7 +186,7 @@
        SECTION A: TRENDING ASSETS
        A1: sparkline charts, A2: arrow icons, A3: click-to-expand
   ============================================================ -->
-  <section id="sec-trending" class="py-12">
+  <section id="sec-trending" class="py-12 reveal">
     <div class="px-6 mb-8 flex items-center justify-between">
       <div>
         <div class="flex items-center gap-3">
@@ -200,11 +234,14 @@
   </div>
 
 
+  <!-- Gradient divider -->
+  <hr class="gradient-divider my-4">
+
   <!-- ============================================================
        SECTION B: TOP INFLUENCERS
        B4: Track button, B5: Holmes Score badge
   ============================================================ -->
-  <section id="sec-influencers" class="py-12">
+  <section id="sec-influencers" class="py-12 reveal">
     <div class="px-6 mb-8 flex items-center justify-between">
       <div>
         <div class="flex items-center gap-3">
@@ -232,7 +269,12 @@
   <!-- ============================================================
        E12: SIGNAL ALERTS — high-confidence AI picks
   ============================================================ -->
-  <section id="sec-signals" class="px-6 section-spacer max-w-3xl mx-auto">
+  <!-- Gradient divider -->
+  <hr class="gradient-divider my-4">
+
+  <section id="sec-signals" class="px-6 section-spacer max-w-3xl mx-auto relative overflow-hidden reveal">
+    <!-- Ambient glow -->
+    <div class="absolute -top-20 -right-40 w-[400px] h-[400px] rounded-full opacity-10 blur-[100px] pointer-events-none" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
     <div class="flex items-center gap-3 mb-6">
       <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Signals</span>
       <h2 class="font-serif text-xl text-[#e8e9ed]">Signal Alerts</h2>
@@ -286,7 +328,10 @@
   <!-- ============================================================
        E11: CONSENSUS RADAR — stocks mentioned by 3+ influencers
   ============================================================ -->
-  <section id="sec-consensus" class="px-6 section-spacer max-w-3xl mx-auto">
+  <!-- Gradient divider -->
+  <hr class="gradient-divider my-4">
+
+  <section id="sec-consensus" class="px-6 section-spacer max-w-3xl mx-auto reveal">
     <div class="flex items-center gap-3 mb-6">
       <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Consensus</span>
       <h2 class="font-serif text-xl text-[#e8e9ed]">Consensus Radar</h2>
@@ -333,7 +378,10 @@
   <!-- ============================================================
        C8: LATEST POSTS — moved above AI suggestions (core differentiator)
   ============================================================ -->
-  <section id="sec-feed" class="px-6 section-spacer max-w-3xl mx-auto">
+  <!-- Gradient divider -->
+  <hr class="gradient-divider my-4">
+
+  <section id="sec-feed" class="px-6 section-spacer max-w-3xl mx-auto reveal">
     <div class="flex items-center gap-3 mb-6">
       <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Live Feed</span>
       <h2 class="font-serif text-xl text-[#e8e9ed]">Latest Posts</h2>
@@ -349,13 +397,18 @@
   <!-- ============================================================
        HOW IT WORKS
   ============================================================ -->
-  <section id="sec-how" class="px-6 section-spacer max-w-4xl mx-auto">
+  <!-- Gradient divider -->
+  <hr class="gradient-divider my-4">
+
+  <section id="sec-how" class="px-6 section-spacer max-w-4xl mx-auto relative overflow-hidden reveal">
+    <!-- Ambient glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none" style="background: radial-gradient(circle, #a78bfa 0%, transparent 70%);"></div>
     <div class="text-center mb-12">
       <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">How it Works</span>
       <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Three steps to <span class="gradient-text-emerald">smarter investing</span></h2>
       <p class="text-muted text-sm mt-2 max-w-md mx-auto">StockHolmes does the detective work so you don't have to.</p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
       <!-- Step 1 -->
       <div class="glass-panel p-6 text-center rounded-2xl">
         <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
@@ -387,13 +440,18 @@
   <!-- ============================================================
        PRICING
   ============================================================ -->
-  <section id="sec-pricing" class="px-6 section-spacer max-w-4xl mx-auto">
+  <!-- Gradient divider -->
+  <hr class="gradient-divider my-4">
+
+  <section id="sec-pricing" class="px-6 section-spacer max-w-4xl mx-auto relative overflow-hidden reveal">
+    <!-- Ambient glow -->
+    <div class="absolute -top-20 left-1/3 w-[500px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none" style="background: radial-gradient(circle, #d4a843 0%, transparent 70%);"></div>
     <div class="text-center mb-12">
       <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Pricing</span>
       <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Simple, <span class="gradient-text-brass">transparent</span> plans</h2>
       <p class="text-muted text-sm mt-2">Start free. Upgrade when you need more signals.</p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
       <!-- Free tier -->
       <div class="glass-panel rounded-2xl p-6 flex flex-col">
         <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Starter</h3>
@@ -527,6 +585,19 @@
 
     </div>
   </footer>
+
+
+  <!-- ============================================================
+       FLOATING COMMAND BAR — Fey-style quick search (Cmd+K to open)
+  ============================================================ -->
+  <div id="command-bar" class="command-bar hidden">
+    <div class="flex items-center gap-3">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9294a8" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="command-input" type="text" placeholder="Search stocks, influencers, or sections..." autocomplete="off">
+      <kbd class="text-[#5c5e73] text-xs border border-[#252640] rounded px-1.5 py-0.5 font-mono">ESC</kbd>
+    </div>
+    <div id="command-results" class="command-results hidden"></div>
+  </div>
 
 
   <!-- ============================================================
@@ -878,7 +949,14 @@
       const container = document.getElementById('posts-container');
       btn.textContent = 'Running...';
       btn.disabled = true;
-      container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Fetching posts from X...</p>';
+      /* Fey-style animated loading bars instead of plain text */
+      container.innerHTML = `
+        <div class="py-12 text-center">
+          <div class="loading-bars mb-4">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p class="text-muted text-sm">Fetching posts from X...</p>
+        </div>`;
 
       try {
         /* Fixed: was calling /api/scrape (GET, doesn't exist). Correct endpoint is POST /api/run */
@@ -913,8 +991,115 @@
 
 
     // =================================================================
-    // BACKEND: UX Agent Chain
+    // SCROLL REVEAL — Fey-style fade-in-up on scroll
+    // IntersectionObserver watches .reveal elements and adds .revealed
     // =================================================================
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    // Observe all .reveal and .reveal-stagger elements
+    document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => {
+      revealObserver.observe(el);
+    });
+
+
+    // =================================================================
+    // FLOATING COMMAND BAR — Cmd+K to open, Esc to close
+    // Quick-jump to any stock, influencer, or section
+    // =================================================================
+    const cmdBar = document.getElementById('command-bar');
+    const cmdInput = document.getElementById('command-input');
+    const cmdResults = document.getElementById('command-results');
+
+    // All searchable items — stocks, influencers, and page sections
+    const searchItems = [
+      ...STOCKS.map(s => ({ type: 'stock', label: `${s.ticker} — ${s.name}`, sub: s.price + ' ' + s.change, ticker: s.ticker })),
+      ...INFLUENCERS.map(i => ({ type: 'influencer', label: `@${i.handle}`, sub: i.name, handle: i.handle })),
+      { type: 'section', label: 'Trending Stocks', sub: 'Jump to section', target: 'sec-trending' },
+      { type: 'section', label: 'Influencers', sub: 'Jump to section', target: 'sec-influencers' },
+      { type: 'section', label: 'Signal Alerts', sub: 'Jump to section', target: 'sec-signals' },
+      { type: 'section', label: 'Consensus Radar', sub: 'Jump to section', target: 'sec-consensus' },
+      { type: 'section', label: 'Live Feed', sub: 'Jump to section', target: 'sec-feed' },
+      { type: 'section', label: 'How it Works', sub: 'Jump to section', target: 'sec-how' },
+      { type: 'section', label: 'Pricing', sub: 'Jump to section', target: 'sec-pricing' },
+    ];
+
+    // Open/close command bar with Cmd+K (Mac) or Ctrl+K (Windows)
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        toggleCommandBar();
+      }
+      if (e.key === 'Escape') {
+        cmdBar.classList.add('hidden');
+      }
+    });
+
+    function toggleCommandBar() {
+      cmdBar.classList.toggle('hidden');
+      if (!cmdBar.classList.contains('hidden')) {
+        cmdInput.value = '';
+        cmdResults.classList.add('hidden');
+        cmdInput.focus();
+      }
+    }
+
+    // Filter results as user types
+    cmdInput.addEventListener('input', () => {
+      const q = cmdInput.value.toLowerCase().trim();
+      if (!q) {
+        cmdResults.classList.add('hidden');
+        return;
+      }
+
+      const matches = searchItems.filter(item =>
+        item.label.toLowerCase().includes(q) || item.sub.toLowerCase().includes(q)
+      ).slice(0, 6);
+
+      if (matches.length === 0) {
+        cmdResults.innerHTML = '<p class="text-muted text-xs py-3 text-center">No results</p>';
+      } else {
+        // Build result rows with type icon
+        cmdResults.innerHTML = matches.map(m => {
+          const icon = m.type === 'stock' ? '📈' : m.type === 'influencer' ? '👤' : '📌';
+          return `<div class="command-result" data-type="${m.type}" data-target="${m.target || ''}" data-ticker="${m.ticker || ''}" data-handle="${m.handle || ''}">
+            <span class="text-sm">${icon}</span>
+            <div>
+              <p class="text-[#e8e9ed] text-sm font-semibold">${m.label}</p>
+              <p class="text-muted text-xs">${m.sub}</p>
+            </div>
+          </div>`;
+        }).join('');
+      }
+      cmdResults.classList.remove('hidden');
+    });
+
+    // Handle clicking a result — scroll to section or show stock detail
+    cmdResults.addEventListener('click', (e) => {
+      const row = e.target.closest('.command-result');
+      if (!row) return;
+
+      const type = row.dataset.type;
+      if (type === 'section') {
+        document.getElementById(row.dataset.target).scrollIntoView({ behavior: 'smooth' });
+      } else if (type === 'stock') {
+        document.getElementById('sec-trending').scrollIntoView({ behavior: 'smooth' });
+      } else if (type === 'influencer') {
+        document.getElementById('sec-influencers').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      cmdBar.classList.add('hidden');
+    });
+
+    // Close command bar when clicking the dark backdrop area
+    cmdBar.addEventListener('click', (e) => {
+      if (e.target === cmdBar) cmdBar.classList.add('hidden');
+    });
 
   </script>
 
