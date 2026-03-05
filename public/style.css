@@ -352,3 +352,93 @@
   color: rgba(92,94,115,0.9);
   font-weight: 500;
 }
+
+
+/* ====================================================================
+   B5: HOLMES SCORE BADGE — credibility/accuracy rating on influencer cards
+==================================================================== */
+.holmes-score {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid;
+  letter-spacing: 0.02em;
+}
+
+
+/* ====================================================================
+   B4: TRACK BUTTON — follow an influencer
+==================================================================== */
+.track-btn {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  background: transparent;
+  color: #a78bfa;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+.track-btn:hover { background: rgba(167, 139, 250, 0.1); }
+.track-btn-active {
+  background: rgba(167, 139, 250, 0.15);
+  border-color: rgba(167, 139, 250, 0.5);
+  color: #c4b5fd;
+}
+
+
+/* ====================================================================
+   A1: SPARKLINE — mini price chart inside stock cards
+==================================================================== */
+.stock-sparkline {
+  display: block;
+  margin: 2px 0;
+}
+
+
+/* ====================================================================
+   C6: SECTION TAB PILLS — sticky navigation below hero
+==================================================================== */
+.section-tab {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid #252640;
+  background: transparent;
+  color: #9294a8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.section-tab:hover {
+  background: #14151f;
+  color: #e8e9ed;
+}
+.section-tab-active {
+  background: #10b981;
+  color: #08090e;
+  border-color: #10b981;
+}
+
+
+/* ====================================================================
+   C7: DOT INDICATORS — carousel position dots
+==================================================================== */
+.cf-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #252640;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.cf-dot:hover { background: #9294a8; }
+.cf-dot-active {
+  background: #10b981;
+  width: 18px;
+  border-radius: 3px;
+}

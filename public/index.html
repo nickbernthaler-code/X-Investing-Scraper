@@ -107,7 +107,6 @@
   ============================================================ -->
   <section class="text-center px-6 pt-16 pb-10">
     <p class="text-xs uppercase tracking-widest text-muted mb-3 font-medium">Investment Intelligence</p>
-    <!-- Serif heading for the "case file" detective feel -->
     <h1 class="font-serif text-4xl sm:text-5xl text-[#e8e9ed] mb-4 leading-tight">
       What the smart money<br>
       <span class="text-accent">is talking about.</span>
@@ -121,48 +120,224 @@
 
 
   <!-- ============================================================
-       SECTION A: TRENDING ASSETS
-       Custom coverflow — always 2 cards left, 1 center, 2 right.
-       Hover left edge to go back, hover right edge to go forward.
+       C6: SECTION TAB NAVIGATION — jump to any section instantly
   ============================================================ -->
-  <section class="py-12">
-    <div class="px-6 mb-8">
-      <div class="flex items-center gap-3">
-        <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Trending</span>
-        <h2 class="font-serif text-xl text-[#e8e9ed]">Top 10 Assets</h2>
+  <div class="flex justify-center gap-2 px-6 pb-8 sticky top-[65px] z-40 bg-[#08090e]/90 backdrop-blur-sm pt-3">
+    <button onclick="document.getElementById('sec-trending').scrollIntoView({behavior:'smooth'})"
+      class="section-tab section-tab-active" data-tab="trending">Trending</button>
+    <button onclick="document.getElementById('sec-influencers').scrollIntoView({behavior:'smooth'})"
+      class="section-tab" data-tab="influencers">Influencers</button>
+    <button onclick="document.getElementById('sec-signals').scrollIntoView({behavior:'smooth'})"
+      class="section-tab" data-tab="signals">Signals</button>
+    <button onclick="document.getElementById('sec-consensus').scrollIntoView({behavior:'smooth'})"
+      class="section-tab" data-tab="consensus">Consensus</button>
+    <button onclick="document.getElementById('sec-feed').scrollIntoView({behavior:'smooth'})"
+      class="section-tab" data-tab="feed">Live Feed</button>
+    <button onclick="document.getElementById('sec-ai').scrollIntoView({behavior:'smooth'})"
+      class="section-tab" data-tab="ai">AI Studio</button>
+  </div>
+
+
+  <!-- ============================================================
+       SECTION A: TRENDING ASSETS
+       A1: sparkline charts, A2: arrow icons, A3: click-to-expand
+  ============================================================ -->
+  <section id="sec-trending" class="py-12">
+    <div class="px-6 mb-8 flex items-center justify-between">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Trending</span>
+          <h2 class="font-serif text-xl text-[#e8e9ed]">Top 10 Assets</h2>
+        </div>
+        <p class="text-muted text-sm mt-1">Use arrows or keyboard ←→ to browse</p>
       </div>
-      <p class="text-muted text-sm mt-1">Use arrows to browse trending stocks</p>
+      <!-- D10: View All link -->
+      <button onclick="document.getElementById('view-all-stocks').classList.toggle('hidden')" class="text-accent text-xs font-semibold hover:underline">View All ↓</button>
     </div>
-    <!-- Ambient glow orb — soft radial light behind the carousel -->
     <div class="cf-wrap">
       <div class="cf-glow cf-glow-green"></div>
       <div class="cf-track" id="assets-track"></div>
     </div>
+    <!-- C7: Dot indicators for stock carousel -->
+    <div id="assets-dots" class="flex justify-center gap-1.5 mt-2"></div>
+    <!-- D10: View All table (hidden by default) -->
+    <div id="view-all-stocks" class="hidden px-6 mt-6 max-w-3xl mx-auto">
+      <div id="stocks-table" class="bg-surface border border-border rounded-xl overflow-hidden"></div>
+    </div>
   </section>
+
+  <!-- A3: Click-to-expand detail panel (hidden, shown when center card clicked) -->
+  <div id="stock-detail-panel" class="hidden px-6 max-w-2xl mx-auto mb-8">
+    <div class="bg-surface border border-border rounded-2xl p-6">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h3 id="detail-ticker" class="font-serif text-2xl text-[#e8e9ed]"></h3>
+          <p id="detail-name" class="text-muted text-sm"></p>
+        </div>
+        <button onclick="document.getElementById('stock-detail-panel').classList.add('hidden')" class="text-muted hover:text-[#e8e9ed] text-lg">✕</button>
+      </div>
+      <div class="grid grid-cols-3 gap-4 mb-4">
+        <div><p class="text-muted text-xs">Price</p><p id="detail-price" class="text-[#e8e9ed] font-bold"></p></div>
+        <div><p class="text-muted text-xs">Change</p><p id="detail-change" class="font-bold"></p></div>
+        <div><p class="text-muted text-xs">Mentions</p><p id="detail-mentions" class="text-[#e8e9ed] font-bold"></p></div>
+      </div>
+      <!-- Mini chart placeholder for the expanded view -->
+      <div class="bg-[#08090e] rounded-lg p-4 mb-4">
+        <svg id="detail-chart" width="100%" height="80" class="block"></svg>
+      </div>
+      <p class="text-muted text-xs">Recent X mentions and sentiment data will appear here when the scraper is connected.</p>
+    </div>
+  </div>
 
 
   <!-- ============================================================
        SECTION B: TOP INFLUENCERS
+       B4: Track button, B5: Holmes Score badge
   ============================================================ -->
-  <section class="py-12">
-    <div class="px-6 mb-8">
-      <div class="flex items-center gap-3">
-        <span class="text-xs font-bold uppercase tracking-widest text-[#a78bfa] bg-[#a78bfa]/10 px-3 py-1 rounded-full">Influencers</span>
-        <h2 class="font-serif text-xl text-[#e8e9ed]">Top 5 Voices</h2>
+  <section id="sec-influencers" class="py-12">
+    <div class="px-6 mb-8 flex items-center justify-between">
+      <div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold uppercase tracking-widest text-[#a78bfa] bg-[#a78bfa]/10 px-3 py-1 rounded-full">Influencers</span>
+          <h2 class="font-serif text-xl text-[#e8e9ed]">Top 5 Voices</h2>
+        </div>
+        <p class="text-muted text-sm mt-1">Use arrows or keyboard ←→ to browse</p>
       </div>
-      <p class="text-muted text-sm mt-1">Use arrows to browse top influencers</p>
+      <!-- D10: View All link -->
+      <button onclick="document.getElementById('view-all-influencers').classList.toggle('hidden')" class="text-[#a78bfa] text-xs font-semibold hover:underline">View All ↓</button>
     </div>
     <div class="cf-wrap">
       <div class="cf-glow cf-glow-purple"></div>
       <div class="cf-track" id="influencers-track"></div>
     </div>
+    <!-- C7: Dot indicators for influencer carousel -->
+    <div id="influencer-dots" class="flex justify-center gap-1.5 mt-2"></div>
+    <!-- D10: View All table -->
+    <div id="view-all-influencers" class="hidden px-6 mt-6 max-w-3xl mx-auto">
+      <div id="influencers-table" class="bg-surface border border-border rounded-xl overflow-hidden"></div>
+    </div>
   </section>
 
 
   <!-- ============================================================
-       AI DESIGN SUGGESTIONS
+       E12: SIGNAL ALERTS — high-confidence AI picks
   ============================================================ -->
-  <section class="px-6 py-12 max-w-3xl mx-auto">
+  <section id="sec-signals" class="px-6 py-12 max-w-3xl mx-auto">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Signals</span>
+      <h2 class="font-serif text-xl text-[#e8e9ed]">Signal Alerts</h2>
+    </div>
+    <div id="signals-container" class="grid gap-3">
+      <!-- Mock signal alerts — will be replaced with real data when scraper runs -->
+      <div class="bg-surface border border-border rounded-xl p-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">NV</div>
+          <div>
+            <p class="text-[#e8e9ed] text-sm font-bold">NVDA <span class="text-accent text-xs font-semibold ml-1">↑ Bullish</span></p>
+            <p class="text-muted text-xs">@unusual_whales — "NVDA call flow massive today"</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-accent text-sm font-bold">9/10</p>
+          <p class="text-muted text-xs">Confidence</p>
+        </div>
+      </div>
+      <div class="bg-surface border border-border rounded-xl p-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">TS</div>
+          <div>
+            <p class="text-[#e8e9ed] text-sm font-bold">TSLA <span class="text-[#f87171] text-xs font-semibold ml-1">↓ Bearish</span></p>
+            <p class="text-muted text-xs">@zerohedge — "Tesla delivery numbers disappointing"</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-brass text-sm font-bold">7/10</p>
+          <p class="text-muted text-xs">Confidence</p>
+        </div>
+      </div>
+      <div class="bg-surface border border-border rounded-xl p-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">PL</div>
+          <div>
+            <p class="text-[#e8e9ed] text-sm font-bold">PLTR <span class="text-accent text-xs font-semibold ml-1">↑ Bullish</span></p>
+            <p class="text-muted text-xs">@chamath — "Palantir is the real AI infrastructure play"</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-accent text-sm font-bold">8/10</p>
+          <p class="text-muted text-xs">Confidence</p>
+        </div>
+      </div>
+    </div>
+    <p class="text-[#5c5e73] text-xs text-center mt-4">Mock signals — run the scraper for live AI-analyzed alerts. Not investment advice.</p>
+  </section>
+
+
+  <!-- ============================================================
+       E11: CONSENSUS RADAR — stocks mentioned by 3+ influencers
+  ============================================================ -->
+  <section id="sec-consensus" class="px-6 py-12 max-w-3xl mx-auto">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Consensus</span>
+      <h2 class="font-serif text-xl text-[#e8e9ed]">Consensus Radar</h2>
+    </div>
+    <p class="text-muted text-sm mb-4">When 3+ influencers independently mention the same stock within 24 hours, it surfaces here.</p>
+    <div class="grid gap-3">
+      <!-- Mock consensus data -->
+      <div class="bg-surface border border-accent/20 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <span class="text-[#e8e9ed] font-bold text-lg">NVDA</span>
+            <span class="text-accent text-xs font-bold bg-accent/10 px-2 py-0.5 rounded-full">4 influencers</span>
+          </div>
+          <span class="text-accent text-sm font-bold">+2.34%</span>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@unusual_whales</span>
+          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@chamath</span>
+          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@TihoBrkan</span>
+          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@StockMoe</span>
+        </div>
+        <p class="text-muted text-xs mt-3">Consensus sentiment: <span class="text-accent font-semibold">Bullish</span> — all 4 voices positive</p>
+      </div>
+      <div class="bg-surface border border-border rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <span class="text-[#e8e9ed] font-bold text-lg">META</span>
+            <span class="text-brass text-xs font-bold bg-brass/10 px-2 py-0.5 rounded-full">3 influencers</span>
+          </div>
+          <span class="text-accent text-sm font-bold">+3.15%</span>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@chamath</span>
+          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@zerohedge</span>
+          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@StockMoe</span>
+        </div>
+        <p class="text-muted text-xs mt-3">Consensus sentiment: <span class="text-brass font-semibold">Mixed</span> — 2 bullish, 1 neutral</p>
+      </div>
+    </div>
+    <p class="text-[#5c5e73] text-xs text-center mt-4">Mock data — consensus is calculated automatically when the scraper runs.</p>
+  </section>
+
+
+  <!-- ============================================================
+       C8: LATEST POSTS — moved above AI suggestions (core differentiator)
+  ============================================================ -->
+  <section id="sec-feed" class="px-6 py-12 max-w-3xl mx-auto">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Live Feed</span>
+      <h2 class="font-serif text-xl text-[#e8e9ed]">Latest Posts</h2>
+    </div>
+    <div id="posts-container">
+      <p class="text-center text-muted py-12 text-sm">Click "Run Scraper" to fetch the latest posts.</p>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       AI DESIGN SUGGESTIONS — moved below feed
+  ============================================================ -->
+  <section id="sec-ai" class="px-6 py-12 max-w-3xl mx-auto">
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center gap-3">
         <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">AI Studio</span>
@@ -175,20 +350,6 @@
     </div>
     <div id="ux-container">
       <p class="text-center text-muted py-8 text-sm">Click "Ask AI for Ideas" — two AI agents will research competitor UIs and suggest specific improvements.</p>
-    </div>
-  </section>
-
-
-  <!-- ============================================================
-       LATEST POSTS
-  ============================================================ -->
-  <section class="px-6 py-12 max-w-3xl mx-auto">
-    <div class="flex items-center gap-3 mb-6">
-      <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Live Feed</span>
-      <h2 class="font-serif text-xl text-[#e8e9ed]">Latest Posts</h2>
-    </div>
-    <div id="posts-container">
-      <p class="text-center text-muted py-12 text-sm">Click "Run Scraper" to fetch the latest posts.</p>
     </div>
   </section>
 
@@ -213,25 +374,27 @@
     // DATA — Stock and Influencer items
     // =================================================================
 
+    // A1: Each stock now has a sparkline array (mock 7-day prices) for mini charts
     const STOCKS = [
-      { rank:1,  ticker:'NVDA',  name:'NVIDIA Corp',      price:'$875.50', change:'+2.34%', mentions:234, domain:'nvidia.com',    color:'#76b900', initials:'NV' },
-      { rank:2,  ticker:'TSLA',  name:'Tesla Inc',        price:'$245.10', change:'-1.12%', mentions:198, domain:'tesla.com',     color:'#e31937', initials:'TS' },
-      { rank:3,  ticker:'AAPL',  name:'Apple Inc',        price:'$182.30', change:'+0.81%', mentions:165, domain:'apple.com',     color:'#555555', initials:'AA' },
-      { rank:4,  ticker:'MSFT',  name:'Microsoft',        price:'$415.20', change:'+1.23%', mentions:143, domain:'microsoft.com', color:'#00a4ef', initials:'MS' },
-      { rank:5,  ticker:'META',  name:'Meta Platforms',   price:'$512.40', change:'+3.15%', mentions:128, domain:'meta.com',      color:'#0082fb', initials:'ME' },
-      { rank:6,  ticker:'AMZN',  name:'Amazon',           price:'$178.90', change:'+0.52%', mentions:112, domain:'amazon.com',    color:'#ff9900', initials:'AM' },
-      { rank:7,  ticker:'GOOGL', name:'Alphabet',         price:'$165.30', change:'-0.31%', mentions:98,  domain:'google.com',    color:'#4285f4', initials:'GO' },
-      { rank:8,  ticker:'AMD',   name:'Advanced Micro',   price:'$165.80', change:'+4.21%', mentions:87,  domain:'amd.com',       color:'#ed1c24', initials:'AM' },
-      { rank:9,  ticker:'PLTR',  name:'Palantir',         price:'$22.40',  change:'+5.83%', mentions:76,  domain:'palantir.com',  color:'#6d6d6d', initials:'PL' },
-      { rank:10, ticker:'COIN',  name:'Coinbase',         price:'$245.90', change:'+7.24%', mentions:65,  domain:'coinbase.com',  color:'#0052ff', initials:'CO' },
+      { rank:1,  ticker:'NVDA',  name:'NVIDIA Corp',      price:'$875.50', change:'+2.34%', mentions:234, domain:'nvidia.com',    color:'#76b900', initials:'NV', spark:[820,835,850,842,860,868,875] },
+      { rank:2,  ticker:'TSLA',  name:'Tesla Inc',        price:'$245.10', change:'-1.12%', mentions:198, domain:'tesla.com',     color:'#e31937', initials:'TS', spark:[260,255,252,248,250,247,245] },
+      { rank:3,  ticker:'AAPL',  name:'Apple Inc',        price:'$182.30', change:'+0.81%', mentions:165, domain:'apple.com',     color:'#555555', initials:'AA', spark:[178,179,180,179,181,181,182] },
+      { rank:4,  ticker:'MSFT',  name:'Microsoft',        price:'$415.20', change:'+1.23%', mentions:143, domain:'microsoft.com', color:'#00a4ef', initials:'MS', spark:[405,408,410,407,412,414,415] },
+      { rank:5,  ticker:'META',  name:'Meta Platforms',   price:'$512.40', change:'+3.15%', mentions:128, domain:'meta.com',      color:'#0082fb', initials:'ME', spark:[490,495,500,498,505,508,512] },
+      { rank:6,  ticker:'AMZN',  name:'Amazon',           price:'$178.90', change:'+0.52%', mentions:112, domain:'amazon.com',    color:'#ff9900', initials:'AM', spark:[176,177,178,177,178,179,179] },
+      { rank:7,  ticker:'GOOGL', name:'Alphabet',         price:'$165.30', change:'-0.31%', mentions:98,  domain:'google.com',    color:'#4285f4', initials:'GO', spark:[167,166,166,165,166,165,165] },
+      { rank:8,  ticker:'AMD',   name:'Advanced Micro',   price:'$165.80', change:'+4.21%', mentions:87,  domain:'amd.com',       color:'#ed1c24', initials:'AM', spark:[155,157,158,160,162,164,166] },
+      { rank:9,  ticker:'PLTR',  name:'Palantir',         price:'$22.40',  change:'+5.83%', mentions:76,  domain:'palantir.com',  color:'#6d6d6d', initials:'PL', spark:[20.5,20.8,21.1,21.3,21.7,22.0,22.4] },
+      { rank:10, ticker:'COIN',  name:'Coinbase',         price:'$245.90', change:'+7.24%', mentions:65,  domain:'coinbase.com',  color:'#0052ff', initials:'CO', spark:[225,228,232,235,238,242,246] },
     ];
 
+    // B5: Each influencer now has a holmesScore (mock accuracy rating)
     const INFLUENCERS = [
-      { handle:'unusual_whales', name:'Unusual Whales',       bio:'Real-time options flow & dark pool data',    followers:'1.2M', posts:48, initials:'UW', grad:'linear-gradient(135deg,#3b82f6,#8b5cf6)' },
-      { handle:'chamath',        name:'Chamath Palihapitiya', bio:'VC, macro investor & tech bull',             followers:'1.5M', posts:31, initials:'CP', grad:'linear-gradient(135deg,#22c55e,#14b8a6)' },
-      { handle:'zerohedge',      name:'ZeroHedge',            bio:'Financial news, market commentary & macro',  followers:'1.1M', posts:72, initials:'ZH', grad:'linear-gradient(135deg,#ef4444,#f97316)' },
-      { handle:'TihoBrkan',      name:'Tiho Brkan',           bio:'Global macro research & cycle analysis',     followers:'127K', posts:19, initials:'TB', grad:'linear-gradient(135deg,#f59e0b,#ef4444)' },
-      { handle:'StockMoe',       name:'StockMoe',             bio:'Retail investor ideas & momentum picks',     followers:'456K', posts:27, initials:'SM', grad:'linear-gradient(135deg,#8b5cf6,#ec4899)' },
+      { handle:'unusual_whales', name:'Unusual Whales',       bio:'Real-time options flow & dark pool data',    followers:'1.2M', posts:48, initials:'UW', grad:'linear-gradient(135deg,#3b82f6,#8b5cf6)', holmesScore:87 },
+      { handle:'chamath',        name:'Chamath Palihapitiya', bio:'VC, macro investor & tech bull',             followers:'1.5M', posts:31, initials:'CP', grad:'linear-gradient(135deg,#10b981,#14b8a6)',  holmesScore:72 },
+      { handle:'zerohedge',      name:'ZeroHedge',            bio:'Financial news, market commentary & macro',  followers:'1.1M', posts:72, initials:'ZH', grad:'linear-gradient(135deg,#ef4444,#f97316)',  holmesScore:64 },
+      { handle:'TihoBrkan',      name:'Tiho Brkan',           bio:'Global macro research & cycle analysis',     followers:'127K', posts:19, initials:'TB', grad:'linear-gradient(135deg,#f59e0b,#ef4444)',  holmesScore:91 },
+      { handle:'StockMoe',       name:'StockMoe',             bio:'Retail investor ideas & momentum picks',     followers:'456K', posts:27, initials:'SM', grad:'linear-gradient(135deg,#8b5cf6,#ec4899)',  holmesScore:58 },
     ];
 
 
@@ -239,7 +402,24 @@
     // CARD RENDERERS — Return HTML string for each card type
     // =================================================================
 
+    // A1: Generate a mini SVG sparkline from an array of prices
+    function makeSparkline(prices, isPositive) {
+      const w = 80, h = 28, pad = 2;
+      const min = Math.min(...prices), max = Math.max(...prices);
+      const range = max - min || 1;
+      const pts = prices.map((p, i) =>
+        `${pad + (i / (prices.length - 1)) * (w - pad * 2)},${pad + (1 - (p - min) / range) * (h - pad * 2)}`
+      ).join(' ');
+      const color = isPositive ? '#10b981' : '#f87171';
+      return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" class="stock-sparkline">
+        <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`;
+    }
+
     function renderStock(s, isActive) {
+      const isPos = s.change.startsWith('+');
+      // A2: Arrow icon alongside the change percentage
+      const arrow = isPos ? '↑' : '↓';
       return `
         <div class="stock-card-top">
           <span class="rank-badge">#${s.rank}</span>
@@ -249,12 +429,16 @@
         </div>
         <div class="stock-ticker">${s.ticker}</div>
         <div class="stock-name">${s.name}</div>
+        <!-- A1: Mini sparkline chart showing 7-day price trend -->
+        ${makeSparkline(s.spark, isPos)}
         <div class="stock-price">${s.price}</div>
-        <div class="stock-change ${s.change.startsWith('+') ? 'positive' : 'negative'}">${s.change}</div>
+        <div class="stock-change ${isPos ? 'positive' : 'negative'}">${arrow} ${s.change}</div>
         <div class="stock-mentions">${s.mentions} mentions</div>`;
     }
 
     function renderInfluencer(inf, isActive) {
+      // B5: Color the Holmes Score based on accuracy tier
+      const scoreColor = inf.holmesScore >= 80 ? '#10b981' : inf.holmesScore >= 65 ? '#d4a843' : '#f87171';
       return `
         <div class="influencer-avatar-wrap">
           <img class="influencer-photo"
@@ -262,13 +446,17 @@
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
           <div class="influencer-avatar" style="display:none;background:${inf.grad};">${inf.initials}</div>
         </div>
+        <!-- B5: Holmes Score badge — accuracy rating -->
+        <div class="holmes-score" style="color:${scoreColor};border-color:${scoreColor}33;">${inf.holmesScore}%</div>
         <div class="influencer-handle">@${inf.handle}</div>
         <div class="influencer-name">${inf.name}</div>
         <div class="influencer-bio">${inf.bio}</div>
         <div class="influencer-stats">
           <span>${inf.followers} followers</span>
           <span style="color:#10b981;">${inf.posts} posts tracked</span>
-        </div>`;
+        </div>
+        <!-- B4: Track button -->
+        <button class="track-btn" onclick="event.stopPropagation();this.textContent=this.textContent==='Track'?'Tracking ✓':'Track';this.classList.toggle('track-btn-active');">Track</button>`;
     }
 
 
@@ -283,7 +471,7 @@
     // =================================================================
 
     class CoverFlow {
-      constructor({ trackId, items, cardClass, halfW, halfH, spacing, renderFn, activeClass }) {
+      constructor({ trackId, items, cardClass, halfW, halfH, spacing, renderFn, activeClass, dotsId, onCenterClick }) {
         this.items       = items;
         this.current     = 0;
         this.track       = document.getElementById(trackId);
@@ -293,10 +481,9 @@
         this.halfH       = halfH;
         this.spacing     = spacing;
         this.renderFn    = renderFn;
+        this.onCenterClick = onCenterClick || null;
 
-        // Slot transforms — tx = horizontal offset, tz = z-depth (positive = toward viewer),
-        // ry = Y-axis rotation for the angled coverflow look.
-        // ±4 are opacity:0 but positioned so cards animate smoothly in/out from edges.
+        // Slot transforms for the 3D coverflow effect
         this.SLOTS = {
           '-4': { tx: spacing * -4, tz: -130, ry:  52, scale: 0.36, opacity: 0,    z: 0 },
           '-3': { tx: spacing * -3, tz: -90,  ry:  40, scale: 0.52, opacity: 0.22, z: 1 },
@@ -309,32 +496,42 @@
            '4': { tx: spacing *  4, tz: -130, ry: -52, scale: 0.36, opacity: 0,    z: 0 },
         };
 
-        // Create one persistent DOM element per item.
-        // Content is set once here and never changed — only the CSS moves.
+        // Create persistent DOM elements for each card
         this.cardEls = this.items.map((item, i) => {
           const el = document.createElement('div');
           el.className = `cf-slide ${cardClass}`;
-          // Start off-screen right; render() will place them correctly
           el.style.cssText = [
-            'position:absolute',
-            'left:50%',
-            'top:50%',
-            `margin-left:-${halfW}px`,
-            `margin-top:-${halfH}px`,
-            'opacity:0',
-            'transform:translateX(0) rotateY(0deg) scale(1)',
+            'position:absolute', 'left:50%', 'top:50%',
+            `margin-left:-${halfW}px`, `margin-top:-${halfH}px`,
+            'opacity:0', 'transform:translateX(0) rotateY(0deg) scale(1)',
           ].join(';');
           el.innerHTML = renderFn(item, false);
+          // A3: Click center card to expand detail
+          el.addEventListener('click', () => {
+            if (this.offsetFor(i) === 0 && this.onCenterClick) {
+              this.onCenterClick(item);
+            }
+          });
           this.track.appendChild(el);
           return el;
         });
 
-        // Let the browser register the initial styles before we trigger transitions
+        // C7: Create dot indicators
+        this.dotsContainer = dotsId ? document.getElementById(dotsId) : null;
+        if (this.dotsContainer) {
+          this.dots = this.items.map((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'cf-dot';
+            dot.addEventListener('click', () => { this.current = i; this.render(); });
+            this.dotsContainer.appendChild(dot);
+            return dot;
+          });
+        }
+
         requestAnimationFrame(() => this.render());
         this.setupNav();
       }
 
-      // Returns the shortest-path offset of item i relative to current center
       offsetFor(i) {
         const n = this.items.length;
         let off = ((i - this.current) % n + n) % n;
@@ -350,21 +547,22 @@
 
       render() {
         this.cardEls.forEach((el, i) => {
-          const off     = this.offsetFor(i);
-          const key     = String(Math.max(-4, Math.min(4, off))); // clamp to defined slots
-          const s       = this.SLOTS[key];
-          const isActive = off === 0;
-
-          // translateX positions left/right, rotateY angles the card, translateZ pops it toward/away viewer
+          const off = this.offsetFor(i);
+          const key = String(Math.max(-4, Math.min(4, off)));
+          const s   = this.SLOTS[key];
           el.style.transform = `translateX(${s.tx}px) rotateY(${s.ry}deg) translateZ(${s.tz}px) scale(${s.scale})`;
           el.style.opacity   = String(s.opacity);
           el.style.zIndex    = String(s.z);
-          el.className = `cf-slide ${this.cardClass}${isActive ? ' ' + this.activeClass : ''}`;
+          el.className = `cf-slide ${this.cardClass}${off === 0 ? ' ' + this.activeClass : ''}`;
         });
+        // C7: Update dot indicators
+        if (this.dots) {
+          this.dots.forEach((d, i) => d.className = i === this.current ? 'cf-dot cf-dot-active' : 'cf-dot');
+        }
       }
 
       setupNav() {
-        const wrap    = document.createElement('div');
+        const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex;justify-content:center;gap:16px;margin-top:20px;';
         const prevBtn = this._makeArrow('&#8249;');
         const nextBtn = this._makeArrow('&#8250;');
@@ -397,27 +595,115 @@
     // spacing: distance in px between adjacent card centers
     // =================================================================
 
+    // A3: Handler for clicking the center stock card — shows detail panel
+    function showStockDetail(s) {
+      const panel = document.getElementById('stock-detail-panel');
+      document.getElementById('detail-ticker').textContent = s.ticker;
+      document.getElementById('detail-name').textContent = s.name;
+      document.getElementById('detail-price').textContent = s.price;
+      const changeEl = document.getElementById('detail-change');
+      const isPos = s.change.startsWith('+');
+      changeEl.textContent = (isPos ? '↑ ' : '↓ ') + s.change;
+      changeEl.style.color = isPos ? '#10b981' : '#f87171';
+      document.getElementById('detail-mentions').textContent = s.mentions + ' mentions';
+      // Draw a larger sparkline in the detail panel
+      const svg = document.getElementById('detail-chart');
+      const w = svg.clientWidth || 500, h = 80, pad = 4;
+      const min = Math.min(...s.spark), max = Math.max(...s.spark), range = max - min || 1;
+      const pts = s.spark.map((p, i) =>
+        `${pad + (i / (s.spark.length - 1)) * (w - pad * 2)},${pad + (1 - (p - min) / range) * (h - pad * 2)}`
+      ).join(' ');
+      svg.innerHTML = `<polyline points="${pts}" fill="none" stroke="${isPos ? '#10b981' : '#f87171'}" stroke-width="2" stroke-linecap="round"/>`;
+      panel.classList.remove('hidden');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Initialize stock carousel with dots and click-to-expand
     const assetsCF = new CoverFlow({
       trackId:     'assets-track',
       items:       STOCKS,
       cardClass:   'stock-card',
       activeClass: 'stock-active',
-      halfW:       100,    // card is 200px wide
-      halfH:       145,    // card is 290px tall
-      spacing:     175,    // tight coverflow overlap
+      halfW:       100,
+      halfH:       145,
+      spacing:     175,
       renderFn:    renderStock,
+      dotsId:      'assets-dots',
+      onCenterClick: showStockDetail,
     });
 
+    // Initialize influencer carousel with dots
     const influencersCF = new CoverFlow({
       trackId:     'influencers-track',
       items:       INFLUENCERS,
       cardClass:   'influencer-card',
       activeClass: 'influencer-active',
-      halfW:       110,    // card is 220px wide
-      halfH:       150,    // card is 300px tall
+      halfW:       110,
+      halfH:       150,
       spacing:     185,
       renderFn:    renderInfluencer,
+      dotsId:      'influencer-dots',
     });
+
+
+    // =================================================================
+    // D9: KEYBOARD NAVIGATION — arrow keys control the focused carousel
+    // =================================================================
+    let focusedCF = assetsCF;  // Default to stock carousel
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft')  { focusedCF.slide(-1); e.preventDefault(); }
+      if (e.key === 'ArrowRight') { focusedCF.slide(+1); e.preventDefault(); }
+    });
+    // Switch focus when hovering over a carousel section
+    document.getElementById('assets-track').closest('.cf-wrap')
+      .addEventListener('mouseenter', () => focusedCF = assetsCF);
+    document.getElementById('influencers-track').closest('.cf-wrap')
+      .addEventListener('mouseenter', () => focusedCF = influencersCF);
+
+
+    // =================================================================
+    // D10: VIEW ALL TABLES — ranked list fallback for each carousel
+    // =================================================================
+    function buildStocksTable() {
+      const rows = STOCKS.map(s => {
+        const isPos = s.change.startsWith('+');
+        return `<div class="flex items-center justify-between px-4 py-3 border-b border-border/50 hover:bg-[#1a1b2e]/50 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="text-muted text-xs w-6">#${s.rank}</span>
+            <span class="text-[#e8e9ed] font-bold text-sm">${s.ticker}</span>
+            <span class="text-muted text-xs">${s.name}</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-[#e8e9ed] text-sm">${s.price}</span>
+            <span class="text-sm font-semibold" style="color:${isPos ? '#10b981' : '#f87171'}">${isPos ? '↑' : '↓'} ${s.change}</span>
+            <span class="text-muted text-xs w-20 text-right">${s.mentions} mentions</span>
+          </div>
+        </div>`;
+      }).join('');
+      document.getElementById('stocks-table').innerHTML = rows;
+    }
+
+    function buildInfluencersTable() {
+      const rows = INFLUENCERS.map(inf => {
+        const scoreColor = inf.holmesScore >= 80 ? '#10b981' : inf.holmesScore >= 65 ? '#d4a843' : '#f87171';
+        return `<div class="flex items-center justify-between px-4 py-3 border-b border-border/50 hover:bg-[#1a1b2e]/50 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="text-[#a78bfa] font-bold text-sm">@${inf.handle}</span>
+            <span class="text-muted text-xs">${inf.name}</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-xs" style="color:${scoreColor}">${inf.holmesScore}% accuracy</span>
+            <span class="text-muted text-xs">${inf.followers}</span>
+            <span class="text-accent text-xs">${inf.posts} posts</span>
+          </div>
+        </div>`;
+      }).join('');
+      document.getElementById('influencers-table').innerHTML = rows;
+    }
+
+    // Build tables on load so they're ready when user clicks "View All"
+    buildStocksTable();
+    buildInfluencersTable();
 
 
     // =================================================================
