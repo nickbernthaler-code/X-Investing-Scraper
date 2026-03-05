@@ -56,7 +56,7 @@
       <div class="h-5 w-px bg-border hidden sm:block"></div>
       <!-- Nav links — How it Works and Pricing (prominent, white text) -->
       <div class="hidden md:flex items-center gap-5">
-        <a href="#sec-how" class="text-[#e8e9ed] text-sm font-semibold hover:text-accent transition-colors cursor-pointer">How it Works</a>
+        <a href="#sec-showcase" class="text-[#e8e9ed] text-sm font-semibold hover:text-accent transition-colors cursor-pointer">How it Works</a>
         <a href="#sec-pricing" class="text-[#e8e9ed] text-sm font-semibold hover:text-accent transition-colors cursor-pointer">Pricing</a>
       </div>
       <div class="h-5 w-px bg-border hidden md:block"></div>
@@ -169,7 +169,7 @@
        FEATURE SHOWCASE — Fey-style horizontal scrollable mockup cards
        Shows key features: X tracking, stock discovery, security
   ============================================================ -->
-  <section class="py-16 reveal">
+  <section id="sec-showcase" class="py-16 reveal">
     <div class="text-center mb-10 px-6">
       <h2 class="font-serif text-3xl text-[#e8e9ed] mb-3">See how it <span class="gradient-text-emerald">works</span></h2>
       <p class="text-muted text-sm max-w-lg mx-auto">StockHolmes scans X accounts, surfaces the hottest stocks, and keeps your data safe — all in one dashboard.</p>
@@ -603,49 +603,6 @@
 
 
   <!-- ============================================================
-       HOW IT WORKS
-  ============================================================ -->
-  <!-- Gradient divider -->
-  <hr class="gradient-divider my-4">
-
-  <section id="sec-how" class="px-6 section-spacer max-w-4xl mx-auto relative overflow-hidden reveal">
-    <!-- Ambient glow -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none" style="background: radial-gradient(circle, #a78bfa 0%, transparent 70%);"></div>
-    <div class="text-center mb-12">
-      <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">How it Works</span>
-      <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Three steps to <span class="gradient-text-emerald">smarter investing</span></h2>
-      <p class="text-muted text-sm mt-2 max-w-md mx-auto">StockHolmes does the detective work so you don't have to.</p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
-      <!-- Step 1 -->
-      <div class="glass-panel p-6 text-center rounded-2xl">
-        <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </div>
-        <h3 class="font-serif text-lg text-[#e8e9ed] mb-2">1. Investigate</h3>
-        <p class="text-muted text-sm leading-relaxed">Our AI scrapes X/Twitter for posts from top investment accounts and filters for stock-related content.</p>
-      </div>
-      <!-- Step 2 -->
-      <div class="glass-panel p-6 text-center rounded-2xl">
-        <div class="w-12 h-12 rounded-xl bg-brass/10 flex items-center justify-center mx-auto mb-4">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4a843" stroke-width="2" stroke-linecap="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
-        </div>
-        <h3 class="font-serif text-lg text-[#e8e9ed] mb-2">2. Analyze</h3>
-        <p class="text-muted text-sm leading-relaxed">Claude AI evaluates each post for sentiment, confidence, and extracts ticker mentions to build a consensus view.</p>
-      </div>
-      <!-- Step 3 -->
-      <div class="glass-panel p-6 text-center rounded-2xl">
-        <div class="w-12 h-12 rounded-xl bg-[#a78bfa]/10 flex items-center justify-center mx-auto mb-4">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </div>
-        <h3 class="font-serif text-lg text-[#e8e9ed] mb-2">3. Act</h3>
-        <p class="text-muted text-sm leading-relaxed">Get signal alerts, consensus picks, and portfolio gap analysis so you can make informed decisions — faster.</p>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ============================================================
        PRICING
   ============================================================ -->
   <!-- Gradient divider -->
@@ -757,7 +714,7 @@
         <div>
           <h4 class="text-[#e8e9ed] text-sm font-semibold mb-4">Resources</h4>
           <ul class="space-y-2.5">
-            <li><a href="#sec-how" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">How it Works</a></li>
+            <li><a href="#sec-showcase" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">How it Works</a></li>
             <li><a href="#" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">API Docs</a></li>
             <li><a href="#" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">Blog</a></li>
           </ul>
@@ -1233,7 +1190,7 @@
       { type: 'section', label: 'Signal Alerts', sub: 'Jump to section', target: 'sec-signals' },
       { type: 'section', label: 'Consensus Radar', sub: 'Jump to section', target: 'sec-consensus' },
       { type: 'section', label: 'Live Feed', sub: 'Jump to section', target: 'sec-feed' },
-      { type: 'section', label: 'How it Works', sub: 'Jump to section', target: 'sec-how' },
+      { type: 'section', label: 'How it Works', sub: 'Jump to section', target: 'sec-showcase' },
       { type: 'section', label: 'Pricing', sub: 'Jump to section', target: 'sec-pricing' },
     ];
 
