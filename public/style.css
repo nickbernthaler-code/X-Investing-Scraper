@@ -35,20 +35,18 @@
 .cf-track {
   position: relative;
   width: 100%;
-  height: 360px;          /* tall enough for the largest card + breathing room */
-  overflow: hidden;       /* clips the outer cards cleanly */
-  perspective: 1100px;    /* gives the rotateY transforms a realistic 3D depth */
+  height: 360px;
+  overflow: hidden;
+  perspective: 1200px;
 }
 
-/* Each card slot — positioned by the CoverFlow class via inline styles */
 .cf-slide {
   position: absolute;
   left: 50%;
   top: 50%;
-  /* Smooth animation between positions */
   transition:
-    transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    opacity   0.45s ease;
+    transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity   0.38s ease;
   will-change: transform;
   backface-visibility: hidden;
 }
