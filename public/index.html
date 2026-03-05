@@ -96,8 +96,11 @@
       </div>
       <p class="text-muted text-sm mt-1">Move mouse to left or right edge to browse</p>
     </div>
-    <!-- Cards are rendered here by the CoverFlow class below -->
-    <div class="cf-track" id="assets-track"></div>
+    <!-- Ambient glow orb — soft radial light behind the carousel -->
+    <div class="cf-wrap">
+      <div class="cf-glow cf-glow-green"></div>
+      <div class="cf-track" id="assets-track"></div>
+    </div>
   </section>
 
 
@@ -112,7 +115,10 @@
       </div>
       <p class="text-muted text-sm mt-1">Move mouse to left or right edge to browse</p>
     </div>
-    <div class="cf-track" id="influencers-track"></div>
+    <div class="cf-wrap">
+      <div class="cf-glow cf-glow-purple"></div>
+      <div class="cf-track" id="influencers-track"></div>
+    </div>
   </section>
 
 
@@ -251,18 +257,19 @@
         this.spacing     = spacing;
         this.renderFn    = renderFn;
 
-        // Slot definitions — includes ±4 at opacity:0 so cards that
-        // enter/exit the visible range still animate smoothly in/out
+        // Slot transforms — tx = horizontal offset, tz = z-depth (positive = toward viewer),
+        // ry = Y-axis rotation for the angled coverflow look.
+        // ±4 are opacity:0 but positioned so cards animate smoothly in/out from edges.
         this.SLOTS = {
-          '-4': { tx: spacing * -4, ry:  48, scale: 0.40, opacity: 0,    z: 0 },
-          '-3': { tx: spacing * -3, ry:  36, scale: 0.52, opacity: 0.28, z: 1 },
-          '-2': { tx: spacing * -2, ry:  24, scale: 0.67, opacity: 0.55, z: 2 },
-          '-1': { tx: spacing * -1, ry:  13, scale: 0.83, opacity: 0.80, z: 3 },
-           '0': { tx: 0,            ry:   0, scale: 1.00, opacity: 1.00, z: 4 },
-           '1': { tx: spacing *  1, ry: -13, scale: 0.83, opacity: 0.80, z: 3 },
-           '2': { tx: spacing *  2, ry: -24, scale: 0.67, opacity: 0.55, z: 2 },
-           '3': { tx: spacing *  3, ry: -36, scale: 0.52, opacity: 0.28, z: 1 },
-           '4': { tx: spacing *  4, ry: -48, scale: 0.40, opacity: 0,    z: 0 },
+          '-4': { tx: spacing * -4, tz: -130, ry:  52, scale: 0.36, opacity: 0,    z: 0 },
+          '-3': { tx: spacing * -3, tz: -90,  ry:  40, scale: 0.52, opacity: 0.22, z: 1 },
+          '-2': { tx: spacing * -2, tz: -55,  ry:  28, scale: 0.67, opacity: 0.52, z: 2 },
+          '-1': { tx: spacing * -1, tz: -20,  ry:  15, scale: 0.83, opacity: 0.78, z: 3 },
+           '0': { tx: 0,            tz:  70,  ry:   0, scale: 1.06, opacity: 1.00, z: 4 },
+           '1': { tx: spacing *  1, tz: -20,  ry: -15, scale: 0.83, opacity: 0.78, z: 3 },
+           '2': { tx: spacing *  2, tz: -55,  ry: -28, scale: 0.67, opacity: 0.52, z: 2 },
+           '3': { tx: spacing *  3, tz: -90,  ry: -40, scale: 0.52, opacity: 0.22, z: 1 },
+           '4': { tx: spacing *  4, tz: -130, ry: -52, scale: 0.36, opacity: 0,    z: 0 },
         };
 
         // Create one persistent DOM element per item.
@@ -311,7 +318,8 @@
           const s       = this.SLOTS[key];
           const isActive = off === 0;
 
-          el.style.transform = `translateX(${s.tx}px) rotateY(${s.ry}deg) scale(${s.scale})`;
+          // translateX positions left/right, rotateY angles the card, translateZ pops it toward/away viewer
+          el.style.transform = `translateX(${s.tx}px) rotateY(${s.ry}deg) translateZ(${s.tz}px) scale(${s.scale})`;
           el.style.opacity   = String(s.opacity);
           el.style.zIndex    = String(s.z);
           el.className = `cf-slide ${this.cardClass}${isActive ? ' ' + this.activeClass : ''}`;
