@@ -422,35 +422,37 @@
   <script>
 
     // ---- Initialize Swiper: Trending Assets ----
-    // loop: true makes it infinite — after the 10th card it wraps back to the 1st
+    // loopedSlides tells Swiper how many clone slides to add on each side
+    // so the wrap-around looks seamless and centered. For 10 stocks, 5 is enough.
     const assetsSwiper = new Swiper('.assets-swiper', {
       effect: 'coverflow',
-      grabCursor: true,
       centeredSlides: true,
       slidesPerView: 'auto',
-      loop: true,               // infinite loop — wraps from last card back to first
-      initialSlide: 4,
+      loop: true,
+      loopedSlides: 5,
+      initialSlide: 0,
       coverflowEffect: {
         rotate: 25,
         stretch: 0,
-        depth: 280,
+        depth: 260,
         modifier: 1,
         slideShadows: true,
       },
     });
 
     // ---- Initialize Swiper: Top Influencers ----
+    // 5 influencers — loopedSlides: 3 gives enough clones for seamless wrap
     const influencersSwiper = new Swiper('.influencers-swiper', {
       effect: 'coverflow',
-      grabCursor: true,
       centeredSlides: true,
       slidesPerView: 'auto',
-      loop: true,               // infinite loop
-      initialSlide: 2,
+      loop: true,
+      loopedSlides: 3,
+      initialSlide: 0,
       coverflowEffect: {
         rotate: 30,
         stretch: 0,
-        depth: 250,
+        depth: 240,
         modifier: 1,
         slideShadows: true,
       },
@@ -458,70 +460,45 @@
 
 
     // ---- Hover-Only Mouse Navigation ----
-    // Listen to mousemove on the entire swiper container (not overlay divs —
-    // those get blocked by the cards sitting on top of them).
-    //
-    // How it works:
-    //   - Mouse in left 30%  → start sliding backward every 700ms
-    //   - Mouse in right 30% → start sliding forward every 700ms
-    //   - Mouse in middle    → stop sliding
-    //   - Mouse leaves       → stop sliding
-    // No clicking required — just hover your mouse to the side.
+    // A single setInterval ticker runs every 700ms for each carousel.
+    // mousemove just updates a 'zone' variable ('left', 'right', or null).
+    // The ticker reads that variable and slides — no intervals being
+    // created/destroyed on every mouse movement, which was causing the jitter.
 
     function setupMouseNav(swiperEl, swiperInstance) {
-      let slideInterval = null;  // holds the repeating timer
-      let currentDir   = null;  // 'prev' | 'next' | null
+      let zone = null; // 'left' | 'right' | null — updated by mousemove
 
-      function startSliding(direction) {
-        // If we're already sliding in this direction, do nothing
-        if (currentDir === direction) return;
-
-        stopSliding(); // clear any existing interval first
-        currentDir = direction;
-
-        // Slide once immediately so there's no perceived delay
-        if (direction === 'prev') swiperInstance.slidePrev(400);
-        else                      swiperInstance.slideNext(400);
-
-        // Then repeat every 700ms while the cursor stays in the zone
-        slideInterval = setInterval(() => {
-          if (direction === 'prev') swiperInstance.slidePrev(400);
-          else                      swiperInstance.slideNext(400);
-        }, 700);
-      }
-
-      function stopSliding() {
-        if (slideInterval) {
-          clearInterval(slideInterval);
-          slideInterval = null;
-        }
-        currentDir = null;
-        swiperEl.style.cursor = 'default';
-      }
-
+      // Update the zone whenever the mouse moves over the carousel
       swiperEl.addEventListener('mousemove', (e) => {
         const rect  = swiperEl.getBoundingClientRect();
         const ratio = (e.clientX - rect.left) / rect.width;
 
-        if (ratio < 0.30) {
-          // Left zone — slide backward
-          swiperEl.style.cursor = 'w-resize';
-          startSliding('prev');
-        } else if (ratio > 0.70) {
-          // Right zone — slide forward
-          swiperEl.style.cursor = 'e-resize';
-          startSliding('next');
+        if (ratio < 0.28) {
+          zone = 'left';
+          swiperEl.style.cursor = 'w-resize'; // ← cursor
+        } else if (ratio > 0.72) {
+          zone = 'right';
+          swiperEl.style.cursor = 'e-resize'; // → cursor
         } else {
-          // Middle — stop sliding, normal cursor
-          stopSliding();
+          zone = null;
+          swiperEl.style.cursor = 'default';
         }
       });
 
-      // Stop when mouse leaves the carousel entirely
-      swiperEl.addEventListener('mouseleave', stopSliding);
+      // Clear zone when mouse leaves the carousel
+      swiperEl.addEventListener('mouseleave', () => {
+        zone = null;
+        swiperEl.style.cursor = 'default';
+      });
+
+      // One steady ticker — fires every 700ms and slides if in a zone.
+      // This is stable because it's created once and never recreated.
+      setInterval(() => {
+        if      (zone === 'left')  swiperInstance.slidePrev(500);
+        else if (zone === 'right') swiperInstance.slideNext(500);
+      }, 700);
     }
 
-    // Wire up both carousels — pass the DOM element and the Swiper instance
     setupMouseNav(document.querySelector('.assets-swiper'),      assetsSwiper);
     setupMouseNav(document.querySelector('.influencers-swiper'), influencersSwiper);
 
