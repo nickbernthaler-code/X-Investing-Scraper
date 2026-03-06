@@ -16,16 +16,19 @@
   <link rel="stylesheet" href="style.css">
 
   <script>
-    /* Tailwind config — refined "Baker Street After Dark" palette */
+    /* Tailwind config — colors reference CSS variables for theme switching */
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            surface: '#14151f',
-            border:  '#252640',
-            muted:   '#9294a8',
-            accent:  '#10b981',
-            brass:   '#d4a843',
+            surface:  'var(--surface)',
+            border:   'var(--border)',
+            muted:    'var(--text-secondary)',
+            accent:   'var(--accent)',
+            brass:    'var(--brass)',
+            'th-bg':  'var(--bg)',
+            'th-text':'var(--text)',
+            'th-muted':'var(--muted)',
           },
           fontFamily: {
             sans:  ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
@@ -37,7 +40,15 @@
   </script>
 </head>
 
-<body class="bg-[#08090e] text-[#e8e9ed] font-sans min-h-screen antialiased">
+<body class="font-sans min-h-screen antialiased page-enter" style="background:var(--bg);color:var(--text);transition:background 0.3s ease,color 0.3s ease;">
+
+  <!-- Apply saved theme immediately to prevent flash -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('stockholmes-theme');
+      if (saved === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    })();
+  </script>
 
   <!-- Fey-style noise texture overlay — very subtle grain for premium feel -->
   <div class="noise-overlay"></div>
@@ -46,34 +57,45 @@
   <!-- ============================================================
        NAVIGATION BAR
   ============================================================ -->
-  <nav class="glass-strong px-6 py-4 flex items-center justify-between sticky top-0 z-50 border-b border-white/[0.06]">
+  <nav class="glass-strong px-6 py-4 flex items-center justify-between sticky top-0 z-50">
     <div class="flex items-center gap-5">
       <!-- StockHolmes detective logo + name -->
       <div class="flex items-center gap-2.5">
         <img src="detective-face.svg" alt="StockHolmes logo" width="34" height="34" class="logo-icon">
-        <span class="text-[#e8e9ed] font-serif text-xl tracking-tight">StockHolmes</span>
+        <span class="text-[var(--text)] font-serif text-xl tracking-tight">StockHolmes</span>
       </div>
       <div class="h-5 w-px bg-border hidden sm:block"></div>
       <!-- Nav links — How it Works and Pricing (prominent, white text) -->
       <div class="hidden md:flex items-center gap-5">
-        <a href="#sec-showcase" class="text-[#e8e9ed] text-sm font-semibold hover:text-accent transition-colors cursor-pointer">How it Works</a>
-        <a href="#sec-pricing" class="text-[#e8e9ed] text-sm font-semibold hover:text-accent transition-colors cursor-pointer">Pricing</a>
+        <a href="#sec-showcase" class="text-[var(--text)] text-sm font-semibold hover:text-accent transition-colors cursor-pointer">How it Works</a>
+        <a href="#sec-pricing" class="text-[var(--text)] text-sm font-semibold hover:text-accent transition-colors cursor-pointer">Pricing</a>
       </div>
       <div class="h-5 w-px bg-border hidden md:block"></div>
       <!-- Search bar -->
-      <div class="hidden sm:flex items-center gap-2 bg-white/[0.04] border border-white/[0.08] rounded-full px-3 py-1.5">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9294a8" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" placeholder="Search stocks or influencers..." class="bg-transparent text-sm text-[#e8e9ed] placeholder-[#5c5e73] outline-none w-48 lg:w-64">
+      <div class="hidden sm:flex items-center gap-2 rounded-full px-3 py-1.5 nav-search-bar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search stocks or influencers..." class="bg-transparent text-sm outline-none w-48 lg:w-64" style="color:var(--text);">
       </div>
     </div>
     <div class="flex items-center gap-3">
+      <!-- Theme toggle — switches between dark and light mode -->
+      <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode"
+        class="w-9 h-9 rounded-full flex items-center justify-center border border-[var(--card-border)] hover:bg-[var(--hover-bg)] transition-colors duration-200">
+        <!-- Sun icon (shown in dark mode) -->
+        <svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#d4a843]">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <!-- Moon icon (shown in light mode) -->
+        <svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#a78bfa] hidden">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
       <!-- Connect Broker button — opens modal instead of cluttering navbar -->
-      <!-- Fey-style pill buttons in the nav -->
       <button onclick="document.getElementById('broker-modal').classList.remove('hidden')"
         class="px-4 py-2 rounded-full text-sm font-semibold border border-[#d4a843]/30 text-[#d4a843] hover:bg-[#d4a843]/10 transition-colors duration-200 hidden sm:block">
         Connect Broker
       </button>
-      <button class="px-4 py-2 rounded-full text-sm font-semibold bg-white/[0.06] border border-white/[0.1] text-[#e8e9ed] hover:bg-white/[0.1] transition-colors duration-200 backdrop-blur-sm">
+      <button class="px-4 py-2 rounded-full text-sm font-semibold bg-[var(--hover-bg)] border border-[var(--card-border)] text-[var(--text)] hover:opacity-80 transition-colors duration-200 backdrop-blur-sm">
         Login / Sign Up
       </button>
     </div>
@@ -85,8 +107,8 @@
   <div id="broker-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
     <div class="glass-strong rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
       <div class="flex justify-between items-center mb-6">
-        <h3 class="font-serif text-xl text-[#e8e9ed]">Connect Your Broker</h3>
-        <button onclick="document.getElementById('broker-modal').classList.add('hidden')" class="text-muted hover:text-[#e8e9ed] text-xl">&times;</button>
+        <h3 class="font-serif text-xl text-[var(--text)]">Connect Your Broker</h3>
+        <button onclick="document.getElementById('broker-modal').classList.add('hidden')" class="text-muted hover:text-[var(--text)] text-xl">&times;</button>
       </div>
       <p class="text-muted text-sm mb-6">Link your brokerage to get personalized portfolio gap analysis and recommendations.</p>
       <div class="flex flex-col gap-3">
@@ -102,12 +124,12 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
           Trade Republic
         </button>
-        <button class="broker-badge-lg" style="background:#1a1b2e;color:#9294a8;border:1px solid #252640;">
+        <button class="broker-badge-lg" style="background:var(--surface-2);color:var(--text-secondary);border:1px solid var(--border);">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
           Manual Entry
         </button>
       </div>
-      <p class="text-[#5c5e73] text-xs text-center mt-6">Read-only access. We never execute trades on your behalf.</p>
+      <p class="text-[var(--muted)] text-xs text-center mt-6">Read-only access. We never execute trades on your behalf.</p>
     </div>
   </div>
 
@@ -115,33 +137,34 @@
   <!-- ============================================================
        HERO — with ambient gradient orbs behind (Fey-style)
   ============================================================ -->
-  <section class="text-center px-6 pt-20 pb-14 relative overflow-hidden">
-    <!-- Ambient glow orbs — give glassmorphism something to blur through -->
-    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full opacity-20 blur-[120px] pointer-events-none" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
-    <div class="absolute top-10 right-1/4 w-[400px] h-[400px] rounded-full opacity-15 blur-[100px] pointer-events-none" style="background: radial-gradient(circle, #a78bfa 0%, transparent 70%);"></div>
+  <!-- Wrapper for hero + metrics so ambient orbs span both seamlessly -->
+  <div class="relative overflow-hidden">
+    <!-- Ambient glow orbs — span the full hero+metrics area for a smooth gradient -->
+    <div class="ambient-orb absolute top-[30%] left-1/4 w-[700px] h-[700px] rounded-full opacity-[0.10] blur-[160px] pointer-events-none" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
+    <div class="ambient-orb absolute top-[35%] right-1/4 w-[550px] h-[550px] rounded-full opacity-[0.07] blur-[140px] pointer-events-none" style="background: radial-gradient(circle, #a78bfa 0%, transparent 70%);"></div>
 
-    <div class="relative z-10">
-      <p class="text-xs uppercase tracking-widest text-muted mb-4 font-medium">Investment Intelligence</p>
-      <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#e8e9ed] mb-5 leading-tight">
-        What the smart money<br>
-        <!-- Fey-style gradient text on the accent phrase -->
-        <span class="gradient-text-emerald">is talking about.</span>
-      </h1>
-      <p class="text-muted text-base max-w-md mx-auto mb-10">Real-time signals from top X investors, analyzed by AI.</p>
-      <!-- Fey-style pill button with glow shadow -->
-      <button id="run-btn" onclick="runScraper()"
-        class="btn-pill btn-pill-accent">
-        Run Scraper
-      </button>
-    </div>
-  </section>
+    <section class="text-center px-6 pt-20 pb-14 relative">
+      <div class="relative z-10">
+        <p class="text-xs uppercase tracking-widest text-muted mb-4 font-medium">Investment Intelligence</p>
+        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-[var(--text)] mb-5 leading-tight">
+          What the smart money<br>
+          <!-- Fey-style gradient text on the accent phrase -->
+          <span class="gradient-text-emerald">is talking about.</span>
+        </h1>
+        <p class="text-muted text-base max-w-md mx-auto mb-10">Real-time signals from top X investors, analyzed by AI.</p>
+        <!-- Fey-style pill button with glow shadow -->
+        <button id="run-btn" onclick="runScraper()"
+          class="btn-pill btn-pill-accent">
+          Run Scraper
+        </button>
+      </div>
+    </section>
 
-
-  <!-- ============================================================
-       METRICS STRIP — key stats in big numbers (Fey-style)
-  ============================================================ -->
-  <div class="px-6 pb-12 reveal">
-    <div class="metrics-strip">
+    <!-- ============================================================
+         METRICS STRIP — key stats in big numbers (Fey-style)
+    ============================================================ -->
+    <div class="px-6 pb-12 reveal relative z-10">
+      <div class="metrics-strip">
       <div class="metric-item">
         <div class="metric-value text-accent">234</div>
         <div class="metric-label">Stocks Tracked</div>
@@ -155,11 +178,12 @@
         <div class="metric-label">Signals Today</div>
       </div>
       <div class="metric-item">
-        <div class="metric-value text-[#e8e9ed]">97%</div>
+        <div class="metric-value text-[var(--text)]">97%</div>
         <div class="metric-label">Uptime</div>
       </div>
     </div>
   </div>
+  </div><!-- end hero+metrics wrapper -->
 
   <!-- Gradient divider -->
   <hr class="gradient-divider mb-6">
@@ -171,7 +195,7 @@
   ============================================================ -->
   <section id="sec-showcase" class="py-16 reveal">
     <div class="text-center mb-10 px-6">
-      <h2 class="font-serif text-3xl text-[#e8e9ed] mb-3">See how it <span class="gradient-text-emerald">works</span></h2>
+      <h2 class="font-serif text-3xl text-[var(--text)] mb-3">See how it <span class="gradient-text-emerald">works</span></h2>
       <p class="text-muted text-sm max-w-lg mx-auto">StockHolmes scans X accounts, surfaces the hottest stocks, and keeps your data safe — all in one dashboard.</p>
     </div>
 
@@ -189,13 +213,18 @@
               <div class="w-2.5 h-2.5 rounded-full bg-[#10b981]/60"></div>
             </div>
             <!-- Mock UI: tracked accounts -->
-            <p class="text-[#5c5e73] text-xs uppercase tracking-widest mb-4">Tracked Accounts</p>
+            <p class="text-[var(--muted)] text-xs uppercase tracking-widest mb-4">Tracked Accounts</p>
             <div class="space-y-3">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);">UW</div>
+                  <!-- Real profile photo with gradient fallback -->
+                  <div class="relative w-9 h-9">
+                    <img src="https://unavatar.io/twitter/unusual_whales" alt="unusual_whales" class="w-9 h-9 rounded-full object-cover" style="filter:drop-shadow(0 0 6px rgba(59,130,246,0.5));"
+                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                    <div class="w-9 h-9 rounded-full items-center justify-center text-xs font-bold text-white" style="display:none;background:linear-gradient(135deg,#3b82f6,#8b5cf6);">UW</div>
+                  </div>
                   <div>
-                    <p class="text-[#e8e9ed] text-sm font-semibold">@unusual_whales</p>
+                    <p class="text-[var(--text)] text-sm font-semibold">@unusual_whales</p>
                     <p class="text-muted text-xs">Options flow & dark pool data</p>
                   </div>
                 </div>
@@ -203,9 +232,13 @@
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:linear-gradient(135deg,#10b981,#14b8a6);">CP</div>
+                  <div class="relative w-9 h-9">
+                    <img src="https://unavatar.io/twitter/chamath" alt="chamath" class="w-9 h-9 rounded-full object-cover" style="filter:drop-shadow(0 0 6px rgba(16,185,129,0.5));"
+                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                    <div class="w-9 h-9 rounded-full items-center justify-center text-xs font-bold text-white" style="display:none;background:linear-gradient(135deg,#10b981,#14b8a6);">CP</div>
+                  </div>
                   <div>
-                    <p class="text-[#e8e9ed] text-sm font-semibold">@chamath</p>
+                    <p class="text-[var(--text)] text-sm font-semibold">@chamath</p>
                     <p class="text-muted text-xs">VC & macro investor</p>
                   </div>
                 </div>
@@ -213,9 +246,13 @@
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:linear-gradient(135deg,#ef4444,#f97316);">ZH</div>
+                  <div class="relative w-9 h-9">
+                    <img src="https://unavatar.io/twitter/zerohedge" alt="zerohedge" class="w-9 h-9 rounded-full object-cover" style="filter:drop-shadow(0 0 6px rgba(239,68,68,0.5));"
+                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                    <div class="w-9 h-9 rounded-full items-center justify-center text-xs font-bold text-white" style="display:none;background:linear-gradient(135deg,#ef4444,#f97316);">ZH</div>
+                  </div>
                   <div>
-                    <p class="text-[#e8e9ed] text-sm font-semibold">@zerohedge</p>
+                    <p class="text-[var(--text)] text-sm font-semibold">@zerohedge</p>
                     <p class="text-muted text-xs">Market commentary & macro</p>
                   </div>
                 </div>
@@ -223,19 +260,23 @@
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">TB</div>
+                  <div class="relative w-9 h-9">
+                    <img src="https://unavatar.io/twitter/TihoBrkan" alt="TihoBrkan" class="w-9 h-9 rounded-full object-cover" style="filter:drop-shadow(0 0 6px rgba(245,158,11,0.5));"
+                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                    <div class="w-9 h-9 rounded-full items-center justify-center text-xs font-bold text-white" style="display:none;background:linear-gradient(135deg,#f59e0b,#ef4444);">TB</div>
+                  </div>
                   <div>
-                    <p class="text-[#e8e9ed] text-sm font-semibold">@TihoBrkan</p>
+                    <p class="text-[var(--text)] text-sm font-semibold">@TihoBrkan</p>
                     <p class="text-muted text-xs">Global macro & cycles</p>
                   </div>
                 </div>
                 <span class="text-accent text-xs font-bold bg-accent/10 px-2 py-0.5 rounded-full">Live</span>
               </div>
             </div>
-            <p class="text-[#5c5e73] text-xs mt-4 text-center">12 accounts tracked · Updated every 5 min</p>
+            <p class="text-[var(--muted)] text-xs mt-4 text-center">12 accounts tracked · Updated every 5 min</p>
           </div>
           <!-- Label below card -->
-          <p class="text-[#e8e9ed] text-base font-semibold text-center mt-5">X Account Tracking</p>
+          <p class="text-[var(--text)] text-base font-semibold text-center mt-5">X Account Tracking</p>
           <p class="text-muted text-xs text-center mt-1">We monitor top investing voices on X in real-time</p>
         </div>
 
@@ -250,67 +291,68 @@
             </div>
             <!-- Mock UI: trending stocks table -->
             <div class="flex items-center justify-between mb-4">
-              <p class="text-[#5c5e73] text-xs uppercase tracking-widest">Trending Today</p>
+              <p class="text-[var(--muted)] text-xs uppercase tracking-widest">Trending Today</p>
               <span class="text-accent text-xs font-bold">Top 10</span>
             </div>
-            <div class="space-y-3">
+            <!-- Showcase stock rows — updated with live data by fetchLiveMarketData() -->
+            <div id="showcase-stocks" class="space-y-3">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <img src="https://assets.parqet.com/logos/symbol/NVDA" alt="NVDA" class="w-9 h-9 rounded-full object-contain" style="filter:drop-shadow(0 0 6px rgba(118,185,0,0.7)) drop-shadow(0 0 16px rgba(118,185,0,0.3));">
                   <div>
-                    <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">NVDA</p>
+                    <p class="text-[var(--text)] text-sm font-bold tabular-nums">NVDA</p>
                     <p class="text-muted text-xs">NVIDIA Corp</p>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-[#e8e9ed] text-sm font-semibold tabular-nums">$875.50</p>
-                  <p class="text-accent text-xs font-bold tabular-nums">+2.34%</p>
+                  <p class="text-[var(--text)] text-sm font-semibold tabular-nums sc-price">$875.50</p>
+                  <p class="text-accent text-xs font-bold tabular-nums sc-change">+2.34%</p>
                 </div>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <img src="https://assets.parqet.com/logos/symbol/TSLA" alt="TSLA" class="w-9 h-9 rounded-full object-contain" style="filter:drop-shadow(0 0 6px rgba(227,25,55,0.7)) drop-shadow(0 0 16px rgba(227,25,55,0.3));">
                   <div>
-                    <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">TSLA</p>
+                    <p class="text-[var(--text)] text-sm font-bold tabular-nums">TSLA</p>
                     <p class="text-muted text-xs">Tesla Inc</p>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-[#e8e9ed] text-sm font-semibold tabular-nums">$245.10</p>
-                  <p class="text-[#f87171] text-xs font-bold tabular-nums">-1.12%</p>
+                  <p class="text-[var(--text)] text-sm font-semibold tabular-nums sc-price">$245.10</p>
+                  <p class="text-[#f87171] text-xs font-bold tabular-nums sc-change">-1.12%</p>
                 </div>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <img src="https://assets.parqet.com/logos/symbol/AAPL" alt="AAPL" class="w-9 h-9 rounded-full object-contain" style="filter:drop-shadow(0 0 6px rgba(160,160,160,0.6)) drop-shadow(0 0 16px rgba(160,160,160,0.25));">
                   <div>
-                    <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">AAPL</p>
+                    <p class="text-[var(--text)] text-sm font-bold tabular-nums">AAPL</p>
                     <p class="text-muted text-xs">Apple Inc</p>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-[#e8e9ed] text-sm font-semibold tabular-nums">$182.30</p>
-                  <p class="text-accent text-xs font-bold tabular-nums">+0.81%</p>
+                  <p class="text-[var(--text)] text-sm font-semibold tabular-nums sc-price">$182.30</p>
+                  <p class="text-accent text-xs font-bold tabular-nums sc-change">+0.81%</p>
                 </div>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <img src="https://assets.parqet.com/logos/symbol/META" alt="META" class="w-9 h-9 rounded-full object-contain" style="filter:drop-shadow(0 0 6px rgba(0,130,251,0.7)) drop-shadow(0 0 16px rgba(0,130,251,0.3));">
                   <div>
-                    <p class="text-[#e8e9ed] text-sm font-bold tabular-nums">META</p>
+                    <p class="text-[var(--text)] text-sm font-bold tabular-nums">META</p>
                     <p class="text-muted text-xs">Meta Platforms</p>
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-[#e8e9ed] text-sm font-semibold tabular-nums">$512.40</p>
-                  <p class="text-accent text-xs font-bold tabular-nums">+3.15%</p>
+                  <p class="text-[var(--text)] text-sm font-semibold tabular-nums sc-price">$512.40</p>
+                  <p class="text-accent text-xs font-bold tabular-nums sc-change">+3.15%</p>
                 </div>
               </div>
             </div>
-            <p class="text-[#5c5e73] text-xs mt-4 text-center">AI-ranked by mention frequency & sentiment</p>
+            <p class="text-[var(--muted)] text-xs mt-4 text-center">AI-ranked by mention frequency & sentiment</p>
           </div>
           <!-- Label below card -->
-          <p class="text-[#e8e9ed] text-base font-semibold text-center mt-5">Top Stocks Surfaced</p>
+          <p class="text-[var(--text)] text-base font-semibold text-center mt-5">Top Stocks Surfaced</p>
           <p class="text-muted text-xs text-center mt-1">The most talked-about stocks, ranked by AI</p>
         </div>
 
@@ -325,7 +367,7 @@
             </div>
             <!-- Mock UI: portfolio sync -->
             <div class="flex items-center justify-between mb-4">
-              <p class="text-[#5c5e73] text-xs uppercase tracking-widest">Your Portfolio</p>
+              <p class="text-[var(--muted)] text-xs uppercase tracking-widest">Your Portfolio</p>
               <span class="text-accent text-xs font-bold flex items-center gap-1">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 Synced
@@ -338,21 +380,21 @@
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
                     <img src="https://assets.parqet.com/logos/symbol/AAPL" alt="AAPL" class="w-6 h-6 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(160,160,160,0.5)) drop-shadow(0 0 10px rgba(160,160,160,0.2));">
-                    <span class="text-[#e8e9ed] text-sm font-semibold">AAPL</span>
+                    <span class="text-[var(--text)] text-sm font-semibold">AAPL</span>
                   </div>
                   <span class="text-muted text-xs tabular-nums">42 shares · $7,656</span>
                 </div>
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
                     <img src="https://assets.parqet.com/logos/symbol/MSFT" alt="MSFT" class="w-6 h-6 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(0,164,239,0.5)) drop-shadow(0 0 10px rgba(0,164,239,0.2));">
-                    <span class="text-[#e8e9ed] text-sm font-semibold">MSFT</span>
+                    <span class="text-[var(--text)] text-sm font-semibold">MSFT</span>
                   </div>
                   <span class="text-muted text-xs tabular-nums">18 shares · $7,473</span>
                 </div>
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
                     <img src="https://assets.parqet.com/logos/symbol/GOOGL" alt="GOOGL" class="w-6 h-6 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(66,133,244,0.5)) drop-shadow(0 0 10px rgba(66,133,244,0.2));">
-                    <span class="text-[#e8e9ed] text-sm font-semibold">GOOGL</span>
+                    <span class="text-[var(--text)] text-sm font-semibold">GOOGL</span>
                   </div>
                   <span class="text-muted text-xs tabular-nums">25 shares · $4,132</span>
                 </div>
@@ -364,12 +406,12 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
                 <p class="text-accent text-xs font-bold">AI Recommendation</p>
               </div>
-              <p class="text-[#e8e9ed] text-xs leading-relaxed">"You're heavy on big tech. Based on trending signals, consider <span class="text-accent font-semibold">NVDA</span> and <span class="text-accent font-semibold">PLTR</span> to diversify into AI infrastructure."</p>
+              <p class="text-[var(--text)] text-xs leading-relaxed">"You're heavy on big tech. Based on trending signals, consider <span class="text-accent font-semibold">NVDA</span> and <span class="text-accent font-semibold">PLTR</span> to diversify into AI infrastructure."</p>
             </div>
-            <p class="text-[#5c5e73] text-xs mt-3 text-center">Personalized picks based on what you already own</p>
+            <p class="text-[var(--muted)] text-xs mt-3 text-center">Personalized picks based on what you already own</p>
           </div>
           <!-- Label below card -->
-          <p class="text-[#e8e9ed] text-base font-semibold text-center mt-5">Secure Broker Sync</p>
+          <p class="text-[var(--text)] text-base font-semibold text-center mt-5">Secure Broker Sync</p>
           <p class="text-muted text-xs text-center mt-1">Connect your portfolio for AI-tailored stock picks you won't find elsewhere</p>
         </div>
 
@@ -378,10 +420,10 @@
 
     <!-- Navigation arrows -->
     <div class="flex justify-center gap-3 mt-6">
-      <button onclick="document.querySelector('.feature-showcase-scroll').scrollBy({left:-400,behavior:'smooth'})" class="w-10 h-10 rounded-full border border-[#252640] flex items-center justify-center text-muted hover:text-[#e8e9ed] hover:border-white/20 transition-colors">
+      <button onclick="document.querySelector('.feature-showcase-scroll').scrollBy({left:-400,behavior:'smooth'})" class="w-10 h-10 rounded-full border border-[var(--border)] flex items-center justify-center text-muted hover:text-[var(--text)] hover:border-[var(--border)] transition-colors">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <button onclick="document.querySelector('.feature-showcase-scroll').scrollBy({left:400,behavior:'smooth'})" class="w-10 h-10 rounded-full border border-[#252640] flex items-center justify-center text-muted hover:text-[#e8e9ed] hover:border-white/20 transition-colors">
+      <button onclick="document.querySelector('.feature-showcase-scroll').scrollBy({left:400,behavior:'smooth'})" class="w-10 h-10 rounded-full border border-[var(--border)] flex items-center justify-center text-muted hover:text-[var(--text)] hover:border-[var(--border)] transition-colors">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
       </button>
     </div>
@@ -400,9 +442,7 @@
     <button onclick="document.getElementById('sec-influencers').scrollIntoView({behavior:'smooth'})"
       class="section-tab" data-tab="influencers">Influencers</button>
     <button onclick="document.getElementById('sec-signals').scrollIntoView({behavior:'smooth'})"
-      class="section-tab" data-tab="signals">Signals</button>
-    <button onclick="document.getElementById('sec-consensus').scrollIntoView({behavior:'smooth'})"
-      class="section-tab" data-tab="consensus">Consensus</button>
+      class="section-tab" data-tab="signals">Intelligence</button>
     <button onclick="document.getElementById('sec-feed').scrollIntoView({behavior:'smooth'})"
       class="section-tab" data-tab="feed">Live Feed</button>
   </div>
@@ -417,7 +457,7 @@
       <div>
         <div class="flex items-center gap-3">
           <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Trending</span>
-          <h2 class="font-serif text-xl text-[#e8e9ed]">Top 10 Assets</h2>
+          <h2 class="font-serif text-xl text-[var(--text)]">Top 10 Assets</h2>
         </div>
         <p class="text-muted text-sm mt-1">Use arrows or keyboard ←→ to browse</p>
       </div>
@@ -441,18 +481,18 @@
     <div class="glass-panel rounded-2xl p-6">
       <div class="flex justify-between items-start mb-4">
         <div>
-          <h3 id="detail-ticker" class="font-serif text-2xl text-[#e8e9ed]"></h3>
+          <h3 id="detail-ticker" class="font-serif text-2xl text-[var(--text)]"></h3>
           <p id="detail-name" class="text-muted text-sm"></p>
         </div>
-        <button onclick="document.getElementById('stock-detail-panel').classList.add('hidden')" class="text-muted hover:text-[#e8e9ed] text-lg">✕</button>
+        <button onclick="document.getElementById('stock-detail-panel').classList.add('hidden')" class="text-muted hover:text-[var(--text)] text-lg">✕</button>
       </div>
       <div class="grid grid-cols-3 gap-4 mb-4">
-        <div><p class="text-muted text-xs">Price</p><p id="detail-price" class="text-[#e8e9ed] font-bold"></p></div>
+        <div><p class="text-muted text-xs">Price</p><p id="detail-price" class="text-[var(--text)] font-bold"></p></div>
         <div><p class="text-muted text-xs">Change</p><p id="detail-change" class="font-bold"></p></div>
-        <div><p class="text-muted text-xs">Mentions</p><p id="detail-mentions" class="text-[#e8e9ed] font-bold"></p></div>
+        <div><p class="text-muted text-xs">Mentions</p><p id="detail-mentions" class="text-[var(--text)] font-bold"></p></div>
       </div>
       <!-- Mini chart placeholder for the expanded view -->
-      <div class="bg-[#08090e] rounded-lg p-4 mb-4">
+      <div class="bg-[var(--bg)] rounded-lg p-4 mb-4">
         <svg id="detail-chart" width="100%" height="80" class="block"></svg>
       </div>
       <p class="text-muted text-xs">Recent X mentions and sentiment data will appear here when the scraper is connected.</p>
@@ -472,7 +512,7 @@
       <div>
         <div class="flex items-center gap-3">
           <span class="text-xs font-bold uppercase tracking-widest text-[#a78bfa] bg-[#a78bfa]/10 px-3 py-1 rounded-full">Influencers</span>
-          <h2 class="font-serif text-xl text-[#e8e9ed]">Top 5 Voices</h2>
+          <h2 class="font-serif text-xl text-[var(--text)]">Top 5 Voices</h2>
         </div>
         <p class="text-muted text-sm mt-1">Use arrows or keyboard ←→ to browse</p>
       </div>
@@ -498,106 +538,385 @@
   <!-- Gradient divider -->
   <hr class="gradient-divider my-4">
 
-  <section id="sec-signals" class="px-6 section-spacer max-w-3xl mx-auto relative overflow-hidden reveal">
-    <!-- Ambient glow -->
-    <div class="absolute -top-20 -right-40 w-[400px] h-[400px] rounded-full opacity-10 blur-[100px] pointer-events-none" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
-    <div class="flex items-center gap-3 mb-6">
-      <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Signals</span>
-      <h2 class="font-serif text-xl text-[#e8e9ed]">Signal Alerts</h2>
-    </div>
-    <div id="signals-container" class="grid gap-3">
-      <!-- Mock signal alerts — will be replaced with real data when scraper runs -->
-      <div class="glass-panel p-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">NV</div>
-          <div>
-            <p class="text-[#e8e9ed] text-sm font-bold">NVDA <span class="text-accent text-xs font-semibold ml-1">↑ Bullish</span></p>
-            <p class="text-muted text-xs">@unusual_whales — "NVDA call flow massive today"</p>
-          </div>
-        </div>
-        <div class="text-right">
-          <p class="text-accent text-sm font-bold tabular-nums">9/10</p>
-          <p class="text-muted text-xs">Confidence</p>
-        </div>
-      </div>
-      <div class="glass-panel p-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">TS</div>
-          <div>
-            <p class="text-[#e8e9ed] text-sm font-bold">TSLA <span class="text-[#f87171] text-xs font-semibold ml-1">↓ Bearish</span></p>
-            <p class="text-muted text-xs">@zerohedge — "Tesla delivery numbers disappointing"</p>
-          </div>
-        </div>
-        <div class="text-right">
-          <p class="text-brass text-sm font-bold tabular-nums">7/10</p>
-          <p class="text-muted text-xs">Confidence</p>
-        </div>
-      </div>
-      <div class="glass-panel p-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <div class="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent font-bold text-sm">PL</div>
-          <div>
-            <p class="text-[#e8e9ed] text-sm font-bold">PLTR <span class="text-accent text-xs font-semibold ml-1">↑ Bullish</span></p>
-            <p class="text-muted text-xs">@chamath — "Palantir is the real AI infrastructure play"</p>
-          </div>
-        </div>
-        <div class="text-right">
-          <p class="text-accent text-sm font-bold tabular-nums">8/10</p>
-          <p class="text-muted text-xs">Confidence</p>
-        </div>
-      </div>
-    </div>
-    <p class="text-[#5c5e73] text-xs text-center mt-4">Mock signals — run the scraper for live AI-analyzed alerts. Not investment advice.</p>
-  </section>
-
-
   <!-- ============================================================
-       E11: CONSENSUS RADAR — stocks mentioned by 3+ influencers
+       MARKET INTELLIGENCE — combined signals + consensus
   ============================================================ -->
-  <!-- Gradient divider -->
-  <hr class="gradient-divider my-4">
+  <section id="sec-signals" class="px-6 section-spacer max-w-4xl mx-auto relative overflow-hidden reveal">
+    <!-- Ambient glow -->
+    <div class="ambient-orb absolute -top-20 -right-40 w-[400px] h-[400px] rounded-full opacity-10 blur-[100px] pointer-events-none" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
 
-  <section id="sec-consensus" class="px-6 section-spacer max-w-3xl mx-auto reveal">
-    <div class="flex items-center gap-3 mb-6">
-      <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Consensus</span>
-      <h2 class="font-serif text-xl text-[#e8e9ed]">Consensus Radar</h2>
-    </div>
-    <p class="text-muted text-sm mb-4">When 3+ influencers independently mention the same stock within 24 hours, it surfaces here.</p>
-    <div class="grid gap-3">
-      <!-- Mock consensus data -->
-      <div class="glass-panel p-5 border-accent/20">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <span class="text-[#e8e9ed] font-bold text-lg">NVDA</span>
-            <span class="text-accent text-xs font-bold bg-accent/10 px-2 py-0.5 rounded-full">4 influencers</span>
-          </div>
-          <span class="text-accent text-sm font-bold tabular-nums">+2.34%</span>
-        </div>
-        <div class="flex gap-2 flex-wrap">
-          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@unusual_whales</span>
-          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@chamath</span>
-          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@TihoBrkan</span>
-          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@StockMoe</span>
-        </div>
-        <p class="text-muted text-xs mt-3">Consensus sentiment: <span class="text-accent font-semibold">Bullish</span> — all 4 voices positive</p>
+    <!-- Section header -->
+    <div class="text-center mb-10">
+      <div class="flex items-center justify-center gap-3 mb-3">
+        <div class="live-dot"></div>
+        <span class="text-xs font-bold uppercase tracking-widest text-accent">Live Intelligence</span>
       </div>
-      <div class="glass-panel p-5">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-3">
-            <span class="text-[#e8e9ed] font-bold text-lg">META</span>
-            <span class="text-brass text-xs font-bold bg-brass/10 px-2 py-0.5 rounded-full">3 influencers</span>
+      <h2 class="font-serif text-3xl text-[var(--text)] mb-2">Market <span class="gradient-text-emerald">Intelligence</span></h2>
+      <p class="text-muted text-sm max-w-lg mx-auto">Signals and consensus from top X investors, analyzed in real-time. When multiple voices agree, we surface it.</p>
+    </div>
+
+    <!-- ==================== CONSENSUS CARDS ==================== -->
+    <div class="consensus-grid grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
+
+      <!-- NVDA consensus card -->
+      <div class="consensus-card">
+        <div class="flex gap-5">
+          <!-- Left: Sentiment arc gauge (SVG) -->
+          <div class="sentiment-gauge">
+            <svg viewBox="0 0 130 72" width="130" height="72">
+              <!-- Background arc track -->
+              <path d="M 10 65 A 55 55 0 0 1 120 65" fill="none" stroke="var(--surface-2)" stroke-width="8" stroke-linecap="round"/>
+              <!-- Gradient arc fill — colored portion showing sentiment -->
+              <defs>
+                <linearGradient id="arc-nvda" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f87171"/>
+                  <stop offset="50%" stop-color="#fbbf24"/>
+                  <stop offset="100%" stop-color="#10b981"/>
+                </linearGradient>
+              </defs>
+              <path d="M 10 65 A 55 55 0 0 1 120 65" fill="none" stroke="url(#arc-nvda)" stroke-width="8" stroke-linecap="round" stroke-dasharray="173" stroke-dashoffset="0"/>
+              <!-- Needle — rotates based on sentiment (0°=bearish, 90°=neutral, 180°=bullish) -->
+              <!-- 85% bullish = ~153° rotation from left -->
+              <line x1="65" y1="65" x2="65" y2="20" stroke="var(--text)" stroke-width="2" stroke-linecap="round" transform="rotate(-17, 65, 65)"/>
+              <!-- Center dot -->
+              <circle cx="65" cy="65" r="4" fill="var(--text)"/>
+            </svg>
+            <!-- Sentiment label under gauge -->
+            <p class="text-center text-xs font-bold text-accent mt-1">Bullish</p>
           </div>
-          <span class="text-accent text-sm font-bold tabular-nums">+3.15%</span>
+
+          <!-- Right: Stock info + details -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <img src="https://assets.parqet.com/logos/symbol/NVDA" alt="NVDA" class="w-7 h-7 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(118,185,0,0.5));">
+                <span class="text-[var(--text)] font-bold text-lg">NVDA</span>
+              </div>
+              <span class="text-accent text-sm font-bold tabular-nums">+2.34%</span>
+            </div>
+            <p class="text-muted text-xs mb-3">4 influencers agree — strong bullish signal</p>
+
+            <!-- Sentiment bar -->
+            <div class="sentiment-bar mb-3">
+              <div class="sentiment-bar-fill" style="width:15%;"></div>
+            </div>
+
+            <!-- Avatar stack of contributing influencers -->
+            <div class="flex items-center justify-between">
+              <div class="avatar-stack">
+                <img src="https://unavatar.io/twitter/unusual_whales" alt="@unusual_whales" class="avatar-bullish" title="@unusual_whales — Bullish"
+                  onerror="this.style.display='none';">
+                <img src="https://unavatar.io/twitter/chamath" alt="@chamath" class="avatar-bullish" title="@chamath — Bullish"
+                  onerror="this.style.display='none';">
+                <img src="https://unavatar.io/twitter/TihoBrkan" alt="@TihoBrkan" class="avatar-bullish" title="@TihoBrkan — Bullish"
+                  onerror="this.style.display='none';">
+                <img src="https://unavatar.io/twitter/StockMoe" alt="@StockMoe" class="avatar-bullish" title="@StockMoe — Bullish"
+                  onerror="this.style.display='none';">
+              </div>
+              <!-- Confidence -->
+              <div class="flex items-center gap-2">
+                <span class="text-muted text-xs">Confidence</span>
+                <div class="confidence-dots">
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="flex gap-2 flex-wrap">
-          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@chamath</span>
-          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@zerohedge</span>
-          <span class="text-xs bg-[#1a1b2e] text-[#a78bfa] px-2 py-1 rounded-full">@StockMoe</span>
+      </div>
+
+      <!-- META consensus card -->
+      <div class="consensus-card">
+        <div class="flex gap-5">
+          <!-- Sentiment arc gauge -->
+          <div class="sentiment-gauge">
+            <svg viewBox="0 0 130 72" width="130" height="72">
+              <path d="M 10 65 A 55 55 0 0 1 120 65" fill="none" stroke="var(--surface-2)" stroke-width="8" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="arc-meta" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f87171"/>
+                  <stop offset="50%" stop-color="#fbbf24"/>
+                  <stop offset="100%" stop-color="#10b981"/>
+                </linearGradient>
+              </defs>
+              <path d="M 10 65 A 55 55 0 0 1 120 65" fill="none" stroke="url(#arc-meta)" stroke-width="8" stroke-linecap="round" stroke-dasharray="173" stroke-dashoffset="0"/>
+              <!-- 65% bullish = ~117° rotation -->
+              <line x1="65" y1="65" x2="65" y2="20" stroke="var(--text)" stroke-width="2" stroke-linecap="round" transform="rotate(-27, 65, 65)"/>
+              <circle cx="65" cy="65" r="4" fill="var(--text)"/>
+            </svg>
+            <p class="text-center text-xs font-bold text-brass mt-1">Mixed</p>
+          </div>
+
+          <!-- Stock info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <img src="https://assets.parqet.com/logos/symbol/META" alt="META" class="w-7 h-7 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(0,130,251,0.5));">
+                <span class="text-[var(--text)] font-bold text-lg">META</span>
+              </div>
+              <span class="text-accent text-sm font-bold tabular-nums">+3.15%</span>
+            </div>
+            <p class="text-muted text-xs mb-3">3 influencers — 2 bullish, 1 neutral</p>
+
+            <!-- Sentiment bar — 65% bullish -->
+            <div class="sentiment-bar mb-3">
+              <div class="sentiment-bar-fill" style="width:35%;"></div>
+            </div>
+
+            <!-- Avatar stack -->
+            <div class="flex items-center justify-between">
+              <div class="avatar-stack">
+                <img src="https://unavatar.io/twitter/chamath" alt="@chamath" class="avatar-bullish" title="@chamath — Bullish"
+                  onerror="this.style.display='none';">
+                <img src="https://unavatar.io/twitter/zerohedge" alt="@zerohedge" class="avatar-bearish" title="@zerohedge — Neutral"
+                  onerror="this.style.display='none';">
+                <img src="https://unavatar.io/twitter/StockMoe" alt="@StockMoe" class="avatar-bullish" title="@StockMoe — Bullish"
+                  onerror="this.style.display='none';">
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-muted text-xs">Confidence</span>
+                <div class="confidence-dots">
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled-warn"></div>
+                  <div class="confidence-dot"></div>
+                  <div class="confidence-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <p class="text-muted text-xs mt-3">Consensus sentiment: <span class="text-brass font-semibold">Mixed</span> — 2 bullish, 1 neutral</p>
+      </div>
+
+      <!-- PLTR consensus card -->
+      <div class="consensus-card">
+        <div class="flex gap-5">
+          <div class="sentiment-gauge">
+            <svg viewBox="0 0 130 72" width="130" height="72">
+              <path d="M 10 65 A 55 55 0 0 1 120 65" fill="none" stroke="var(--surface-2)" stroke-width="8" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="arc-pltr" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f87171"/>
+                  <stop offset="50%" stop-color="#fbbf24"/>
+                  <stop offset="100%" stop-color="#10b981"/>
+                </linearGradient>
+              </defs>
+              <path d="M 10 65 A 55 55 0 0 1 120 65" fill="none" stroke="url(#arc-pltr)" stroke-width="8" stroke-linecap="round" stroke-dasharray="173" stroke-dashoffset="0"/>
+              <!-- 75% bullish -->
+              <line x1="65" y1="65" x2="65" y2="20" stroke="var(--text)" stroke-width="2" stroke-linecap="round" transform="rotate(-22, 65, 65)"/>
+              <circle cx="65" cy="65" r="4" fill="var(--text)"/>
+            </svg>
+            <p class="text-center text-xs font-bold text-accent mt-1">Bullish</p>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <img src="https://assets.parqet.com/logos/symbol/PLTR" alt="PLTR" class="w-7 h-7 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(109,109,109,0.5));">
+                <span class="text-[var(--text)] font-bold text-lg">PLTR</span>
+              </div>
+              <span class="text-accent text-sm font-bold tabular-nums">+5.83%</span>
+            </div>
+            <p class="text-muted text-xs mb-3">3 influencers agree — momentum signal</p>
+
+            <div class="sentiment-bar mb-3">
+              <div class="sentiment-bar-fill" style="width:25%;"></div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="avatar-stack">
+                <img src="https://unavatar.io/twitter/chamath" alt="@chamath" class="avatar-bullish" title="@chamath — Bullish"
+                  onerror="this.style.display='none';">
+                <img src="https://unavatar.io/twitter/TihoBrkan" alt="@TihoBrkan" class="avatar-bullish" title="@TihoBrkan — Bullish"
+                  onerror="this.style.display='none';">
+                <img src="https://unavatar.io/twitter/unusual_whales" alt="@unusual_whales" class="avatar-bullish" title="@unusual_whales — Bullish"
+                  onerror="this.style.display='none';">
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-muted text-xs">Confidence</span>
+                <div class="confidence-dots">
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TSLA consensus card (bearish) -->
+      <div class="consensus-card">
+        <div class="flex gap-5">
+          <div class="sentiment-gauge">
+            <svg viewBox="0 0 130 72" width="130" height="72">
+              <path d="M 10 65 A 55 55 0 0 1 120 65" fill="none" stroke="var(--surface-2)" stroke-width="8" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="arc-tsla" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#f87171"/>
+                  <stop offset="50%" stop-color="#fbbf24"/>
+                  <stop offset="100%" stop-color="#10b981"/>
+                </linearGradient>
+              </defs>
+              <path d="M 10 65 A 55 55 0 0 1 120 65" fill="none" stroke="url(#arc-tsla)" stroke-width="8" stroke-linecap="round" stroke-dasharray="173" stroke-dashoffset="0"/>
+              <!-- 30% bullish = bearish needle position -->
+              <line x1="65" y1="65" x2="65" y2="20" stroke="var(--text)" stroke-width="2" stroke-linecap="round" transform="rotate(-63, 65, 65)"/>
+              <circle cx="65" cy="65" r="4" fill="var(--text)"/>
+            </svg>
+            <p class="text-center text-xs font-bold" style="color:var(--danger);">Bearish</p>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <img src="https://assets.parqet.com/logos/symbol/TSLA" alt="TSLA" class="w-7 h-7 rounded-full object-contain" style="filter:drop-shadow(0 0 4px rgba(227,25,55,0.5));">
+                <span class="text-[var(--text)] font-bold text-lg">TSLA</span>
+              </div>
+              <span class="text-sm font-bold tabular-nums" style="color:var(--danger);">-1.07%</span>
+            </div>
+            <p class="text-muted text-xs mb-3">2 influencers — delivery concerns flagged</p>
+
+            <div class="sentiment-bar mb-3">
+              <div class="sentiment-bar-fill" style="width:70%;"></div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="avatar-stack">
+                <img src="https://unavatar.io/twitter/zerohedge" alt="@zerohedge" class="avatar-bearish" title="@zerohedge — Bearish"
+                  onerror="this.style.display='none';">
+                <img src="https://unavatar.io/twitter/unusual_whales" alt="@unusual_whales" class="avatar-bearish" title="@unusual_whales — Bearish"
+                  onerror="this.style.display='none';">
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-muted text-xs">Confidence</span>
+                <div class="confidence-dots">
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled"></div>
+                  <div class="confidence-dot filled-warn"></div>
+                  <div class="confidence-dot"></div>
+                  <div class="confidence-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <p class="text-[#5c5e73] text-xs text-center mt-4">Mock data — consensus is calculated automatically when the scraper runs.</p>
+
+    <!-- ==================== SIGNAL FEED ==================== -->
+    <div class="mb-4">
+      <div class="flex items-center gap-2 mb-5">
+        <div class="live-dot"></div>
+        <h3 class="font-serif text-lg text-[var(--text)]">Latest Signals</h3>
+        <span class="text-muted text-xs ml-auto">Updated in real-time</span>
+      </div>
+
+      <div id="signals-container" class="grid gap-3">
+        <!-- Signal 1: NVDA bullish -->
+        <div class="signal-card signal-card-bullish flex items-center gap-4">
+          <img src="https://unavatar.io/twitter/unusual_whales" alt="@unusual_whales" class="w-10 h-10 rounded-full object-cover flex-shrink-0" style="border:2px solid var(--accent);"
+            onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0\' style=\'background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:white;\'>UW</div>';">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-[var(--text)] text-sm font-bold">NVDA</span>
+              <span class="text-accent text-xs font-semibold">↑ Bullish</span>
+              <span class="text-muted text-xs ml-auto">2h ago</span>
+            </div>
+            <p class="text-muted text-xs truncate">@unusual_whales — "NVDA call flow massive today, whales loading"</p>
+          </div>
+          <div class="flex flex-col items-end gap-1 flex-shrink-0">
+            <span class="text-accent text-sm font-bold tabular-nums">9/10</span>
+            <div class="confidence-dots">
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Signal 2: TSLA bearish -->
+        <div class="signal-card signal-card-bearish flex items-center gap-4">
+          <img src="https://unavatar.io/twitter/zerohedge" alt="@zerohedge" class="w-10 h-10 rounded-full object-cover flex-shrink-0" style="border:2px solid var(--danger);"
+            onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0\' style=\'background:linear-gradient(135deg,#ef4444,#f97316);color:white;\'>ZH</div>';">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-[var(--text)] text-sm font-bold">TSLA</span>
+              <span class="text-xs font-semibold" style="color:var(--danger);">↓ Bearish</span>
+              <span class="text-muted text-xs ml-auto">3h ago</span>
+            </div>
+            <p class="text-muted text-xs truncate">@zerohedge — "Tesla delivery numbers disappointing, margin pressure ahead"</p>
+          </div>
+          <div class="flex flex-col items-end gap-1 flex-shrink-0">
+            <span class="text-brass text-sm font-bold tabular-nums">7/10</span>
+            <div class="confidence-dots">
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled-warn"></div>
+              <div class="confidence-dot filled-warn"></div>
+              <div class="confidence-dot"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Signal 3: PLTR bullish -->
+        <div class="signal-card signal-card-bullish flex items-center gap-4">
+          <img src="https://unavatar.io/twitter/chamath" alt="@chamath" class="w-10 h-10 rounded-full object-cover flex-shrink-0" style="border:2px solid var(--accent);"
+            onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0\' style=\'background:linear-gradient(135deg,#10b981,#14b8a6);color:white;\'>CP</div>';">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-[var(--text)] text-sm font-bold">PLTR</span>
+              <span class="text-accent text-xs font-semibold">↑ Bullish</span>
+              <span class="text-muted text-xs ml-auto">4h ago</span>
+            </div>
+            <p class="text-muted text-xs truncate">@chamath — "Palantir is the real AI infrastructure play, still undervalued"</p>
+          </div>
+          <div class="flex flex-col items-end gap-1 flex-shrink-0">
+            <span class="text-accent text-sm font-bold tabular-nums">8/10</span>
+            <div class="confidence-dots">
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Signal 4: META bullish -->
+        <div class="signal-card signal-card-bullish flex items-center gap-4">
+          <img src="https://unavatar.io/twitter/StockMoe" alt="@StockMoe" class="w-10 h-10 rounded-full object-cover flex-shrink-0" style="border:2px solid var(--accent);"
+            onerror="this.outerHTML='<div class=\'w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0\' style=\'background:linear-gradient(135deg,#8b5cf6,#ec4899);color:white;\'>SM</div>';">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-[var(--text)] text-sm font-bold">META</span>
+              <span class="text-accent text-xs font-semibold">↑ Bullish</span>
+              <span class="text-muted text-xs ml-auto">5h ago</span>
+            </div>
+            <p class="text-muted text-xs truncate">@StockMoe — "Meta's AI ad targeting is printing money, breakout incoming"</p>
+          </div>
+          <div class="flex flex-col items-end gap-1 flex-shrink-0">
+            <span class="text-accent text-sm font-bold tabular-nums">7/10</span>
+            <div class="confidence-dots">
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled"></div>
+              <div class="confidence-dot filled-warn"></div>
+              <div class="confidence-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-[var(--muted)] text-xs text-center mt-4">Mock data — run the scraper for live AI-analyzed signals. Not investment advice.</p>
   </section>
 
 
@@ -610,7 +929,7 @@
   <section id="sec-feed" class="px-6 section-spacer max-w-3xl mx-auto reveal">
     <div class="flex items-center gap-3 mb-6">
       <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Live Feed</span>
-      <h2 class="font-serif text-xl text-[#e8e9ed]">Latest Posts</h2>
+      <h2 class="font-serif text-xl text-[var(--text)]">Latest Posts</h2>
     </div>
     <div id="posts-container">
       <p class="text-center text-muted py-12 text-sm">Click "Run Scraper" to fetch the latest posts.</p>
@@ -628,52 +947,52 @@
 
   <section id="sec-pricing" class="px-6 section-spacer max-w-4xl mx-auto relative overflow-hidden reveal">
     <!-- Ambient glow -->
-    <div class="absolute -top-20 left-1/3 w-[500px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none" style="background: radial-gradient(circle, #d4a843 0%, transparent 70%);"></div>
+    <div class="ambient-orb absolute -top-20 left-1/3 w-[500px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none" style="background: radial-gradient(circle, #d4a843 0%, transparent 70%);"></div>
     <div class="text-center mb-12">
       <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Pricing</span>
-      <h2 class="font-serif text-3xl text-[#e8e9ed] mt-4">Simple, <span class="gradient-text-brass">transparent</span> plans</h2>
+      <h2 class="font-serif text-3xl text-[var(--text)] mt-4">Simple, <span class="gradient-text-brass">transparent</span> plans</h2>
       <p class="text-muted text-sm mt-2">Start free. Upgrade when you need more signals.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
       <!-- Free tier -->
       <div class="glass-panel rounded-2xl p-6 flex flex-col">
-        <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Starter</h3>
+        <h3 class="font-serif text-xl text-[var(--text)] mb-1">Starter</h3>
         <p class="text-muted text-sm mb-4">For curious investors</p>
-        <p class="text-3xl font-bold text-[#e8e9ed] mb-1 tabular-nums">$0<span class="text-muted text-sm font-normal">/mo</span></p>
-        <p class="text-[#5c5e73] text-xs mb-6">Free forever</p>
+        <p class="text-3xl font-bold text-[var(--text)] mb-1 tabular-nums">$0<span class="text-muted text-sm font-normal">/mo</span></p>
+        <p class="text-[var(--muted)] text-xs mb-6">Free forever</p>
         <ul class="space-y-3 mb-8 flex-grow">
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Top 10 trending stocks</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Top 5 influencers</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Live post feed</li>
-          <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> Signal alerts</li>
-          <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> Consensus radar</li>
-          <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> Holmes Score history</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-[var(--muted)]">—</span> Signal alerts</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-[var(--muted)]">—</span> Consensus radar</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-[var(--muted)]">—</span> Holmes Score history</li>
         </ul>
         <button class="btn-pill btn-pill-outline w-full">Get Started</button>
       </div>
       <!-- Pro tier (highlighted) -->
       <div class="glass-panel rounded-2xl p-6 flex flex-col relative border-accent/40">
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-[#08090e] text-xs font-bold px-3 py-1 rounded-full">Most Popular</div>
-        <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Detective</h3>
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-xs font-bold px-3 py-1 rounded-full" style="color:var(--on-accent);">Most Popular</div>
+        <h3 class="font-serif text-xl text-[var(--text)] mb-1">Detective</h3>
         <p class="text-muted text-sm mb-4">For active investors</p>
-        <p class="text-3xl font-bold text-[#e8e9ed] mb-1 tabular-nums">$19<span class="text-muted text-sm font-normal">/mo</span></p>
-        <p class="text-[#5c5e73] text-xs mb-6">Billed monthly</p>
+        <p class="text-3xl font-bold text-[var(--text)] mb-1 tabular-nums">$19<span class="text-muted text-sm font-normal">/mo</span></p>
+        <p class="text-[var(--muted)] text-xs mb-6">Billed monthly</p>
         <ul class="space-y-3 mb-8 flex-grow">
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Everything in Starter</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Real-time signal alerts</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Consensus radar</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Holmes Score tracking</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Portfolio gap analysis</li>
-          <li class="text-muted text-sm flex gap-2"><span class="text-[#5c5e73]">—</span> AI thesis reports</li>
+          <li class="text-muted text-sm flex gap-2"><span class="text-[var(--muted)]">—</span> AI thesis reports</li>
         </ul>
         <button class="btn-pill btn-pill-accent w-full">Start Free Trial</button>
       </div>
       <!-- Premium tier -->
       <div class="glass-panel rounded-2xl p-6 flex flex-col">
-        <h3 class="font-serif text-xl text-[#e8e9ed] mb-1">Holmes Pro</h3>
+        <h3 class="font-serif text-xl text-[var(--text)] mb-1">Holmes Pro</h3>
         <p class="text-muted text-sm mb-4">For serious traders</p>
-        <p class="text-3xl font-bold text-[#e8e9ed] mb-1 tabular-nums">$49<span class="text-muted text-sm font-normal">/mo</span></p>
-        <p class="text-[#5c5e73] text-xs mb-6">Billed monthly</p>
+        <p class="text-3xl font-bold text-[var(--text)] mb-1 tabular-nums">$49<span class="text-muted text-sm font-normal">/mo</span></p>
+        <p class="text-[var(--muted)] text-xs mb-6">Billed monthly</p>
         <ul class="space-y-3 mb-8 flex-grow">
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> Everything in Detective</li>
           <li class="text-muted text-sm flex gap-2"><span class="text-accent">✓</span> AI thesis reports (unlimited)</li>
@@ -685,7 +1004,7 @@
         <button class="btn-pill btn-pill-outline w-full border-brass/30 text-brass">Contact Sales</button>
       </div>
     </div>
-    <p class="text-[#5c5e73] text-xs text-center mt-6">All plans include a 14-day free trial. No credit card required. Not financial advice.</p>
+    <p class="text-[var(--muted)] text-xs text-center mt-6">All plans include a 14-day free trial. No credit card required. Not financial advice.</p>
   </section>
 
 
@@ -702,15 +1021,15 @@
         <div class="md:col-span-1">
           <div class="flex items-center gap-2 mb-3">
             <img src="detective-face.svg" alt="StockHolmes" width="28" height="28" class="logo-icon">
-            <span class="font-serif text-lg text-[#e8e9ed]">StockHolmes</span>
+            <span class="font-serif text-lg text-[var(--text)]">StockHolmes</span>
           </div>
           <p class="text-muted text-sm leading-relaxed mb-4">AI-powered investment intelligence. We investigate what the smart money is talking about on X.</p>
           <!-- Social links -->
           <div class="flex gap-3">
-            <a href="#" class="text-muted hover:text-[#e8e9ed] transition-colors" title="X / Twitter">
+            <a href="#" class="text-muted hover:text-[var(--text)] transition-colors" title="X / Twitter">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </a>
-            <a href="#" class="text-muted hover:text-[#e8e9ed] transition-colors" title="GitHub">
+            <a href="#" class="text-muted hover:text-[var(--text)] transition-colors" title="GitHub">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
             </a>
           </div>
@@ -718,33 +1037,33 @@
 
         <!-- Product column -->
         <div>
-          <h4 class="text-[#e8e9ed] text-sm font-semibold mb-4">Product</h4>
+          <h4 class="text-[var(--text)] text-sm font-semibold mb-4">Product</h4>
           <ul class="space-y-2.5">
-            <li><a href="#sec-trending" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">Trending Stocks</a></li>
-            <li><a href="#sec-signals" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">Signal Alerts</a></li>
-            <li><a href="#sec-consensus" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">Consensus Radar</a></li>
-            <li><a href="#sec-influencers" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">Influencer Tracking</a></li>
-            <li><a href="#sec-pricing" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">Pricing</a></li>
+            <li><a href="#sec-trending" class="text-muted text-sm hover:text-[var(--text)] transition-colors">Trending Stocks</a></li>
+            <li><a href="#sec-signals" class="text-muted text-sm hover:text-[var(--text)] transition-colors">Signal Alerts</a></li>
+            <li><a href="#sec-signals" class="text-muted text-sm hover:text-[var(--text)] transition-colors">Market Intelligence</a></li>
+            <li><a href="#sec-influencers" class="text-muted text-sm hover:text-[var(--text)] transition-colors">Influencer Tracking</a></li>
+            <li><a href="#sec-pricing" class="text-muted text-sm hover:text-[var(--text)] transition-colors">Pricing</a></li>
           </ul>
         </div>
 
         <!-- Resources column -->
         <div>
-          <h4 class="text-[#e8e9ed] text-sm font-semibold mb-4">Resources</h4>
+          <h4 class="text-[var(--text)] text-sm font-semibold mb-4">Resources</h4>
           <ul class="space-y-2.5">
-            <li><a href="#sec-showcase" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">How it Works</a></li>
-            <li><a href="#" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">API Docs</a></li>
-            <li><a href="#" class="text-muted text-sm hover:text-[#e8e9ed] transition-colors">Blog</a></li>
+            <li><a href="#sec-showcase" class="text-muted text-sm hover:text-[var(--text)] transition-colors">How it Works</a></li>
+            <li><a href="#" class="text-muted text-sm hover:text-[var(--text)] transition-colors">API Docs</a></li>
+            <li><a href="#" class="text-muted text-sm hover:text-[var(--text)] transition-colors">Blog</a></li>
           </ul>
         </div>
 
         <!-- Newsletter column -->
         <div>
-          <h4 class="text-[#e8e9ed] text-sm font-semibold mb-4">Stay in the loop</h4>
+          <h4 class="text-[var(--text)] text-sm font-semibold mb-4">Stay in the loop</h4>
           <p class="text-muted text-sm mb-3">Get weekly market signals and feature updates.</p>
           <form onsubmit="event.preventDefault();this.querySelector('button').textContent='Subscribed ✓';this.querySelector('input').value='';" class="flex gap-2">
-            <input type="email" placeholder="you@email.com" class="flex-1 bg-[#14151f] border border-border rounded-lg px-3 py-2 text-sm text-[#e8e9ed] placeholder-[#5c5e73] outline-none focus:border-accent/50 transition-colors">
-            <button type="submit" class="px-4 py-2 bg-accent text-[#08090e] font-semibold text-sm rounded-lg hover:brightness-110 transition-all">Subscribe</button>
+            <input type="email" placeholder="you@email.com" class="flex-1 bg-[var(--surface)] border border-border rounded-lg px-3 py-2 text-sm text-[var(--text)] placeholder-[var(--muted)] outline-none focus:border-accent/50 transition-colors">
+            <button type="submit" class="px-4 py-2 bg-accent font-semibold text-sm rounded-lg hover:brightness-110 transition-all" style="color:var(--on-accent);">Subscribe</button>
           </form>
         </div>
 
@@ -752,16 +1071,16 @@
 
       <!-- Bottom bar: copyright + legal -->
       <div class="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-        <span class="text-[#5c5e73] text-xs">© 2026 StockHolmes. Powered by Claude AI.</span>
+        <span class="text-[var(--muted)] text-xs">© 2026 StockHolmes. Powered by Claude AI.</span>
         <div class="flex gap-4">
-          <a href="#" class="text-[#5c5e73] text-xs hover:text-muted transition-colors">Privacy Policy</a>
-          <a href="#" class="text-[#5c5e73] text-xs hover:text-muted transition-colors">Terms of Service</a>
-          <a href="#" class="text-[#5c5e73] text-xs hover:text-muted transition-colors">Disclaimer</a>
+          <a href="#" class="text-[var(--muted)] text-xs hover:text-muted transition-colors">Privacy Policy</a>
+          <a href="#" class="text-[var(--muted)] text-xs hover:text-muted transition-colors">Terms of Service</a>
+          <a href="#" class="text-[var(--muted)] text-xs hover:text-muted transition-colors">Disclaimer</a>
         </div>
       </div>
 
       <!-- Legal disclaimer -->
-      <p class="text-[#5c5e73] text-xs text-center mt-4 max-w-2xl mx-auto leading-relaxed">
+      <p class="text-[var(--muted)] text-xs text-center mt-4 max-w-2xl mx-auto leading-relaxed">
         StockHolmes is not a registered investment advisor. All content is for informational and educational purposes only.
         Past performance of tracked influencers does not guarantee future results. Always do your own research before making investment decisions.
       </p>
@@ -775,9 +1094,9 @@
   ============================================================ -->
   <div id="command-bar" class="command-bar hidden">
     <div class="flex items-center gap-3">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9294a8" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input id="command-input" type="text" placeholder="Search stocks, influencers, or sections..." autocomplete="off">
-      <kbd class="text-[#5c5e73] text-xs border border-[#252640] rounded px-1.5 py-0.5 font-mono">ESC</kbd>
+      <kbd class="text-[var(--muted)] text-xs border border-[var(--border)] rounded px-1.5 py-0.5 font-mono">ESC</kbd>
     </div>
     <div id="command-results" class="command-results hidden"></div>
   </div>
@@ -787,6 +1106,37 @@
        JAVASCRIPT
   ============================================================ -->
   <script>
+
+    // =================================================================
+    // THEME TOGGLE — switch between dark and light mode
+    // =================================================================
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isLight = html.getAttribute('data-theme') === 'light';
+
+      if (isLight) {
+        // Switch to dark
+        html.removeAttribute('data-theme');
+        localStorage.setItem('stockholmes-theme', 'dark');
+        document.getElementById('icon-sun').classList.remove('hidden');
+        document.getElementById('icon-moon').classList.add('hidden');
+      } else {
+        // Switch to light
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('stockholmes-theme', 'light');
+        document.getElementById('icon-sun').classList.add('hidden');
+        document.getElementById('icon-moon').classList.remove('hidden');
+      }
+    }
+
+    // Set correct icon on page load based on saved theme
+    (function() {
+      if (document.documentElement.getAttribute('data-theme') === 'light') {
+        document.getElementById('icon-sun').classList.add('hidden');
+        document.getElementById('icon-moon').classList.remove('hidden');
+      }
+    })();
+
 
     // =================================================================
     // DATA — Stock and Influencer items
@@ -1001,13 +1351,13 @@
         btn.innerHTML = html;
         btn.style.cssText = [
           'width:44px', 'height:44px', 'border-radius:50%',
-          'border:1px solid #252640', 'background:#14151f',
-          'color:#9294a8', 'font-size:26px', 'cursor:pointer',
+          'border:1px solid var(--border)', 'background:var(--surface)',
+          'color:var(--text-secondary)', 'font-size:26px', 'cursor:pointer',
           'transition:background 0.2s,color 0.2s',
           'display:flex', 'align-items:center', 'justify-content:center',
         ].join(';');
-        btn.onmouseenter = () => { btn.style.background='#1a1b2e'; btn.style.color='#fff'; };
-        btn.onmouseleave = () => { btn.style.background='#14151f'; btn.style.color='#9294a8'; };
+        btn.onmouseenter = () => { btn.style.background='var(--surface-2)'; btn.style.color='var(--text)'; };
+        btn.onmouseleave = () => { btn.style.background='var(--surface)'; btn.style.color='var(--text-secondary)'; };
         return btn;
       }
     }
@@ -1090,14 +1440,14 @@
     function buildStocksTable() {
       const rows = STOCKS.map(s => {
         const isPos = s.change.startsWith('+');
-        return `<div class="flex items-center justify-between px-4 py-3 border-b border-border/50 hover:bg-[#1a1b2e]/50 transition-colors">
+        return `<div class="flex items-center justify-between px-4 py-3 border-b border-border/50 hover:bg-[var(--surface-2)]/50 transition-colors">
           <div class="flex items-center gap-3">
             <span class="text-muted text-xs w-6">#${s.rank}</span>
-            <span class="text-[#e8e9ed] font-bold text-sm">${s.ticker}</span>
+            <span class="text-[var(--text)] font-bold text-sm">${s.ticker}</span>
             <span class="text-muted text-xs">${s.name}</span>
           </div>
           <div class="flex items-center gap-4">
-            <span class="text-[#e8e9ed] text-sm">${s.price}</span>
+            <span class="text-[var(--text)] text-sm">${s.price}</span>
             <span class="text-sm font-semibold" style="color:${isPos ? '#10b981' : '#f87171'}">${isPos ? '↑' : '↓'} ${s.change}</span>
             <span class="text-muted text-xs w-20 text-right">${s.mentions} mentions</span>
           </div>
@@ -1109,7 +1459,7 @@
     function buildInfluencersTable() {
       const rows = INFLUENCERS.map(inf => {
         const scoreColor = inf.holmesScore >= 80 ? '#10b981' : inf.holmesScore >= 65 ? '#d4a843' : '#f87171';
-        return `<div class="flex items-center justify-between px-4 py-3 border-b border-border/50 hover:bg-[#1a1b2e]/50 transition-colors">
+        return `<div class="flex items-center justify-between px-4 py-3 border-b border-border/50 hover:bg-[var(--surface-2)]/50 transition-colors">
           <div class="flex items-center gap-3">
             <span class="text-[#a78bfa] font-bold text-sm">@${inf.handle}</span>
             <span class="text-muted text-xs">${inf.name}</span>
@@ -1127,6 +1477,68 @@
     // Build tables on load so they're ready when user clicks "View All"
     buildStocksTable();
     buildInfluencersTable();
+
+
+    // =================================================================
+    // LIVE MARKET DATA — fetch real prices from Yahoo Finance on page load
+    // Updates the STOCKS array and re-renders the carousel + table
+    // =================================================================
+    async function fetchLiveMarketData() {
+      try {
+        const res = await fetch('/api/market-data');
+        const json = await res.json();
+        if (!json.success || !json.data) return;
+
+        const liveData = json.data;
+
+        // Update each stock in the STOCKS array with live data
+        STOCKS.forEach(s => {
+          const live = liveData[s.ticker];
+          if (!live) return;
+
+          s.price  = '$' + live.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          s.change = live.change_percent;
+          s.name   = live.name || s.name;
+          s.spark  = live.spark || s.spark;
+        });
+
+        // Re-render the carousel cards with updated prices
+        assetsCF.cardEls.forEach((el, i) => {
+          const isActive = assetsCF.offsetFor(i) === 0;
+          el.innerHTML = renderStock(STOCKS[i], isActive);
+        });
+
+        // Re-render the "View All" table too
+        buildStocksTable();
+
+        // Update the showcase card (Top Stocks Surfaced) with live prices
+        const showcaseTickers = ['NVDA', 'TSLA', 'AAPL', 'META'];
+        const showcaseRows = document.querySelectorAll('#showcase-stocks .flex.items-center.justify-between');
+        showcaseTickers.forEach((ticker, i) => {
+          const live = liveData[ticker];
+          if (!live || !showcaseRows[i]) return;
+          const priceEl = showcaseRows[i].querySelector('.sc-price');
+          const changeEl = showcaseRows[i].querySelector('.sc-change');
+          if (priceEl) priceEl.textContent = '$' + live.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          if (changeEl) {
+            changeEl.textContent = live.change_percent;
+            // Update color based on positive/negative
+            const isPos = live.change_percent.startsWith('+');
+            changeEl.className = `${isPos ? 'text-accent' : 'text-[#f87171]'} text-xs font-bold tabular-nums sc-change`;
+          }
+        });
+
+        console.log('[StockHolmes] Live market data loaded');
+      } catch (err) {
+        console.warn('[StockHolmes] Could not fetch live prices, using defaults:', err.message);
+      }
+    }
+
+    // Fetch live data on page load
+    fetchLiveMarketData();
+
+    // Refresh prices every 60 seconds
+    setInterval(fetchLiveMarketData, 60000);
 
 
     // =================================================================
@@ -1160,7 +1572,7 @@
             container.innerHTML = posts.map(post => `
               <div class="bg-surface border border-border rounded-xl p-5 mb-4 hover:-translate-y-1 transition-transform duration-200">
                 <p class="text-accent text-sm font-semibold mb-2">@${post.username || 'unknown'}</p>
-                <p class="text-[#e8e9ed] text-sm leading-relaxed mb-3">${post.content || post.text || ''}</p>
+                <p class="text-[var(--text)] text-sm leading-relaxed mb-3">${post.content || post.text || ''}</p>
                 <p class="text-muted text-xs">${post.scraped_at ? new Date(post.scraped_at).toLocaleString() : ''}</p>
               </div>`).join('');
           } else {
@@ -1211,7 +1623,7 @@
       { type: 'section', label: 'Trending Stocks', sub: 'Jump to section', target: 'sec-trending' },
       { type: 'section', label: 'Influencers', sub: 'Jump to section', target: 'sec-influencers' },
       { type: 'section', label: 'Signal Alerts', sub: 'Jump to section', target: 'sec-signals' },
-      { type: 'section', label: 'Consensus Radar', sub: 'Jump to section', target: 'sec-consensus' },
+      { type: 'section', label: 'Market Intelligence', sub: 'Jump to section', target: 'sec-signals' },
       { type: 'section', label: 'Live Feed', sub: 'Jump to section', target: 'sec-feed' },
       { type: 'section', label: 'How it Works', sub: 'Jump to section', target: 'sec-showcase' },
       { type: 'section', label: 'Pricing', sub: 'Jump to section', target: 'sec-pricing' },
@@ -1258,7 +1670,7 @@
           return `<div class="command-result" data-type="${m.type}" data-target="${m.target || ''}" data-ticker="${m.ticker || ''}" data-handle="${m.handle || ''}">
             <span class="text-sm">${icon}</span>
             <div>
-              <p class="text-[#e8e9ed] text-sm font-semibold">${m.label}</p>
+              <p class="text-[var(--text)] text-sm font-semibold">${m.label}</p>
               <p class="text-muted text-xs">${m.sub}</p>
             </div>
           </div>`;

@@ -14,12 +14,316 @@
    - Danger:      #f87171 (soft red)
 =================================================================== */
 
+/* ====================================================================
+   THEME VARIABLES — all colors as CSS custom properties
+   Dark mode is default, light mode overrides below
+==================================================================== */
+:root {
+  /* Fey-inspired true-black palette — deeper, more cinematic */
+  --bg:         #000000;
+  --surface:    #0a0a0f;
+  --surface-2:  #111118;
+  --border:     #1a1a2e;
+  --text:       #e8e9ed;
+  --text-secondary: #9294a8;
+  --muted:      #5c5e73;
+  --accent:     #10b981;
+  --accent-glow: rgba(16, 185, 129, 0.15);
+  --secondary:  #a78bfa;
+  --brass:      #d4a843;
+  --danger:     #f87171;
+
+  /* Glass & card backgrounds — darker for true-black base */
+  --glass:        rgba(10, 10, 15, 0.7);
+  --glass-strong: rgba(0, 0, 0, 0.92);
+  --glass-panel:  rgba(14, 14, 22, 0.65);
+  --card-bg:      rgba(14, 14, 22, 0.75);
+  --card-border:  rgba(255, 255, 255, 0.06);
+  --card-shine:   rgba(255, 255, 255, 0.10);
+  --card-shine-2: rgba(255, 255, 255, 0.03);
+  --card-shadow:  rgba(0, 0, 0, 0.7);
+  --card-inset:   rgba(255, 255, 255, 0.06);
+
+  /* Text on colored buttons (always contrasts with accent bg) */
+  --on-accent:    #08090e;
+
+  /* Overlay intensity */
+  --hover-bg:     rgba(255, 255, 255, 0.06);
+  --noise-opacity: 0.045;
+}
+
+/* LIGHT MODE overrides — clean, professional, Apple-inspired */
+[data-theme="light"] {
+  --bg:         #f8f9fb;
+  --surface:    #ffffff;
+  --surface-2:  #f1f2f6;
+  --border:     #d1d5db;
+  --text:       #111827;
+  --text-secondary: #6b7280;
+  --muted:      #9ca3af;
+  --accent:     #059669;
+  --secondary:  #7c3aed;
+  --brass:      #b45309;
+  --danger:     #dc2626;
+
+  /* Cards & panels — solid white with real shadow depth */
+  --glass:        rgba(255, 255, 255, 0.90);
+  --glass-strong: rgba(255, 255, 255, 0.98);
+  --glass-panel:  #ffffff;
+  --card-bg:      #ffffff;
+  --card-border:  rgba(0, 0, 0, 0.10);
+  --card-shine:   rgba(255, 255, 255, 0.0);
+  --card-shine-2: rgba(255, 255, 255, 0.0);
+  --card-shadow:  rgba(0, 0, 0, 0.06);
+  --card-inset:   rgba(0, 0, 0, 0.0);
+
+  --on-accent:    #ffffff;
+
+  --hover-bg:     rgba(0, 0, 0, 0.04);
+  --noise-opacity: 0.015;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Custom scrollbar — slim and dark */
+/* ====================================================================
+   FEY-INSPIRED: Typography refinements — tight tracking, crisp rendering
+   Fey uses negative letter-spacing for that premium, dense headline feel
+==================================================================== */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  letter-spacing: -0.01em;
+}
+
+/* Headlines — tighter tracking like Fey's Calibre font */
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Serif display headings — even tighter for drama */
+.font-serif {
+  letter-spacing: -0.03em;
+}
+
+/* Smooth theme transition on key elements */
+body,
+.glass, .glass-strong, .glass-panel,
+.stock-card, .influencer-card,
+.showcase-card-inner, .command-bar,
+.section-tab, .cf-dot, .btn-pill,
+.gradient-divider, .metric-label {
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Light mode: flip white overlays to dark overlays */
+/* Nav search bar — adapts to theme */
+.nav-search-bar {
+  background: var(--hover-bg);
+  border: 1px solid var(--card-border);
+}
+.nav-search-bar input::placeholder { color: var(--muted); }
+
+/* ====================================================================
+   LIGHT MODE — component-level overrides for a polished light theme
+   Follows Apple/Linear design: white cards, subtle shadows, clean type
+==================================================================== */
+
+/* Nav — solid white with a clean bottom border */
+[data-theme="light"] .glass-strong {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Gradient text — richer colors that pop on white */
+[data-theme="light"] .gradient-text-emerald {
+  background: linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+[data-theme="light"] .gradient-text-brass {
+  background: linear-gradient(135deg, #92400e 0%, #b45309 50%, #d97706 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Stock & influencer cards — white cards with clean layered shadows */
+[data-theme="light"] .stock-card,
+[data-theme="light"] .influencer-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 12px 28px rgba(0, 0, 0, 0.05);
+}
+
+/* Remove the shine overlays — they look odd on white */
+[data-theme="light"] .stock-card::before,
+[data-theme="light"] .influencer-card::before {
+  background: none;
+}
+[data-theme="light"] .stock-card::after,
+[data-theme="light"] .influencer-card::after {
+  background: none;
+}
+
+/* Active card glows still work but softer */
+[data-theme="light"] .stock-active {
+  border-color: rgba(5, 150, 105, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(5, 150, 105, 0.15),
+    0 4px 12px rgba(5, 150, 105, 0.12),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+}
+[data-theme="light"] .influencer-active {
+  border-color: rgba(124, 58, 237, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(124, 58, 237, 0.15),
+    0 4px 12px rgba(124, 58, 237, 0.12),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Card hover — subtle lift with clean shadow */
+[data-theme="light"] .stock-card:hover,
+[data-theme="light"] .influencer-card:hover {
+  border-color: #d1d5db;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 8px 20px rgba(0, 0, 0, 0.08),
+    0 16px 40px rgba(0, 0, 0, 0.06);
+}
+
+/* Glass panels — solid white with clean borders */
+[data-theme="light"] .glass-panel {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+[data-theme="light"] .glass-panel:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* Showcase cards — white with shadow depth */
+[data-theme="light"] .showcase-card-inner {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+[data-theme="light"] .showcase-card-inner:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Buttons — adjust for light bg */
+[data-theme="light"] .btn-pill-accent {
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(5, 150, 105, 0.3), 0 4px 12px rgba(5, 150, 105, 0.15);
+}
+[data-theme="light"] .btn-pill-outline {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+[data-theme="light"] .btn-pill-outline:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* Section tabs — clean borders */
+[data-theme="light"] .section-tab {
+  border-color: #d1d5db;
+}
+[data-theme="light"] .section-tab:hover {
+  background: #f3f4f6;
+}
+[data-theme="light"] .section-tab-active {
+  color: #ffffff;
+}
+
+/* Dots — darker for visibility */
+[data-theme="light"] .cf-dot { background: #d1d5db; }
+[data-theme="light"] .cf-dot:hover { background: #9ca3af; }
+
+/* Track button */
+[data-theme="light"] .track-btn {
+  border-color: rgba(124, 58, 237, 0.3);
+  color: #7c3aed;
+}
+
+/* Command bar */
+[data-theme="light"] .command-bar {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #d1d5db;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10), 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .command-results {
+  border-top-color: #e5e7eb;
+}
+
+/* Gradient divider — softer for light bg */
+[data-theme="light"] .gradient-divider {
+  background: radial-gradient(
+    50% 100% at 50% 50%,
+    rgba(5, 150, 105, 0.25) 0%,
+    rgba(124, 58, 237, 0.10) 50%,
+    transparent 100%
+  );
+}
+
+/* Glow orbs behind carousels — much softer on light */
+[data-theme="light"] .cf-glow { opacity: 0.25; }
+
+/* Ember glow on logos — less intense on light */
+[data-theme="light"] .stock-card .stock-logo,
+[data-theme="light"] .stock-card .stock-logo-fallback {
+  animation: none;
+  filter:
+    drop-shadow(0 0 3px var(--brand, rgba(5,150,105,0.3)))
+    drop-shadow(0 0 8px var(--brand-soft, rgba(5,150,105,0.12)));
+}
+
+/* Text glow on change % — remove in light mode */
+[data-theme="light"] .stock-card .stock-change.positive { text-shadow: none; }
+[data-theme="light"] .stock-card .stock-change.negative { text-shadow: none; }
+
+/* Influencer photo border — visible on white */
+[data-theme="light"] .influencer-card .influencer-photo {
+  border-color: #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Ambient glow orbs — hide in light mode (they muddy the clean look) */
+[data-theme="light"] .ambient-orb { opacity: 0.04 !important; }
+
+/* Noise overlay — barely visible in light mode */
+[data-theme="light"] .noise-overlay { opacity: 0.015; }
+
+/* Holmes Score badge */
+[data-theme="light"] .holmes-score { background: rgba(0, 0, 0, 0.03); }
+
+/* Nav search bar */
+[data-theme="light"] .nav-search-bar {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+/* Broker modal */
+[data-theme="light"] #broker-modal > div {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Custom scrollbar — matches theme */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #08090e; }
-::-webkit-scrollbar-thumb { background: #252640; border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
 
 /* ====================================================================
@@ -31,7 +335,7 @@
   inset: 0;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.045;
+  opacity: var(--noise-opacity);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 256px 256px;
@@ -61,20 +365,19 @@
    Semi-transparent bg + backdrop blur + inset light border
 ==================================================================== */
 .glass {
-  background: rgba(20, 21, 31, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 0.5px solid rgba(255, 255, 255, 0.08);
-  /* Inset light border — subtle inner glow like Fey */
-  box-shadow: inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.06);
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 0.5px solid var(--card-border);
+  box-shadow: inset 0.5px 0.5px 0.5px var(--card-inset), inset 0 0 20px rgba(255,255,255,0.03);
 }
 
 .glass-strong {
-  background: rgba(20, 21, 31, 0.85);
+  background: var(--glass-strong);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 0.5px solid rgba(255, 255, 255, 0.10);
-  box-shadow: inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.08);
+  border-bottom: 0.5px solid var(--card-border);
+  box-shadow: none;
 }
 
 
@@ -156,12 +459,14 @@
   border-radius: 50%;
   pointer-events: none;
   filter: blur(80px);
-  opacity: 0.55;
+  /* Toned down — Fey keeps ambient light barely perceptible */
+  opacity: 0.35;
 }
 
 /* Updated glow colors to match refined palette */
-.cf-glow-green  { background: radial-gradient(ellipse, rgba(16, 185, 129, 0.35) 0%, transparent 70%); }
-.cf-glow-purple { background: radial-gradient(ellipse, rgba(167, 139, 250, 0.35) 0%, transparent 70%); }
+/* Reduced glow intensity for Fey-level restraint */
+.cf-glow-green  { background: radial-gradient(ellipse, rgba(16, 185, 129, 0.20) 0%, transparent 70%); }
+.cf-glow-purple { background: radial-gradient(ellipse, rgba(167, 139, 250, 0.20) 0%, transparent 70%); }
 
 
 /* ====================================================================
@@ -219,21 +524,19 @@
   position: relative;
   overflow: hidden;
 
-  /* Fey-style glassmorphism — semi-transparent with blur */
-  background: rgba(26, 27, 46, 0.75);
+  /* Glassmorphism — adapts to theme */
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
-  /* Thin Fey-style inset light border */
-  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border: 0.5px solid var(--card-border);
 
-  /* Multi-layer shadow + inset glow for depth */
   box-shadow:
-    inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.06),
-    0 1px 2px  rgba(0, 0, 0, 0.7),
-    0 4px 8px  rgba(0, 0, 0, 0.55),
-    0 16px 32px rgba(0, 0, 0, 0.45),
-    0 32px 56px rgba(0, 0, 0, 0.3);
+    inset 0.5px 0.5px 0.5px var(--card-inset),
+    0 1px 2px  var(--card-shadow),
+    0 4px 8px  var(--card-shadow),
+    0 16px 32px var(--card-shadow),
+    0 32px 56px var(--card-shadow);
 
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -246,8 +549,8 @@
   border-radius: inherit;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.10) 0%,
-    rgba(255, 255, 255, 0.03) 40%,
+    var(--card-shine) 0%,
+    var(--card-shine-2) 40%,
     transparent 60%
   );
   pointer-events: none;
@@ -261,7 +564,7 @@
   left: 20%;
   right: 20%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  background: linear-gradient(90deg, transparent, var(--card-border), transparent);
   pointer-events: none;
 }
 
@@ -352,14 +655,13 @@
   animation: ember-pulse 3s ease-in-out infinite;
 }
 
-.stock-card .stock-ticker   { font-size: 30px; font-weight: 900; color: #e8e9ed; letter-spacing: -1px; line-height: 1; }
-.stock-card .stock-name     { font-size: 11px; color: rgba(146,148,168,0.75); font-weight: 500; }
-/* Tabular nums so price digits align nicely (Fey-style) */
-.stock-card .stock-price    { font-size: 18px; font-weight: 700; color: #e8e9ed; font-variant-numeric: tabular-nums; }
+.stock-card .stock-ticker   { font-size: 30px; font-weight: 900; color: var(--text); letter-spacing: -1px; line-height: 1; }
+.stock-card .stock-name     { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
+.stock-card .stock-price    { font-size: 18px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
 .stock-card .stock-change   { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.stock-card .stock-change.positive { color: #10b981; text-shadow: 0 0 12px rgba(16,185,129,0.5); }
-.stock-card .stock-change.negative { color: #f87171; text-shadow: 0 0 12px rgba(248,113,113,0.5); }
-.stock-card .stock-mentions { font-size: 11px; color: rgba(92,94,115,0.9); font-weight: 500; }
+.stock-card .stock-change.positive { color: var(--accent); text-shadow: 0 0 12px rgba(16,185,129,0.5); }
+.stock-card .stock-change.negative { color: var(--danger); text-shadow: 0 0 12px rgba(248,113,113,0.5); }
+.stock-card .stock-mentions { font-size: 11px; color: var(--text-secondary); font-weight: 500; }
 
 
 /* ====================================================================
@@ -379,17 +681,17 @@
   position: relative;
   overflow: hidden;
 
-  /* Fey-style glassmorphism */
-  background: rgba(26, 27, 46, 0.75);
+  /* Glassmorphism — adapts to theme */
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  border: 0.5px solid var(--card-border);
   box-shadow:
-    inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.06),
-    0 1px 2px  rgba(0, 0, 0, 0.7),
-    0 4px 8px  rgba(0, 0, 0, 0.55),
-    0 16px 32px rgba(0, 0, 0, 0.45),
-    0 32px 56px rgba(0, 0, 0, 0.3);
+    inset 0.5px 0.5px 0.5px var(--card-inset),
+    0 1px 2px  var(--card-shadow),
+    0 4px 8px  var(--card-shadow),
+    0 16px 32px var(--card-shadow),
+    0 32px 56px var(--card-shadow);
 
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -400,7 +702,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.02) 40%, transparent 60%);
+  background: linear-gradient(135deg, var(--card-shine) 0%, var(--card-shine-2) 40%, transparent 60%);
   pointer-events: none;
 }
 
@@ -409,7 +711,7 @@
   position: absolute;
   top: 0; left: 20%; right: 20%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(90deg, transparent, var(--card-border), transparent);
   pointer-events: none;
 }
 
@@ -448,16 +750,16 @@
   box-shadow: 0 4px 16px rgba(0,0,0,0.5);
 }
 
-.influencer-card .influencer-handle { font-size: 13px; font-weight: 700; color: #a78bfa; }
-.influencer-card .influencer-name   { font-size: 14px; font-weight: 700; color: #e8e9ed; }
-.influencer-card .influencer-bio    { font-size: 11px; color: rgba(146,148,168,0.75); line-height: 1.5; }
+.influencer-card .influencer-handle { font-size: 13px; font-weight: 700; color: var(--secondary); }
+.influencer-card .influencer-name   { font-size: 14px; font-weight: 700; color: var(--text); }
+.influencer-card .influencer-bio    { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
 .influencer-card .influencer-stats  {
   display: flex;
   flex-direction: column;
   gap: 3px;
   margin-top: auto;
   font-size: 11px;
-  color: rgba(92,94,115,0.9);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -515,21 +817,21 @@
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 999px;
-  border: 1px solid #252640;
+  border: 1px solid var(--border);
   background: transparent;
-  color: #9294a8;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
 }
 .section-tab:hover {
-  background: #14151f;
-  color: #e8e9ed;
+  background: var(--surface);
+  color: var(--text);
 }
 .section-tab-active {
-  background: #10b981;
-  color: #08090e;
-  border-color: #10b981;
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
 }
 
 
@@ -540,13 +842,13 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #252640;
+  background: var(--border);
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.cf-dot:hover { background: #9294a8; }
+.cf-dot:hover { background: var(--text-secondary); }
 .cf-dot-active {
-  background: #10b981;
+  background: var(--accent);
   width: 18px;
   border-radius: 3px;
 }
@@ -570,9 +872,9 @@
 }
 
 .btn-pill-accent {
-  background: #10b981;
-  color: #08090e;
-  box-shadow: 0 0 24px rgba(16, 185, 129, 0.25), 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.25), 0 4px 12px var(--card-shadow);
 }
 .btn-pill-accent:hover {
   box-shadow: 0 0 36px rgba(16, 185, 129, 0.35), 0 6px 16px rgba(0, 0, 0, 0.5);
@@ -580,16 +882,16 @@
 }
 
 .btn-pill-outline {
-  background: rgba(20, 21, 31, 0.6);
+  background: var(--glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  color: #e8e9ed;
-  border: 0.5px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0.5px 0.5px 0.5px rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border: 0.5px solid var(--card-border);
+  box-shadow: inset 0.5px 0.5px 0.5px var(--card-inset);
 }
 .btn-pill-outline:hover {
-  background: rgba(20, 21, 31, 0.8);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--glass-strong);
+  border-color: var(--border);
   transform: translateY(-1px);
 }
 
@@ -600,21 +902,21 @@
 ==================================================================== */
 .stock-card:hover,
 .influencer-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--border);
   box-shadow:
-    inset 1px 1px 1px rgba(255, 255, 255, 0.1),
-    0 1px 2px  rgba(0, 0, 0, 0.7),
-    0 8px 16px rgba(0, 0, 0, 0.55),
-    0 24px 48px rgba(0, 0, 0, 0.45);
+    inset 1px 1px 1px var(--card-inset),
+    0 1px 2px  var(--card-shadow),
+    0 8px 16px var(--card-shadow),
+    0 24px 48px var(--card-shadow);
   transform: translateY(-2px);
 }
 
 /* Glass panel hover — subtle lift */
 .glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--border);
   box-shadow:
-    inset 1px 1px 0px rgba(255, 255, 255, 0.08),
-    0 8px 32px rgba(0, 0, 0, 0.5);
+    inset 1px 1px 0px var(--card-inset),
+    0 8px 32px var(--card-shadow);
   transition: all 0.25s ease;
 }
 
@@ -624,14 +926,14 @@
    Signal alerts, consensus, feed sections get the frosted look
 ==================================================================== */
 .glass-panel {
-  background: rgba(20, 21, 31, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  /* Visible inset glow on top-left edge — like light hitting glass */
+  background: var(--glass-panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
   box-shadow:
-    inset 1px 1px 0px rgba(255, 255, 255, 0.05),
-    0 4px 24px rgba(0, 0, 0, 0.4);
+    inset 1px 1px 0px var(--card-inset),
+    inset 0 0 20px rgba(255,255,255,0.03),
+    0 4px 24px var(--card-shadow);
   border-radius: 16px;
 }
 
@@ -685,10 +987,11 @@
 .gradient-divider {
   height: 1px;
   border: none;
+  /* Toned down for Fey-style subtlety — barely visible, elegant */
   background: radial-gradient(
     50% 100% at 50% 50%,
-    rgba(16, 185, 129, 0.4) 0%,
-    rgba(167, 139, 250, 0.15) 50%,
+    rgba(16, 185, 129, 0.25) 0%,
+    rgba(167, 139, 250, 0.08) 50%,
     transparent 100%
   );
   max-width: 600px;
@@ -712,7 +1015,7 @@
   display: block;
   width: 4px;
   border-radius: 2px;
-  background: #10b981;
+  background: var(--accent);
   animation: barPulse 0.8s ease-in-out infinite;
 }
 
@@ -740,14 +1043,14 @@
   z-index: 200;
   width: 460px;
   max-width: calc(100vw - 32px);
-  background: rgba(20, 21, 31, 0.9);
+  background: var(--glass-strong);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--card-border);
   border-radius: 16px;
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    inset 1px 1px 0px rgba(255, 255, 255, 0.05);
+    0 8px 32px var(--card-shadow),
+    inset 1px 1px 0px var(--card-inset);
   padding: 12px 16px;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
@@ -763,13 +1066,13 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #e8e9ed;
+  color: var(--text);
   font-size: 15px;
   font-family: inherit;
 }
 
 .command-bar input::placeholder {
-  color: #5c5e73;
+  color: var(--muted);
 }
 
 /* Results dropdown inside the command bar */
@@ -777,7 +1080,7 @@
   max-height: 240px;
   overflow-y: auto;
   margin-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--card-border);
   padding-top: 8px;
 }
 
@@ -792,7 +1095,7 @@
 }
 
 .command-result:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--hover-bg);
 }
 
 
@@ -819,7 +1122,7 @@
 
 .metric-label {
   font-size: 12px;
-  color: #9294a8;
+  color: var(--text-secondary);
   margin-top: 4px;
   font-weight: 500;
 }
@@ -877,24 +1180,24 @@
 }
 
 .showcase-card-inner {
-  background: rgba(20, 21, 31, 0.75);
+  background: var(--glass-panel);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--card-border);
   border-radius: 20px;
   padding: 24px;
   min-height: 380px;
   box-shadow:
-    inset 1px 1px 0px rgba(255, 255, 255, 0.05),
-    0 8px 32px rgba(0, 0, 0, 0.5);
+    inset 1px 1px 0px var(--card-inset),
+    0 8px 32px var(--card-shadow);
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .showcase-card-inner:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: var(--border);
   box-shadow:
-    inset 1px 1px 0px rgba(255, 255, 255, 0.08),
-    0 12px 40px rgba(0, 0, 0, 0.6);
+    inset 1px 1px 0px var(--card-inset),
+    0 12px 40px var(--card-shadow);
   transform: translateY(-4px);
 }
 
@@ -909,4 +1212,623 @@
   .showcase-card { width: 300px; }
   .showcase-card-inner { min-height: 340px; padding: 20px; }
   .feature-showcase-track { padding: 0 20px; }
+}
+
+
+/* ====================================================================
+   MARKET INTELLIGENCE — combined signals + consensus section
+==================================================================== */
+
+/* Consensus card — premium glass card with arc gauge */
+.consensus-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow:
+    0 1px 2px var(--card-shadow),
+    0 4px 16px var(--card-shadow);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.consensus-card:hover {
+  border-color: var(--border);
+  box-shadow:
+    0 2px 4px var(--card-shadow),
+    0 8px 24px var(--card-shadow);
+  transform: translateY(-2px);
+}
+
+/* Light mode override for consensus cards */
+[data-theme="light"] .consensus-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .consensus-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06);
+}
+
+/* Sentiment arc gauge container */
+.sentiment-gauge {
+  position: relative;
+  width: 130px;
+  height: 72px;
+  flex-shrink: 0;
+}
+.sentiment-gauge svg { overflow: visible; }
+
+/* Sentiment bar — thin horizontal gradient bar */
+.sentiment-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--danger) 0%, #fbbf24 50%, var(--accent) 100%);
+  position: relative;
+  overflow: hidden;
+}
+.sentiment-bar-fill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background: var(--surface-2);
+  opacity: 0.7;
+  border-radius: 0 3px 3px 0;
+}
+
+/* Avatar stack — overlapping profile pics */
+.avatar-stack {
+  display: flex;
+  align-items: center;
+}
+.avatar-stack img,
+.avatar-stack .avatar-fallback {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--bg);
+  margin-left: -8px;
+  position: relative;
+  transition: transform 0.2s ease, z-index 0.2s ease;
+}
+.avatar-stack img:first-child,
+.avatar-stack .avatar-fallback:first-child {
+  margin-left: 0;
+}
+.avatar-stack img:hover,
+.avatar-stack .avatar-fallback:hover {
+  transform: scale(1.2);
+  z-index: 10;
+}
+/* Colored ring around avatar to show stance */
+.avatar-bullish { box-shadow: 0 0 0 2px var(--accent); }
+.avatar-bearish { box-shadow: 0 0 0 2px var(--danger); }
+
+.avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: var(--surface-2);
+}
+
+/* Confidence bar — thin fill bar */
+.confidence-bar {
+  width: 60px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.confidence-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* Signal feed cards — colored left border */
+.signal-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  border-left: 3px solid transparent;
+  box-shadow: 0 1px 3px var(--card-shadow);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.signal-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px var(--card-shadow);
+}
+.signal-card-bullish { border-left-color: var(--accent); }
+.signal-card-bearish { border-left-color: var(--danger); }
+
+[data-theme="light"] .signal-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+[data-theme="light"] .signal-card-bullish { border-left: 3px solid var(--accent); }
+[data-theme="light"] .signal-card-bearish { border-left: 3px solid var(--danger); }
+
+/* Confidence dots — 5 dots showing signal strength */
+.confidence-dots {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+.confidence-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  transition: background 0.3s ease;
+}
+.confidence-dot.filled { background: var(--accent); }
+.confidence-dot.filled-warn { background: var(--brass); }
+
+/* Live pulse dot */
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+}
+
+/* Responsive: stack consensus cards vertically on mobile */
+@media (max-width: 768px) {
+  .consensus-grid { grid-template-columns: 1fr !important; }
+  .sentiment-gauge { width: 110px; height: 62px; }
+}
+
+
+/* =====================================================================
+   =====================================================================
+   NEW ADDITIONS — Fey-inspired Premium Overhaul
+   Added by Visual Architect, Interaction Specialist, and Data Storyteller
+   =====================================================================
+   ===================================================================== */
+
+
+/* ====================================================================
+   VISUAL ARCHITECT: Glass Premium — extra-blurred panels for hero/modals
+   Use on the most important UI surfaces for maximum depth
+==================================================================== */
+.glass-premium {
+  background: var(--glass-panel);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--card-border);
+  box-shadow:
+    inset 1px 1px 0px var(--card-inset),
+    inset 0 0 30px rgba(255,255,255,0.03),
+    0 8px 40px var(--card-shadow);
+  border-radius: 20px;
+}
+
+
+/* ====================================================================
+   INTERACTION SPECIALIST: Skeleton Loader — shimmer animation for loading
+   Shows a pulsing gradient placeholder while data loads
+==================================================================== */
+.skeleton-loader {
+  background: var(--surface);
+  background-image: linear-gradient(
+    90deg,
+    var(--surface) 0%,
+    var(--surface-2) 40%,
+    var(--surface) 80%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Light mode skeleton — uses lighter grays */
+[data-theme="light"] .skeleton-loader {
+  background: #f1f2f6;
+  background-image: linear-gradient(
+    90deg,
+    #f1f2f6 0%,
+    #e5e7eb 40%,
+    #f1f2f6 80%
+  );
+  background-size: 200% 100%;
+}
+
+
+/* ====================================================================
+   INTERACTION SPECIALIST: Enhanced Hover Micro-interactions
+   Subtle effects that reward interaction — purposeful, not flashy
+==================================================================== */
+
+/* Stock ticker gets a soft glow on card hover */
+.stock-card:hover .stock-ticker {
+  text-shadow: 0 0 12px var(--accent-glow);
+  transition: text-shadow 0.3s ease;
+}
+
+/* Stock logo scales up slightly on card hover — spring easing for bounce */
+.stock-card:hover .stock-logo {
+  transform: scale(1.05);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Signal card left border thickens on hover for emphasis */
+.signal-card {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, border-left-width 0.2s ease;
+}
+.signal-card:hover {
+  border-left-width: 4px;
+}
+
+/* Consensus card gets a subtle scale-up on hover */
+.consensus-card:hover {
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* All pill buttons get a satisfying press-down on click */
+.btn-pill:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
+
+/* ====================================================================
+   INTERACTION SPECIALIST: Fade-In-Up animation utility class
+   Use on elements that should gracefully appear from below
+==================================================================== */
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ====================================================================
+   INTERACTION SPECIALIST: Page Enter animation
+   Applies on page load — the entire content fades in smoothly
+==================================================================== */
+.page-enter {
+  animation: pageEnter 0.6s ease both;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+/* ====================================================================
+   INTERACTION SPECIALIST: Enhanced Command Bar spring animation
+   Uses overshoot cubic-bezier for a "pops into place" feel
+==================================================================== */
+.command-bar {
+  transition:
+    opacity 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    backdrop-filter 0.3s ease;
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+}
+
+.command-bar.hidden {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+
+/* ====================================================================
+   INTERACTION SPECIALIST: Stock Ticker Hover Glow
+   Any stock ticker or tabular number gets a subtle glow on hover
+==================================================================== */
+.stock-card .stock-ticker:hover,
+.stock-card .tabular-nums:hover {
+  text-shadow: 0 0 8px var(--accent-glow);
+  transition: text-shadow 0.2s ease;
+}
+
+
+/* ====================================================================
+   DATA STORYTELLER: Progressive Disclosure — expand/collapse panels
+   Hidden by default; add .expanded class via JS to reveal content
+   Animates max-height and opacity for a smooth open/close
+==================================================================== */
+.disclosure-panel {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.3s ease;
+}
+
+/* When expanded, allow content to show (600px is generous max) */
+.disclosure-panel.expanded {
+  max-height: 600px;
+  opacity: 1;
+}
+
+/* Toggle button — small, subtle, with a rotating chevron icon */
+.disclosure-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.disclosure-toggle:hover {
+  color: var(--text);
+  border-color: var(--text-secondary);
+  background: var(--hover-bg);
+}
+
+/* Chevron rotates 180° when panel is expanded */
+.disclosure-toggle .chevron {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.disclosure-toggle.active .chevron {
+  transform: rotate(180deg);
+}
+
+[data-theme="light"] .disclosure-toggle {
+  border-color: #d1d5db;
+}
+[data-theme="light"] .disclosure-toggle:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+
+/* ====================================================================
+   DATA STORYTELLER: Insight Priority hierarchy
+   Three tiers of visual importance for signal cards
+==================================================================== */
+
+/* Primary — the most important insight: accent border glow */
+.insight-primary {
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow:
+    0 0 16px rgba(16, 185, 129, 0.10),
+    0 4px 16px var(--card-shadow);
+}
+
+/* Secondary — standard importance: normal styling */
+.insight-secondary {
+  border: 1px solid var(--card-border);
+  box-shadow: 0 2px 8px var(--card-shadow);
+}
+
+/* Tertiary — lower importance: muted, smaller text */
+.insight-tertiary {
+  border: 1px solid var(--card-border);
+  box-shadow: 0 1px 4px var(--card-shadow);
+  opacity: 0.75;
+  font-size: 0.92em;
+}
+
+[data-theme="light"] .insight-primary {
+  border-color: rgba(5, 150, 105, 0.3);
+  box-shadow: 0 0 12px rgba(5, 150, 105, 0.08), 0 4px 12px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .insight-secondary {
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+[data-theme="light"] .insight-tertiary {
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+
+/* ====================================================================
+   DATA STORYTELLER: Holmes Insight — premium AI summary box
+   Glass panel with left accent border, used for key AI takeaways
+==================================================================== */
+.holmes-insight {
+  background: var(--glass-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-left: 3px solid var(--accent);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow:
+    inset 0 0 16px rgba(16, 185, 129, 0.04),
+    0 2px 12px var(--card-shadow);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.holmes-insight:hover {
+  border-left-color: var(--accent);
+  box-shadow:
+    inset 0 0 20px rgba(16, 185, 129, 0.06),
+    0 4px 16px var(--card-shadow);
+}
+
+/* Critical variant — pulsing accent border for urgent insights */
+.holmes-insight-critical {
+  border-left-color: var(--accent);
+  animation: insight-pulse 2s ease-in-out infinite;
+}
+
+@keyframes insight-pulse {
+  0%, 100% { border-left-color: var(--accent); box-shadow: inset 0 0 16px rgba(16, 185, 129, 0.04), 0 2px 12px var(--card-shadow); }
+  50%      { border-left-color: #34d399; box-shadow: inset 0 0 24px rgba(16, 185, 129, 0.08), 0 4px 20px var(--card-shadow); }
+}
+
+[data-theme="light"] .holmes-insight {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 3px solid var(--accent);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+
+/* ====================================================================
+   DATA STORYTELLER: AI Badges — small premium pills for AI labels
+   Used to tag content as "AI Generated", "Holmes Insight", etc.
+==================================================================== */
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Bullish variant — green tint */
+.ai-badge-bullish {
+  color: var(--accent);
+  border-color: rgba(16, 185, 129, 0.2);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+/* Bearish variant — red tint */
+.ai-badge-bearish {
+  color: var(--danger);
+  border-color: rgba(248, 113, 113, 0.2);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+/* Neutral variant — brass/amber tint */
+.ai-badge-neutral {
+  color: var(--brass);
+  border-color: rgba(212, 168, 67, 0.2);
+  background: rgba(212, 168, 67, 0.08);
+}
+
+[data-theme="light"] .ai-badge {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  backdrop-filter: none;
+}
+[data-theme="light"] .ai-badge-bullish {
+  background: rgba(5, 150, 105, 0.06);
+  border-color: rgba(5, 150, 105, 0.2);
+}
+[data-theme="light"] .ai-badge-bearish {
+  background: rgba(220, 38, 38, 0.06);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+[data-theme="light"] .ai-badge-neutral {
+  background: rgba(180, 83, 9, 0.06);
+  border-color: rgba(180, 83, 9, 0.2);
+}
+
+
+/* ====================================================================
+   DATA STORYTELLER: Sparkline Enhancements
+   Wrapper with edge fade and tiny high/low labels
+==================================================================== */
+.sparkline-wrap {
+  position: relative;
+  /* Soft edge fade on both sides — chart blends into the card */
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+/* Tiny labels positioned at chart extremes */
+.sparkline-label {
+  position: absolute;
+  font-size: 9px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.sparkline-label-high {
+  top: 0;
+  right: 4px;
+  color: var(--accent);
+}
+
+.sparkline-label-low {
+  bottom: 0;
+  right: 4px;
+  color: var(--danger);
+}
+
+
+/* ====================================================================
+   DATA STORYTELLER: Data Freshness Indicators
+   Tiny dots that show how recent/live data is
+==================================================================== */
+.freshness-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Live — green with pulse animation */
+.freshness-live {
+  background: var(--accent);
+  animation: freshness-pulse 2s ease-in-out infinite;
+}
+
+@keyframes freshness-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  50%      { opacity: 0.7; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
+}
+
+/* Recent — static green, no pulse */
+.freshness-recent {
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+/* Stale — gray, no animation */
+.freshness-stale {
+  background: var(--muted);
+  opacity: 0.5;
 }
