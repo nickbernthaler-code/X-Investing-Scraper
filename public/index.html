@@ -50,8 +50,19 @@
     })();
   </script>
 
+  <!-- Scroll progress bar — thin line at top showing how far you've scrolled -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+
   <!-- Fey-style noise texture overlay — very subtle grain for premium feel -->
   <div class="noise-overlay"></div>
+
+  <!-- Toast notification container — signals slide in here -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Back to top button — appears after scrolling down -->
+  <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
 
 
   <!-- ============================================================
@@ -463,8 +474,12 @@
         </div>
         <p class="text-muted text-sm mt-1">Use arrows or keyboard ←→ to browse</p>
       </div>
-      <!-- D10: View All link -->
-      <button onclick="document.getElementById('view-all-stocks').classList.toggle('hidden')" class="text-accent text-xs font-semibold hover:underline">View All ↓</button>
+      <div class="flex items-center gap-4">
+        <!-- Compare button — opens side-by-side stock comparison -->
+        <button onclick="openCompareMode()" class="text-[#a78bfa] text-xs font-semibold hover:underline hidden sm:block">Compare ⇄</button>
+        <!-- D10: View All link -->
+        <button onclick="document.getElementById('view-all-stocks').classList.toggle('hidden')" class="text-accent text-xs font-semibold hover:underline">View All ↓</button>
+      </div>
     </div>
     <div class="cf-wrap">
       <div class="cf-glow cf-glow-green"></div>
@@ -947,6 +962,52 @@
   <!-- Gradient divider -->
   <hr class="gradient-divider my-4">
 
+  <!-- ============================================================
+       #9: TESTIMONIALS — social proof from investors
+  ============================================================ -->
+  <section class="px-8 lg:px-12 py-24 sm:py-32 max-w-5xl mx-auto reveal">
+    <div class="text-center mb-14">
+      <p class="text-xs uppercase tracking-[0.25em] text-[var(--text-secondary)] mb-5 font-medium opacity-70">Testimonials</p>
+      <h2 class="font-serif text-4xl sm:text-5xl text-[var(--text)] mb-4">What investors <span class="gradient-text-emerald">are saying</span></h2>
+      <p class="text-[var(--text-secondary)] text-lg max-w-xl mx-auto opacity-80">Join thousands of investors who use StockHolmes to stay ahead.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">StockHolmes caught the NVDA run 3 days before my Bloomberg terminal flagged it. The X signal analysis is genuinely ahead of institutional tools.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:linear-gradient(135deg,#10b981,#14b8a6);">MK</div>
+          <div>
+            <p class="testimonial-name">Michael K.</p>
+            <p class="testimonial-role">Portfolio Manager, NYC</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">The analyst accuracy scores are a game-changer. I now know which X accounts actually predict moves vs. just talk. Saved me from 3 bad trades last month.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6);">SR</div>
+          <div>
+            <p class="testimonial-name">Sarah R.</p>
+            <p class="testimonial-role">Day Trader, London</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">Finally a clean, premium interface for social sentiment. The consensus radar alone is worth the subscription. Feels like having a research team.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:linear-gradient(135deg,#d4a843,#f59e0b);">JT</div>
+          <div>
+            <p class="testimonial-name">James T.</p>
+            <p class="testimonial-role">Retail Investor, Berlin</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gradient divider -->
+  <hr class="gradient-divider my-4">
+
   <section id="sec-pricing" class="px-8 lg:px-12 py-24 sm:py-32 max-w-5xl mx-auto relative overflow-hidden reveal">
     <!-- Ambient glow -->
     <div class="ambient-orb absolute -top-20 left-1/3 w-[500px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none" style="background: radial-gradient(circle, #d4a843 0%, transparent 70%);"></div>
@@ -972,8 +1033,8 @@
         </ul>
         <button class="btn-pill btn-pill-outline w-full">Get Started</button>
       </div>
-      <!-- Pro tier (highlighted) -->
-      <div class="glass-panel rounded-2xl p-6 flex flex-col relative border-accent/40">
+      <!-- Pro tier (highlighted) — animated gradient border -->
+      <div class="glass-panel gradient-border-card rounded-2xl p-6 flex flex-col relative">
         <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-xs font-bold px-3 py-1 rounded-full" style="color:var(--on-accent);">Most Popular</div>
         <h3 class="font-serif text-xl text-[var(--text)] mb-1">Detective</h3>
         <p class="text-muted text-sm mb-4">For active investors</p>
@@ -1722,6 +1783,319 @@
 
 
     // =================================================================
+    // #2: SCROLL PROGRESS BAR — updates width as you scroll
+    // =================================================================
+    const scrollProgress = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      if (scrollProgress) scrollProgress.style.width = progress + '%';
+    }, { passive: true });
+
+
+    // =================================================================
+    // #3: PARALLAX AURORA — aurora mesh shifts subtly on scroll
+    // Creates depth by moving the background slower than content
+    // =================================================================
+    const auroraMesh = document.querySelector('.aurora-mesh');
+    const auroraSecondary = document.querySelector('.aurora-mesh-secondary');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      // Move aurora at 30% of scroll speed — creates parallax depth
+      if (auroraMesh) auroraMesh.style.transform = `translateY(${scrollY * 0.3}px)`;
+      if (auroraSecondary) auroraSecondary.style.transform = `translateY(${scrollY * 0.15}px)`;
+    }, { passive: true });
+
+
+    // =================================================================
+    // #5: SCROLL-LINKED TAB HIGHLIGHTING — active tab follows scroll
+    // =================================================================
+    const sectionTabs = document.querySelectorAll('.section-tab');
+    const sectionIds = ['sec-trending', 'sec-influencers', 'sec-signals', 'sec-feed'];
+    const tabObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const tabIndex = sectionIds.indexOf(id);
+          if (tabIndex === -1) return;
+          // Remove active from all, add to current
+          sectionTabs.forEach(t => {
+            t.classList.remove('section-tab-active');
+            t.style.background = '';
+            t.style.color = '';
+            t.style.borderColor = '';
+          });
+          sectionTabs[tabIndex].classList.add('section-tab-active');
+        }
+      });
+    }, { threshold: 0.3, rootMargin: '-100px 0px -60% 0px' });
+
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) tabObserver.observe(el);
+    });
+
+
+    // =================================================================
+    // #6: TOAST NOTIFICATIONS — show when new signals arrive
+    // =================================================================
+    function showToast(icon, title, message, duration = 4000) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <div class="toast-content">
+          <p class="toast-title">${title}</p>
+          <p class="toast-message">${message}</p>
+        </div>
+        <button class="toast-close" onclick="dismissToast(this.parentElement)">✕</button>
+      `;
+      container.appendChild(toast);
+
+      // Auto-dismiss after duration
+      setTimeout(() => dismissToast(toast), duration);
+    }
+
+    function dismissToast(toast) {
+      if (!toast || toast.classList.contains('toast-exit')) return;
+      toast.classList.add('toast-exit');
+      setTimeout(() => toast.remove(), 300);
+    }
+
+    // Hook toasts into the live feed simulation — show toast when new signal arrives
+    const originalSetInterval = window.setInterval;
+    // We'll integrate this with the live feed in the existing interval
+
+
+    // =================================================================
+    // #7: KEYBOARD SHORTCUTS OVERLAY — press ? to see all shortcuts
+    // =================================================================
+    function showShortcuts() {
+      const overlay = document.createElement('div');
+      overlay.className = 'shortcuts-overlay';
+      overlay.innerHTML = `
+        <div class="shortcuts-modal">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="font-serif text-xl text-[var(--text)]">Keyboard Shortcuts</h3>
+            <button class="modal-close" onclick="this.closest('.shortcuts-overlay').remove()" style="position:static;">✕</button>
+          </div>
+          <div class="shortcut-row">
+            <span class="shortcut-label">Search anything</span>
+            <div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">K</span></div>
+          </div>
+          <div class="shortcut-row">
+            <span class="shortcut-label">Browse stocks</span>
+            <div class="shortcut-keys"><span class="shortcut-key">←</span><span class="shortcut-key">→</span></div>
+          </div>
+          <div class="shortcut-row">
+            <span class="shortcut-label">Toggle dark/light mode</span>
+            <div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">D</span></div>
+          </div>
+          <div class="shortcut-row">
+            <span class="shortcut-label">Compare stocks</span>
+            <div class="shortcut-keys"><span class="shortcut-key">⌘</span><span class="shortcut-key">J</span></div>
+          </div>
+          <div class="shortcut-row">
+            <span class="shortcut-label">Show shortcuts</span>
+            <div class="shortcut-keys"><span class="shortcut-key">?</span></div>
+          </div>
+          <div class="shortcut-row">
+            <span class="shortcut-label">Close modal</span>
+            <div class="shortcut-keys"><span class="shortcut-key">Esc</span></div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+    }
+
+    // Listen for ? key and Cmd+D for theme toggle, Cmd+J for compare
+    document.addEventListener('keydown', (e) => {
+      // ? key — show shortcuts (only when not typing in an input)
+      if (e.key === '?' && !e.target.closest('input, textarea')) {
+        e.preventDefault();
+        showShortcuts();
+      }
+      // Cmd+D — toggle dark/light mode
+      if ((e.metaKey || e.ctrlKey) && e.key === 'd') {
+        e.preventDefault();
+        toggleTheme();
+      }
+      // Cmd+J — open compare mode
+      if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
+        e.preventDefault();
+        openCompareMode();
+      }
+    });
+
+
+    // =================================================================
+    // #8: BACK TO TOP BUTTON — show after scrolling 500px
+    // =================================================================
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (backToTop) {
+        if (window.scrollY > 500) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      }
+    }, { passive: true });
+
+
+    // =================================================================
+    // #10: COMPARISON MODE — pick two stocks and compare side-by-side
+    // =================================================================
+    function openCompareMode() {
+      // Build dropdown options from STOCKS array
+      const options = STOCKS.map(s =>
+        `<option value="${s.ticker}">${s.ticker} — ${s.name}</option>`
+      ).join('');
+
+      const overlay = document.createElement('div');
+      overlay.className = 'compare-overlay';
+      overlay.innerHTML = `
+        <div class="compare-modal">
+          <button class="modal-close" onclick="this.closest('.compare-overlay').remove()">✕</button>
+          <h2 class="font-serif text-2xl text-[var(--text)] mb-2">Compare Stocks</h2>
+          <p class="text-[var(--text-secondary)] text-sm mb-6">Select two stocks to see them side by side.</p>
+
+          <!-- Stock pickers -->
+          <div class="compare-grid mb-6">
+            <div>
+              <label class="text-muted text-xs uppercase tracking-wider font-semibold mb-2 block">Stock A</label>
+              <select class="compare-select" id="compare-a" onchange="updateComparison()">
+                ${options}
+              </select>
+            </div>
+            <div>
+              <label class="text-muted text-xs uppercase tracking-wider font-semibold mb-2 block">Stock B</label>
+              <select class="compare-select" id="compare-b" onchange="updateComparison()">
+                ${options.replace('value="NVDA"', 'value="NVDA"').replace('value="TSLA" selected', 'value="TSLA"')}
+              </select>
+            </div>
+          </div>
+
+          <!-- Comparison results -->
+          <div id="compare-results"></div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      // Set default: first two stocks
+      document.getElementById('compare-b').selectedIndex = 1;
+
+      // Close handlers
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+      const escHandler = (e) => {
+        if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', escHandler); }
+      };
+      document.addEventListener('keydown', escHandler);
+
+      // Initial comparison render
+      updateComparison();
+    }
+
+    function updateComparison() {
+      const aSelect = document.getElementById('compare-a');
+      const bSelect = document.getElementById('compare-b');
+      const results = document.getElementById('compare-results');
+      if (!aSelect || !bSelect || !results) return;
+
+      const a = STOCKS.find(s => s.ticker === aSelect.value);
+      const b = STOCKS.find(s => s.ticker === bSelect.value);
+      if (!a || !b) return;
+
+      // Parse numeric values for comparison
+      const aPrice = parseFloat(a.price.replace('$', '').replace(',', ''));
+      const bPrice = parseFloat(b.price.replace('$', '').replace(',', ''));
+      const aChange = parseFloat(a.change.replace('%', '').replace('+', ''));
+      const bChange = parseFloat(b.change.replace('%', '').replace('+', ''));
+
+      // Helper to determine winner class
+      const w = (aVal, bVal, higherWins = true) => {
+        if (higherWins) return { aClass: aVal > bVal ? 'compare-winner' : '', bClass: bVal > aVal ? 'compare-winner' : '' };
+        return { aClass: aVal < bVal ? 'compare-winner' : '', bClass: bVal < aVal ? 'compare-winner' : '' };
+      };
+
+      const priceW = w(aPrice, bPrice);
+      const changeW = w(aChange, bChange);
+      const mentionsW = w(a.mentions, b.mentions);
+
+      // Build sparklines for both
+      const sparkA = buildCompareSpark(a.spark, aChange >= 0);
+      const sparkB = buildCompareSpark(b.spark, bChange >= 0);
+
+      results.innerHTML = `
+        <!-- Charts side by side -->
+        <div class="compare-grid mb-6">
+          <div class="compare-stock text-center">
+            <div class="flex items-center justify-center gap-2 mb-3">
+              <img src="https://assets.parqet.com/logos/symbol/${a.ticker}" class="w-8 h-8 rounded-full object-contain" style="filter:drop-shadow(0 0 6px ${a.color}80);" onerror="this.style.display='none'">
+              <span class="text-[var(--text)] text-xl font-bold">${a.ticker}</span>
+            </div>
+            ${sparkA}
+            <p class="text-[var(--text)] text-lg font-bold mt-2 tabular-nums">${a.price}</p>
+            <p class="text-sm font-bold tabular-nums" style="color:${aChange >= 0 ? '#10b981' : '#f87171'}">${a.change}</p>
+          </div>
+          <div class="compare-stock text-center">
+            <div class="flex items-center justify-center gap-2 mb-3">
+              <img src="https://assets.parqet.com/logos/symbol/${b.ticker}" class="w-8 h-8 rounded-full object-contain" style="filter:drop-shadow(0 0 6px ${b.color}80);" onerror="this.style.display='none'">
+              <span class="text-[var(--text)] text-xl font-bold">${b.ticker}</span>
+            </div>
+            ${sparkB}
+            <p class="text-[var(--text)] text-lg font-bold mt-2 tabular-nums">${b.price}</p>
+            <p class="text-sm font-bold tabular-nums" style="color:${bChange >= 0 ? '#10b981' : '#f87171'}">${b.change}</p>
+          </div>
+        </div>
+
+        <!-- Metric comparison rows -->
+        <div class="compare-row">
+          <span class="compare-value ${changeW.aClass}">${a.change}</span>
+          <span class="compare-label">Change</span>
+          <span class="compare-value ${changeW.bClass}">${b.change}</span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-value ${mentionsW.aClass}">${a.mentions}</span>
+          <span class="compare-label">Mentions</span>
+          <span class="compare-value ${mentionsW.bClass}">${b.mentions}</span>
+        </div>
+        <div class="compare-row">
+          <span class="compare-value">#${a.rank}</span>
+          <span class="compare-label">Rank</span>
+          <span class="compare-value">#${b.rank}</span>
+        </div>
+      `;
+    }
+
+    // Build a sparkline SVG for the comparison view
+    function buildCompareSpark(prices, isPositive) {
+      const w = 280, h = 60, pad = 4;
+      const min = Math.min(...prices), max = Math.max(...prices), range = max - min || 1;
+      const pts = prices.map((p, i) =>
+        `${pad + (i / (prices.length - 1)) * (w - pad * 2)},${pad + (1 - (p - min) / range) * (h - pad * 2)}`
+      ).join(' ');
+      const color = isPositive ? '#10b981' : '#f87171';
+      const areaPoints = `${pad},${h - pad} ${pts} ${w - pad},${h - pad}`;
+      // Unique gradient ID for each sparkline
+      const gradId = 'cg-' + Math.random().toString(36).slice(2, 8);
+      return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="border-radius:8px;">
+        <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${color}" stop-opacity="0.2"/><stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+        </linearGradient></defs>
+        <polygon points="${areaPoints}" fill="url(#${gradId})"/>
+        <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/>
+      </svg>`;
+    }
+
+
+    // =================================================================
     // #1: COUNT-UP ANIMATION — numbers animate from 0 to their target
     // Uses IntersectionObserver to trigger when metrics scroll into view
     // =================================================================
@@ -1969,6 +2343,10 @@
         while (container.children.length > 6) {
           container.removeChild(container.lastChild);
         }
+
+        // #6: Show a toast notification for the new signal
+        const toastIcon = isBullish ? '📈' : '📉';
+        showToast(toastIcon, `New Signal: ${sig.ticker}`, `@${sig.handle} — ${sig.type === 'bullish' ? 'Bullish' : 'Bearish'} · ${sig.score}`, 5000);
 
         signalIndex++;
       }, 30000); // Every 30 seconds
