@@ -1832,3 +1832,331 @@ body,
   background: var(--muted);
   opacity: 0.5;
 }
+
+
+/* =====================================================================
+   =====================================================================
+   DRAMATIC VISUAL OVERHAUL — Fey-level Premium Design
+   These styles create the cinematic, high-end feel that separates
+   a fintech platform from a typical dark dashboard
+   =====================================================================
+   ===================================================================== */
+
+
+/* ====================================================================
+   FEY NAV — ultra-clean, translucent, with opacity-based links
+   The nav should barely be there — content is the star
+==================================================================== */
+.nav-fey {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Nav links use opacity instead of color changes — more elegant */
+.nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  opacity: 0.6;
+  transition: opacity 0.25s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+.nav-link:hover {
+  opacity: 1;
+}
+
+/* Primary nav button — solid accent */
+.nav-btn-primary {
+  padding: 8px 20px;
+  border-radius: 99px;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.nav-btn-primary:hover {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Secondary nav button — ghost style */
+.nav-btn-secondary {
+  padding: 8px 20px;
+  border-radius: 99px;
+  font-size: 14px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--text);
+  opacity: 0.7;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.nav-btn-secondary:hover {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Light mode nav */
+[data-theme="light"] .nav-fey {
+  background: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+[data-theme="light"] .nav-btn-secondary {
+  border-color: rgba(0, 0, 0, 0.15);
+  color: var(--text);
+}
+[data-theme="light"] .nav-link {
+  color: var(--text);
+  opacity: 0.5;
+}
+[data-theme="light"] .nav-link:hover { opacity: 1; }
+
+
+/* ====================================================================
+   AURORA GRADIENT MESH — the signature Fey background effect
+   Creates a dramatic, colorful atmosphere behind the hero
+   This is THE visual difference maker
+==================================================================== */
+.aurora-mesh {
+  position: absolute;
+  top: -30%;
+  left: -20%;
+  right: -20%;
+  bottom: -10%;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 60%,
+      rgba(16, 185, 129, 0.12) 0%,
+      transparent 60%),
+    radial-gradient(ellipse 60% 80% at 75% 30%,
+      rgba(167, 139, 250, 0.10) 0%,
+      transparent 55%),
+    radial-gradient(ellipse 90% 50% at 50% 80%,
+      rgba(212, 168, 67, 0.06) 0%,
+      transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: aurora-drift 12s ease-in-out infinite alternate;
+}
+
+/* Second aurora layer — slower, offset, creates depth */
+.aurora-mesh-secondary {
+  position: absolute;
+  top: -50%;
+  left: -30%;
+  right: -30%;
+  bottom: -20%;
+  background:
+    radial-gradient(ellipse 50% 70% at 80% 50%,
+      rgba(16, 185, 129, 0.07) 0%,
+      transparent 60%),
+    radial-gradient(ellipse 70% 50% at 10% 70%,
+      rgba(167, 139, 250, 0.05) 0%,
+      transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+  animation: aurora-drift 18s ease-in-out infinite alternate-reverse;
+}
+
+/* Slow, subtle drift animation — aurora gently shifts position */
+@keyframes aurora-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+}
+
+/* Light mode — much softer aurora */
+[data-theme="light"] .aurora-mesh {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 60%,
+      rgba(5, 150, 105, 0.06) 0%,
+      transparent 60%),
+    radial-gradient(ellipse 60% 80% at 75% 30%,
+      rgba(124, 58, 237, 0.04) 0%,
+      transparent 55%);
+}
+[data-theme="light"] .aurora-mesh-secondary { opacity: 0.3; }
+
+/* Hero wrapper needs relative positioning */
+.hero-wrapper {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+/* ====================================================================
+   DRAMATICALLY LARGER METRICS — Fey uses 48px+ for key numbers
+==================================================================== */
+.metric-value {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.metric-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+}
+
+.metrics-strip {
+  display: flex;
+  justify-content: center;
+  gap: 64px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .metrics-strip { gap: 32px; }
+  .metric-value { font-size: 36px; }
+}
+
+
+/* ====================================================================
+   3D PERSPECTIVE SHOWCASE — Fey's signature effect
+   Cards appear tilted in 3D space, creating depth
+==================================================================== */
+.showcase-card-inner {
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 3D perspective tilt on the showcase scroll container */
+.feature-showcase-scroll {
+  perspective: 1200px;
+}
+
+.showcase-card:hover .showcase-card-inner {
+  transform: translateY(-8px) rotateX(2deg);
+  box-shadow:
+    inset 1px 1px 0px var(--card-inset),
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(16, 185, 129, 0.05);
+}
+
+
+/* ====================================================================
+   ENHANCED STOCK CARDS — more dramatic shadows, larger radius
+   Cards should feel like they're floating in space
+==================================================================== */
+.stock-card {
+  border-radius: 28px;
+  box-shadow:
+    inset 0.5px 0.5px 0.5px var(--card-inset),
+    0 2px 4px  rgba(0, 0, 0, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    0 48px 80px rgba(0, 0, 0, 0.3);
+}
+
+.stock-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    inset 1px 1px 1px var(--card-inset),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 16px 32px rgba(0, 0, 0, 0.4),
+    0 40px 80px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(16, 185, 129, 0.06);
+}
+
+/* Active stock card — much more dramatic emerald glow */
+.stock-active {
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow:
+    0 0 30px rgba(16, 185, 129, 0.20),
+    0 0 80px rgba(16, 185, 129, 0.08),
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    0 16px 32px rgba(0, 0, 0, 0.5),
+    0 32px 64px rgba(0, 0, 0, 0.4);
+}
+
+.influencer-card {
+  border-radius: 28px;
+  box-shadow:
+    inset 0.5px 0.5px 0.5px var(--card-inset),
+    0 2px 4px  rgba(0, 0, 0, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    0 48px 80px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ====================================================================
+   ENHANCED PRICING CARDS — taller, more premium feel
+==================================================================== */
+.glass-panel {
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.glass-panel:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    inset 1px 1px 0px var(--card-inset),
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(16, 185, 129, 0.03);
+}
+
+
+/* ====================================================================
+   ENHANCED CONSENSUS CARDS — more dramatic, bigger
+==================================================================== */
+.consensus-card {
+  border-radius: 20px;
+  padding: 28px;
+}
+
+.consensus-grid {
+  gap: 20px;
+}
+
+
+/* ====================================================================
+   ENHANCED SIGNAL CARDS — more spacing, bigger
+==================================================================== */
+.signal-card {
+  border-radius: 18px;
+  padding: 20px 22px;
+}
+
+
+/* ====================================================================
+   ENHANCED GRADIENT DIVIDERS — more dramatic glow
+==================================================================== */
+.gradient-divider {
+  max-width: 800px;
+  height: 2px;
+  background: radial-gradient(
+    50% 100% at 50% 50%,
+    rgba(16, 185, 129, 0.35) 0%,
+    rgba(167, 139, 250, 0.12) 50%,
+    transparent 100%
+  );
+}
+
+
+/* ====================================================================
+   FOOTER — more spacing, cleaner
+==================================================================== */
+footer {
+  padding-top: 4rem;
+  padding-bottom: 3rem;
+  margin-top: 2rem;
+}

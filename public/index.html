@@ -57,46 +57,39 @@
   <!-- ============================================================
        NAVIGATION BAR
   ============================================================ -->
-  <nav class="glass-strong px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-    <div class="flex items-center gap-5">
+  <!-- Fey-style minimal nav — lots of space, opacity hover, ultra-clean -->
+  <nav class="nav-fey px-8 lg:px-12 py-5 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-8">
       <!-- StockHolmes detective logo + name -->
-      <div class="flex items-center gap-2.5">
-        <img src="detective-face.svg" alt="StockHolmes logo" width="34" height="34" class="logo-icon">
+      <div class="flex items-center gap-3">
+        <img src="detective-face.svg" alt="StockHolmes logo" width="32" height="32" class="logo-icon">
         <span class="text-[var(--text)] font-serif text-xl tracking-tight">StockHolmes</span>
       </div>
-      <div class="h-5 w-px bg-border hidden sm:block"></div>
-      <!-- Nav links — How it Works and Pricing (prominent, white text) -->
-      <div class="hidden md:flex items-center gap-5">
-        <a href="#sec-showcase" class="text-[var(--text)] text-sm font-semibold hover:text-accent transition-colors cursor-pointer">How it Works</a>
-        <a href="#sec-pricing" class="text-[var(--text)] text-sm font-semibold hover:text-accent transition-colors cursor-pointer">Pricing</a>
-      </div>
-      <div class="h-5 w-px bg-border hidden md:block"></div>
-      <!-- Search bar -->
-      <div class="hidden sm:flex items-center gap-2 rounded-full px-3 py-1.5 nav-search-bar">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" placeholder="Search stocks or influencers..." class="bg-transparent text-sm outline-none w-48 lg:w-64" style="color:var(--text);">
+      <!-- Nav links — Fey uses opacity transitions, not color changes -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#sec-showcase" class="nav-link">How it Works</a>
+        <a href="#sec-pricing" class="nav-link">Pricing</a>
+        <a href="#sec-signals" class="nav-link">Intelligence</a>
       </div>
     </div>
-    <div class="flex items-center gap-3">
-      <!-- Theme toggle — switches between dark and light mode -->
+    <div class="flex items-center gap-4">
+      <!-- Theme toggle -->
       <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode"
-        class="w-9 h-9 rounded-full flex items-center justify-center border border-[var(--card-border)] hover:bg-[var(--hover-bg)] transition-colors duration-200">
-        <!-- Sun icon (shown in dark mode) -->
-        <svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#d4a843]">
+        class="w-9 h-9 rounded-full flex items-center justify-center border border-[var(--card-border)] hover:bg-[var(--hover-bg)] transition-all duration-300">
+        <svg id="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#d4a843]">
           <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
         </svg>
-        <!-- Moon icon (shown in light mode) -->
-        <svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#a78bfa] hidden">
+        <svg id="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#a78bfa] hidden">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
       </button>
-      <!-- Connect Broker button — opens modal instead of cluttering navbar -->
+      <!-- CTA buttons — cleaner, more minimal -->
       <button onclick="document.getElementById('broker-modal').classList.remove('hidden')"
-        class="px-4 py-2 rounded-full text-sm font-semibold border border-[#d4a843]/30 text-[#d4a843] hover:bg-[#d4a843]/10 transition-colors duration-200 hidden sm:block">
+        class="nav-btn-secondary hidden sm:block">
         Connect Broker
       </button>
-      <button class="px-4 py-2 rounded-full text-sm font-semibold bg-[var(--hover-bg)] border border-[var(--card-border)] text-[var(--text)] hover:opacity-80 transition-colors duration-200 backdrop-blur-sm">
-        Login / Sign Up
+      <button class="nav-btn-primary">
+        Get Started
       </button>
     </div>
   </nav>
@@ -135,55 +128,63 @@
 
 
   <!-- ============================================================
-       HERO — with ambient gradient orbs behind (Fey-style)
+       HERO — Fey-style cinematic hero with aurora gradient mesh
+       Massive padding, huge typography, dramatic atmosphere
   ============================================================ -->
-  <!-- Wrapper for hero + metrics so ambient orbs span both seamlessly -->
-  <div class="relative overflow-hidden">
-    <!-- Ambient glow orbs — span the full hero+metrics area for a smooth gradient -->
-    <div class="ambient-orb absolute top-[30%] left-1/4 w-[700px] h-[700px] rounded-full opacity-[0.10] blur-[160px] pointer-events-none" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
-    <div class="ambient-orb absolute top-[35%] right-1/4 w-[550px] h-[550px] rounded-full opacity-[0.07] blur-[140px] pointer-events-none" style="background: radial-gradient(circle, #a78bfa 0%, transparent 70%);"></div>
+  <div class="hero-wrapper relative overflow-hidden">
+    <!-- Aurora gradient mesh background — the key visual that makes it feel premium -->
+    <div class="aurora-mesh"></div>
+    <!-- Secondary aurora layer for depth -->
+    <div class="aurora-mesh-secondary"></div>
 
-    <section class="text-center px-6 pt-20 pb-14 relative">
-      <div class="relative z-10">
-        <p class="text-xs uppercase tracking-widest text-muted mb-4 font-medium">Investment Intelligence</p>
-        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-[var(--text)] mb-5 leading-tight">
+    <section class="text-center px-8 lg:px-12 pt-32 sm:pt-40 lg:pt-48 pb-20 sm:pb-28 relative">
+      <div class="relative z-10 max-w-4xl mx-auto">
+        <!-- Tiny label above headline — sets context -->
+        <p class="text-xs uppercase tracking-[0.25em] text-[var(--text-secondary)] mb-8 font-medium opacity-70">Investment Intelligence Platform</p>
+        <!-- MASSIVE headline — Fey uses 48-54px, we're going even bigger -->
+        <h1 class="font-serif text-5xl sm:text-6xl lg:text-8xl text-[var(--text)] mb-8 leading-[1.05]">
           What the smart money<br>
-          <!-- Fey-style gradient text on the accent phrase -->
           <span class="gradient-text-emerald">is talking about.</span>
         </h1>
-        <p class="text-muted text-base max-w-md mx-auto mb-10">Real-time signals from top X investors, analyzed by AI.</p>
-        <!-- Fey-style pill button with glow shadow -->
-        <button id="run-btn" onclick="runScraper()"
-          class="btn-pill btn-pill-accent">
-          Run Scraper
-        </button>
+        <!-- Subtitle — larger, more breathing room -->
+        <p class="text-[var(--text-secondary)] text-lg sm:text-xl max-w-xl mx-auto mb-14 leading-relaxed opacity-80">Real-time signals from top X investors,<br class="hidden sm:block"> distilled by AI into actionable insights.</p>
+        <!-- CTA buttons — two buttons like Fey: primary + secondary -->
+        <div class="flex items-center justify-center gap-4">
+          <button id="run-btn" onclick="runScraper()"
+            class="btn-pill btn-pill-accent text-base px-8 py-3.5">
+            Run Scraper
+          </button>
+          <a href="#sec-showcase" class="btn-pill btn-pill-outline text-base px-8 py-3.5">
+            See How it Works
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- ============================================================
-         METRICS STRIP — key stats in big numbers (Fey-style)
+         METRICS STRIP — big numbers, massive spacing
     ============================================================ -->
-    <div class="px-6 pb-12 reveal relative z-10">
-      <div class="metrics-strip">
-      <div class="metric-item">
-        <div class="metric-value text-accent">234</div>
-        <div class="metric-label">Stocks Tracked</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-value text-[#a78bfa]">12</div>
-        <div class="metric-label">Influencers</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-value text-brass">1.2K</div>
-        <div class="metric-label">Signals Today</div>
-      </div>
-      <div class="metric-item">
-        <div class="metric-value text-[var(--text)]">97%</div>
-        <div class="metric-label">Uptime</div>
+    <div class="px-8 lg:px-12 pb-20 sm:pb-28 reveal relative z-10">
+      <div class="metrics-strip max-w-3xl mx-auto">
+        <div class="metric-item">
+          <div class="metric-value text-accent">234</div>
+          <div class="metric-label">Stocks Tracked</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value text-[#a78bfa]">12</div>
+          <div class="metric-label">Influencers</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value text-brass">1.2K</div>
+          <div class="metric-label">Signals Today</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value text-[var(--text)]">97%</div>
+          <div class="metric-label">Uptime</div>
+        </div>
       </div>
     </div>
-  </div>
-  </div><!-- end hero+metrics wrapper -->
+  </div><!-- end hero wrapper -->
 
   <!-- Gradient divider -->
   <hr class="gradient-divider mb-6">
@@ -193,10 +194,11 @@
        FEATURE SHOWCASE — Fey-style horizontal scrollable mockup cards
        Shows key features: X tracking, stock discovery, security
   ============================================================ -->
-  <section id="sec-showcase" class="py-16 reveal">
-    <div class="text-center mb-10 px-6">
-      <h2 class="font-serif text-3xl text-[var(--text)] mb-3">See how it <span class="gradient-text-emerald">works</span></h2>
-      <p class="text-muted text-sm max-w-lg mx-auto">StockHolmes scans X accounts, surfaces the hottest stocks, and keeps your data safe — all in one dashboard.</p>
+  <section id="sec-showcase" class="py-24 sm:py-32 reveal">
+    <div class="text-center mb-16 px-8 lg:px-12">
+      <p class="text-xs uppercase tracking-[0.25em] text-[var(--text-secondary)] mb-5 font-medium opacity-70">How It Works</p>
+      <h2 class="font-serif text-4xl sm:text-5xl text-[var(--text)] mb-5">See how it <span class="gradient-text-emerald">works</span></h2>
+      <p class="text-[var(--text-secondary)] text-lg max-w-xl mx-auto opacity-80">StockHolmes scans X accounts, surfaces the hottest stocks, and keeps your data safe — all in one dashboard.</p>
     </div>
 
     <!-- Horizontal scroll container with edge fade -->
@@ -436,7 +438,7 @@
   <!-- ============================================================
        C6: SECTION TAB NAVIGATION — jump to any section instantly
   ============================================================ -->
-  <div class="flex justify-center gap-2 px-6 pb-8 sticky top-[65px] z-40 glass pt-3">
+  <div class="flex justify-center gap-3 px-8 pb-10 sticky top-[68px] z-40 glass pt-4">
     <button onclick="document.getElementById('sec-trending').scrollIntoView({behavior:'smooth'})"
       class="section-tab section-tab-active" data-tab="trending">Trending</button>
     <button onclick="document.getElementById('sec-influencers').scrollIntoView({behavior:'smooth'})"
@@ -452,7 +454,7 @@
        SECTION A: TRENDING ASSETS
        A1: sparkline charts, A2: arrow icons, A3: click-to-expand
   ============================================================ -->
-  <section id="sec-trending" class="py-12 reveal">
+  <section id="sec-trending" class="py-20 sm:py-28 reveal">
     <div class="px-6 mb-8 flex items-center justify-between">
       <div>
         <div class="flex items-center gap-3">
@@ -507,7 +509,7 @@
        SECTION B: TOP INFLUENCERS
        B4: Track button, B5: Holmes Score badge
   ============================================================ -->
-  <section id="sec-influencers" class="py-12 reveal">
+  <section id="sec-influencers" class="py-20 sm:py-28 reveal">
     <div class="px-6 mb-8 flex items-center justify-between">
       <div>
         <div class="flex items-center gap-3">
@@ -541,7 +543,7 @@
   <!-- ============================================================
        MARKET INTELLIGENCE — combined signals + consensus
   ============================================================ -->
-  <section id="sec-signals" class="px-6 section-spacer max-w-4xl mx-auto relative overflow-hidden reveal">
+  <section id="sec-signals" class="px-8 lg:px-12 py-24 sm:py-32 max-w-5xl mx-auto relative overflow-hidden reveal">
     <!-- Ambient glow -->
     <div class="ambient-orb absolute -top-20 -right-40 w-[400px] h-[400px] rounded-full opacity-10 blur-[100px] pointer-events-none" style="background: radial-gradient(circle, #10b981 0%, transparent 70%);"></div>
 
@@ -551,8 +553,8 @@
         <div class="live-dot"></div>
         <span class="text-xs font-bold uppercase tracking-widest text-accent">Live Intelligence</span>
       </div>
-      <h2 class="font-serif text-3xl text-[var(--text)] mb-2">Market <span class="gradient-text-emerald">Intelligence</span></h2>
-      <p class="text-muted text-sm max-w-lg mx-auto">Signals and consensus from top X investors, analyzed in real-time. When multiple voices agree, we surface it.</p>
+      <h2 class="font-serif text-4xl sm:text-5xl text-[var(--text)] mb-4">Market <span class="gradient-text-emerald">Intelligence</span></h2>
+      <p class="text-[var(--text-secondary)] text-lg max-w-xl mx-auto opacity-80">Signals and consensus from top X investors, analyzed in real-time. When multiple voices agree, we surface it.</p>
     </div>
 
     <!-- ==================== CONSENSUS CARDS ==================== -->
@@ -945,13 +947,13 @@
   <!-- Gradient divider -->
   <hr class="gradient-divider my-4">
 
-  <section id="sec-pricing" class="px-6 section-spacer max-w-4xl mx-auto relative overflow-hidden reveal">
+  <section id="sec-pricing" class="px-8 lg:px-12 py-24 sm:py-32 max-w-5xl mx-auto relative overflow-hidden reveal">
     <!-- Ambient glow -->
     <div class="ambient-orb absolute -top-20 left-1/3 w-[500px] h-[400px] rounded-full opacity-10 blur-[120px] pointer-events-none" style="background: radial-gradient(circle, #d4a843 0%, transparent 70%);"></div>
     <div class="text-center mb-12">
       <span class="text-xs font-bold uppercase tracking-widest text-brass bg-brass/10 px-3 py-1 rounded-full">Pricing</span>
-      <h2 class="font-serif text-3xl text-[var(--text)] mt-4">Simple, <span class="gradient-text-brass">transparent</span> plans</h2>
-      <p class="text-muted text-sm mt-2">Start free. Upgrade when you need more signals.</p>
+      <h2 class="font-serif text-4xl sm:text-5xl text-[var(--text)] mt-5">Simple, <span class="gradient-text-brass">transparent</span> plans</h2>
+      <p class="text-[var(--text-secondary)] text-lg mt-4 opacity-80">Start free. Upgrade when you need more signals.</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal-stagger">
       <!-- Free tier -->
