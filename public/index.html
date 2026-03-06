@@ -513,8 +513,8 @@
     <div class="px-6 mb-8 flex items-center justify-between">
       <div>
         <div class="flex items-center gap-3">
-          <span class="text-xs font-bold uppercase tracking-widest text-[#a78bfa] bg-[#a78bfa]/10 px-3 py-1 rounded-full">Influencers</span>
-          <h2 class="font-serif text-xl text-[var(--text)]">Top 5 Voices</h2>
+          <span class="text-xs font-bold uppercase tracking-widest text-[#a78bfa] bg-[#a78bfa]/10 px-3 py-1 rounded-full">Research</span>
+          <h2 class="font-serif text-2xl text-[var(--text)]">Top Analysts</h2>
         </div>
         <p class="text-muted text-sm mt-1">Use arrows or keyboard ←→ to browse</p>
       </div>
@@ -1158,13 +1158,14 @@
       { rank:10, ticker:'COIN',  name:'Coinbase',         price:'$245.90', change:'+7.24%', mentions:65,  domain:'coinbase.com',  color:'#0052ff', initials:'CO', spark:[225,228,232,235,238,242,246] },
     ];
 
-    // B5: Each influencer now has a holmesScore (mock accuracy rating)
+    // #6: Influencers redesigned as premium "Research Analysts"
+    // Each analyst has: accuracy score, tier (gold/silver/bronze), current thesis, win rate
     const INFLUENCERS = [
-      { handle:'unusual_whales', name:'Unusual Whales',       bio:'Real-time options flow & dark pool data',    followers:'1.2M', posts:48, initials:'UW', grad:'linear-gradient(135deg,#3b82f6,#8b5cf6)', holmesScore:87 },
-      { handle:'chamath',        name:'Chamath Palihapitiya', bio:'VC, macro investor & tech bull',             followers:'1.5M', posts:31, initials:'CP', grad:'linear-gradient(135deg,#10b981,#14b8a6)',  holmesScore:72 },
-      { handle:'zerohedge',      name:'ZeroHedge',            bio:'Financial news, market commentary & macro',  followers:'1.1M', posts:72, initials:'ZH', grad:'linear-gradient(135deg,#ef4444,#f97316)',  holmesScore:64 },
-      { handle:'TihoBrkan',      name:'Tiho Brkan',           bio:'Global macro research & cycle analysis',     followers:'127K', posts:19, initials:'TB', grad:'linear-gradient(135deg,#f59e0b,#ef4444)',  holmesScore:91 },
-      { handle:'StockMoe',       name:'StockMoe',             bio:'Retail investor ideas & momentum picks',     followers:'456K', posts:27, initials:'SM', grad:'linear-gradient(135deg,#8b5cf6,#ec4899)',  holmesScore:58 },
+      { handle:'unusual_whales', name:'Unusual Whales',       bio:'Options flow & dark pool analytics',    followers:'1.2M', posts:48, initials:'UW', grad:'linear-gradient(135deg,#3b82f6,#8b5cf6)', holmesScore:87, thesis:'"NVDA call flow is massive — institutional accumulation signal"', winRate:82 },
+      { handle:'chamath',        name:'Chamath Palihapitiya', bio:'VC & macro investment thesis',          followers:'1.5M', posts:31, initials:'CP', grad:'linear-gradient(135deg,#10b981,#14b8a6)',  holmesScore:72, thesis:'"AI infrastructure is the real play — not the apps layer"', winRate:68 },
+      { handle:'zerohedge',      name:'ZeroHedge',            bio:'Contrarian macro & risk analysis',      followers:'1.1M', posts:72, initials:'ZH', grad:'linear-gradient(135deg,#ef4444,#f97316)',  holmesScore:64, thesis:'"Delivery miss incoming for TSLA — margin compression ahead"', winRate:61 },
+      { handle:'TihoBrkan',      name:'Tiho Brkan',           bio:'Global macro cycles & positioning',     followers:'127K', posts:19, initials:'TB', grad:'linear-gradient(135deg,#f59e0b,#ef4444)',  holmesScore:91, thesis:'"Commodities supercycle entering wave 3 — overweight energy"', winRate:88 },
+      { handle:'StockMoe',       name:'StockMoe',             bio:'Momentum & retail sentiment tracker',   followers:'456K', posts:27, initials:'SM', grad:'linear-gradient(135deg,#8b5cf6,#ec4899)',  holmesScore:58, thesis:'"META breakout confirmed — ad revenue beat incoming"', winRate:54 },
     ];
 
 
@@ -1212,26 +1213,42 @@
     }
 
     function renderInfluencer(inf, isActive) {
-      // B5: Color the Holmes Score based on accuracy tier
-      const scoreColor = inf.holmesScore >= 80 ? '#10b981' : inf.holmesScore >= 65 ? '#d4a843' : '#f87171';
+      // #6: Analyst Card — institutional-grade design with track record
+      // Determine tier based on Holmes Score: Gold (80+), Silver (65+), Bronze (<65)
+      const tier = inf.holmesScore >= 80 ? 'gold' : inf.holmesScore >= 65 ? 'silver' : 'bronze';
+      const tierLabel = tier === 'gold' ? 'Top Analyst' : tier === 'silver' ? 'Analyst' : 'Contributor';
+      const scoreColor = tier === 'gold' ? '#d4a843' : tier === 'silver' ? '#9294a8' : '#f87171';
+      const ringClass = `analyst-ring-${tier}`;
       return `
         <div class="influencer-avatar-wrap">
-          <img class="influencer-photo"
+          <img class="influencer-photo ${ringClass}"
             src="https://unavatar.io/twitter/${inf.handle}" alt="${inf.handle}"
             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-          <div class="influencer-avatar" style="display:none;background:${inf.grad};">${inf.initials}</div>
+          <div class="influencer-avatar ${ringClass}" style="display:none;background:${inf.grad};">${inf.initials}</div>
         </div>
-        <!-- B5: Holmes Score badge — accuracy rating -->
-        <div class="holmes-score" style="color:${scoreColor};border-color:${scoreColor}33;">${inf.holmesScore}%</div>
-        <div class="influencer-handle">@${inf.handle}</div>
-        <div class="influencer-name">${inf.name}</div>
-        <div class="influencer-bio">${inf.bio}</div>
-        <div class="influencer-stats">
-          <span>${inf.followers} followers</span>
-          <span style="color:#10b981;">${inf.posts} posts tracked</span>
+        <!-- Analyst tier badge -->
+        <span class="analyst-tier analyst-tier-${tier}">${tierLabel}</span>
+        <div class="influencer-name" style="margin-top:4px;">${inf.name}</div>
+        <div class="influencer-handle" style="font-size:11px;opacity:0.7;">@${inf.handle}</div>
+        <!-- Track record bar showing prediction accuracy -->
+        <div style="width:100%;margin-top:6px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:10px;color:var(--text-secondary);font-weight:600;">Accuracy</span>
+            <span style="font-size:12px;font-weight:800;color:${scoreColor};">${inf.holmesScore}%</span>
+          </div>
+          <div class="track-record-bar">
+            <div class="track-record-fill" style="width:${inf.holmesScore}%;"></div>
+          </div>
         </div>
-        <!-- B4: Track button -->
-        <button class="track-btn" onclick="event.stopPropagation();this.textContent=this.textContent==='Track'?'Tracking ✓':'Track';this.classList.toggle('track-btn-active');">Track</button>`;
+        <!-- Current thesis — their latest market stance -->
+        <div class="analyst-thesis">${inf.thesis}</div>
+        <!-- Stats row -->
+        <div class="influencer-stats" style="flex-direction:row;gap:8px;font-size:10px;">
+          <span>${inf.followers}</span>
+          <span>·</span>
+          <span>${inf.winRate}% win rate</span>
+        </div>
+        <button class="track-btn" onclick="event.stopPropagation();this.textContent=this.textContent==='Follow'?'Following ✓':'Follow';this.classList.toggle('track-btn-active');">Follow</button>`;
     }
 
 
@@ -1404,7 +1421,7 @@
       spacing:     175,
       renderFn:    renderStock,
       dotsId:      'assets-dots',
-      onCenterClick: showStockDetail,
+      onCenterClick: showStockModal,
     });
 
     // Initialize influencer carousel with dots
@@ -1413,9 +1430,9 @@
       items:       INFLUENCERS,
       cardClass:   'influencer-card',
       activeClass: 'influencer-active',
-      halfW:       110,
-      halfH:       150,
-      spacing:     185,
+      halfW:       115,
+      halfH:       185,
+      spacing:     195,
       renderFn:    renderInfluencer,
       dotsId:      'influencer-dots',
     });
@@ -1702,6 +1719,337 @@
     cmdBar.addEventListener('click', (e) => {
       if (e.target === cmdBar) cmdBar.classList.add('hidden');
     });
+
+
+    // =================================================================
+    // #1: COUNT-UP ANIMATION — numbers animate from 0 to their target
+    // Uses IntersectionObserver to trigger when metrics scroll into view
+    // =================================================================
+    function animateCountUp(el, target, suffix = '') {
+      const duration = 1500; // milliseconds
+      const startTime = performance.now();
+      // Parse the target: handle numbers like "1.2K"
+      let numTarget = parseFloat(target.replace(/[^0-9.]/g, ''));
+      const hasK = target.includes('K');
+      if (hasK) numTarget = numTarget; // keep as 1.2 for "1.2K"
+
+      function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease-out curve for a natural deceleration
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = numTarget * eased;
+
+        if (hasK) {
+          el.textContent = current.toFixed(1) + 'K' + suffix;
+        } else if (numTarget >= 100) {
+          el.textContent = Math.round(current) + suffix;
+        } else {
+          el.textContent = Math.round(current) + suffix;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          // Final value + pop animation
+          el.textContent = target + suffix;
+          el.classList.add('count-up-done');
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Observe the metrics strip — animate when it enters the viewport
+    const metricsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Find all metric values and animate them
+          const values = entry.target.querySelectorAll('.metric-value');
+          values.forEach((el, i) => {
+            // Stagger each number by 200ms
+            setTimeout(() => {
+              const target = el.textContent.trim();
+              const suffix = target.includes('%') ? '%' : '';
+              const cleanTarget = target.replace('%', '');
+              el.textContent = '0';
+              animateCountUp(el, cleanTarget, suffix);
+            }, i * 200);
+          });
+          metricsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const metricsStrip = document.querySelector('.metrics-strip');
+    if (metricsStrip) metricsObserver.observe(metricsStrip);
+
+
+    // =================================================================
+    // #7: STOCK DETAIL MODAL — full-screen overlay with chart & analysis
+    // Replaces the old inline panel with a dramatic Fey-style modal
+    // =================================================================
+    function showStockModal(s) {
+      const isPos = s.change.startsWith('+');
+      const changeColor = isPos ? '#10b981' : '#f87171';
+      const arrow = isPos ? '↑' : '↓';
+
+      // Build larger sparkline SVG for the modal
+      const w = 640, h = 120, pad = 8;
+      const min = Math.min(...s.spark), max = Math.max(...s.spark), range = max - min || 1;
+      const pts = s.spark.map((p, i) =>
+        `${pad + (i / (s.spark.length - 1)) * (w - pad * 2)},${pad + (1 - (p - min) / range) * (h - pad * 2)}`
+      ).join(' ');
+
+      // Build area fill (gradient under the line)
+      const areaPoints = `${pad},${h - pad} ${pts} ${w - pad},${h - pad}`;
+
+      // Mock sentiment data for this stock
+      const bullish = isPos ? 72 : 35;
+      const neutral = 15;
+      const bearish = 100 - bullish - neutral;
+
+      // Mock influencer opinions
+      const opinions = INFLUENCERS.slice(0, 3).map(inf => {
+        const stance = Math.random() > 0.4 ? 'Bullish' : 'Bearish';
+        return `<div class="flex items-center gap-3 py-2">
+          <img src="https://unavatar.io/twitter/${inf.handle}" class="w-8 h-8 rounded-full object-cover" style="border:2px solid ${stance === 'Bullish' ? '#10b981' : '#f87171'}" onerror="this.style.display='none'">
+          <div class="flex-1">
+            <span class="text-[var(--text)] text-sm font-semibold">@${inf.handle}</span>
+            <span class="text-xs ml-2" style="color:${stance === 'Bullish' ? '#10b981' : '#f87171'}">${arrow} ${stance}</span>
+          </div>
+          <span class="text-muted text-xs">${Math.floor(Math.random() * 12 + 1)}h ago</span>
+        </div>`;
+      }).join('');
+
+      // Create the modal overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'stock-modal-overlay';
+      overlay.innerHTML = `
+        <div class="stock-modal relative">
+          <button class="modal-close" onclick="this.closest('.stock-modal-overlay').remove()">✕</button>
+
+          <!-- Header: ticker, name, price -->
+          <div class="flex items-center gap-4 mb-2">
+            <img src="https://assets.parqet.com/logos/symbol/${s.ticker}" class="w-12 h-12 rounded-full object-contain" style="filter:drop-shadow(0 0 8px ${s.color}80);" onerror="this.style.display='none'">
+            <div>
+              <div class="flex items-center gap-3">
+                <h2 class="font-serif text-3xl text-[var(--text)]">${s.ticker}</h2>
+                <span class="ai-badge ai-badge-${isPos ? 'bullish' : 'bearish'}">${isPos ? 'Bullish' : 'Bearish'}</span>
+              </div>
+              <p class="text-[var(--text-secondary)] text-sm">${s.name}</p>
+            </div>
+          </div>
+
+          <!-- Price row -->
+          <div class="flex items-baseline gap-4 mb-6">
+            <span class="text-[var(--text)] text-4xl font-bold tabular-nums">${s.price}</span>
+            <span class="text-lg font-bold tabular-nums" style="color:${changeColor}">${arrow} ${s.change}</span>
+          </div>
+
+          <!-- Chart area -->
+          <div class="modal-chart-area">
+            <svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="chart-grad-${s.ticker}" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="${changeColor}" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="${changeColor}" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <polygon points="${areaPoints}" fill="url(#chart-grad-${s.ticker})"/>
+              <polyline points="${pts}" fill="none" stroke="${changeColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="stock-sparkline"/>
+            </svg>
+            <div class="flex justify-between mt-2">
+              <span class="text-muted text-xs">7 days ago</span>
+              <span class="text-muted text-xs">Today</span>
+            </div>
+          </div>
+
+          <!-- Sentiment breakdown -->
+          <h3 class="text-[var(--text)] text-sm font-bold mb-3 mt-4">X Sentiment Breakdown</h3>
+          <div class="modal-sentiment-row">
+            <span class="modal-sentiment-label" style="color:#10b981;">Bullish</span>
+            <div class="modal-sentiment-bar"><div class="modal-sentiment-fill" style="width:${bullish}%;background:#10b981;"></div></div>
+            <span class="text-[var(--text)] text-xs font-bold tabular-nums" style="width:32px;text-align:right;">${bullish}%</span>
+          </div>
+          <div class="modal-sentiment-row">
+            <span class="modal-sentiment-label" style="color:#d4a843;">Neutral</span>
+            <div class="modal-sentiment-bar"><div class="modal-sentiment-fill" style="width:${neutral}%;background:#d4a843;"></div></div>
+            <span class="text-[var(--text)] text-xs font-bold tabular-nums" style="width:32px;text-align:right;">${neutral}%</span>
+          </div>
+          <div class="modal-sentiment-row">
+            <span class="modal-sentiment-label" style="color:#f87171;">Bearish</span>
+            <div class="modal-sentiment-bar"><div class="modal-sentiment-fill" style="width:${bearish}%;background:#f87171;"></div></div>
+            <span class="text-[var(--text)] text-xs font-bold tabular-nums" style="width:32px;text-align:right;">${bearish}%</span>
+          </div>
+
+          <!-- Influencer opinions -->
+          <h3 class="text-[var(--text)] text-sm font-bold mb-2 mt-6">Analyst Opinions</h3>
+          <div class="border-t border-[var(--card-border)]">
+            ${opinions}
+          </div>
+
+          <!-- Mentions count -->
+          <div class="flex items-center justify-between mt-6 pt-4 border-t border-[var(--card-border)]">
+            <span class="text-muted text-xs">${s.mentions} mentions across ${Math.floor(s.mentions / 20)} influencers</span>
+            <span class="text-muted text-xs">Data updates every 5 min</span>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      // Close on overlay click (not modal itself)
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+      });
+
+      // Close on Escape
+      const escHandler = (e) => {
+        if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', escHandler); }
+      };
+      document.addEventListener('keydown', escHandler);
+    }
+
+
+    // =================================================================
+    // #8: LIVE FEED SIMULATION — signals slide in with animation
+    // Adds the signal-enter class to existing cards + simulates new ones
+    // =================================================================
+    (function initLiveFeed() {
+      // Add slide-in animation to existing signal cards
+      const signalCards = document.querySelectorAll('.signal-card');
+      signalCards.forEach((card, i) => {
+        card.style.animationDelay = `${i * 0.15}s`;
+        card.classList.add('signal-enter');
+      });
+
+      // Simulate a new signal arriving every 30 seconds
+      const mockSignals = [
+        { ticker: 'AMD', handle: 'unusual_whales', text: '"AMD GPU demand surging — datacenter orders up 300%"', type: 'bullish', score: '8/10' },
+        { ticker: 'GOOGL', handle: 'TihoBrkan', text: '"Google Cloud growth accelerating — underappreciated AI play"', type: 'bullish', score: '7/10' },
+        { ticker: 'COIN', handle: 'chamath', text: '"Crypto winter is over — Coinbase is the infrastructure bet"', type: 'bullish', score: '6/10' },
+        { ticker: 'AMZN', handle: 'zerohedge', text: '"AWS margins under pressure from price war — bearish signal"', type: 'bearish', score: '7/10' },
+      ];
+
+      let signalIndex = 0;
+      setInterval(() => {
+        const container = document.getElementById('signals-container');
+        if (!container) return;
+
+        const sig = mockSignals[signalIndex % mockSignals.length];
+        const isBullish = sig.type === 'bullish';
+        const borderClass = isBullish ? 'signal-card-bullish' : 'signal-card-bearish';
+        const arrowText = isBullish ? '↑ Bullish' : '↓ Bearish';
+        const arrowColor = isBullish ? 'var(--accent)' : 'var(--danger)';
+        const scoreColor = isBullish ? 'text-accent' : 'text-brass';
+
+        const card = document.createElement('div');
+        card.className = `signal-card ${borderClass} flex items-center gap-4 signal-enter`;
+        card.innerHTML = `
+          <img src="https://unavatar.io/twitter/${sig.handle}" alt="@${sig.handle}" class="w-10 h-10 rounded-full object-cover flex-shrink-0" style="border:2px solid ${arrowColor};" onerror="this.style.display='none'">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-[var(--text)] text-sm font-bold">${sig.ticker}</span>
+              <span class="text-xs font-semibold" style="color:${arrowColor}">${arrowText}</span>
+              <span class="freshness-dot freshness-live ml-1"></span>
+              <span class="text-muted text-xs ml-auto">Just now</span>
+            </div>
+            <p class="text-muted text-xs truncate">@${sig.handle} — ${sig.text}</p>
+          </div>
+          <div class="flex flex-col items-end gap-1 flex-shrink-0">
+            <span class="${scoreColor} text-sm font-bold tabular-nums">${sig.score}</span>
+            <span class="ai-badge" style="font-size:8px;">AI Signal</span>
+          </div>
+        `;
+
+        // Insert at the top of the container
+        container.insertBefore(card, container.firstChild);
+
+        // Remove the oldest card if there are more than 6
+        while (container.children.length > 6) {
+          container.removeChild(container.lastChild);
+        }
+
+        signalIndex++;
+      }, 30000); // Every 30 seconds
+    })();
+
+
+    // =================================================================
+    // #9: ONBOARDING FLOW — shown on first visit only
+    // 3 steps: Welcome, Choose interests, Get started
+    // =================================================================
+    (function initOnboarding() {
+      // Check if user has already completed onboarding
+      if (localStorage.getItem('stockholmes-onboarded')) return;
+
+      const steps = [
+        {
+          icon: '🔍',
+          title: 'Welcome to StockHolmes',
+          desc: 'Your AI-powered investment intelligence platform. We track what the smartest investors on X are talking about.',
+          btn: 'Next',
+        },
+        {
+          icon: '📊',
+          title: 'Real-Time Signals',
+          desc: 'We analyze posts from top investors, detect stock mentions, and rate their conviction using AI sentiment analysis.',
+          btn: 'Next',
+        },
+        {
+          icon: '🚀',
+          title: 'Ready to Explore',
+          desc: 'Browse trending stocks, follow top analysts, and discover investment ideas before the crowd. Press Cmd+K anytime to search.',
+          btn: 'Get Started',
+        },
+      ];
+
+      let currentStep = 0;
+
+      // Create the overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'onboarding-overlay';
+
+      function renderStep() {
+        const step = steps[currentStep];
+        const dots = steps.map((_, i) =>
+          `<div class="onboard-dot ${i === currentStep ? 'onboard-dot-active' : ''}"></div>`
+        ).join('');
+
+        overlay.innerHTML = `
+          <button class="onboard-skip" id="onboard-skip">Skip</button>
+          <div class="onboarding-step" key="${currentStep}">
+            <div style="font-size:56px;margin-bottom:20px;">${step.icon}</div>
+            <h2 class="font-serif text-[var(--text)]">${step.title}</h2>
+            <p>${step.desc}</p>
+            <button class="btn-pill btn-pill-accent text-base px-10 py-3" id="onboard-next">${step.btn}</button>
+            <div class="onboard-dots">${dots}</div>
+          </div>
+        `;
+
+        // Wire up buttons
+        document.getElementById('onboard-next').addEventListener('click', () => {
+          if (currentStep < steps.length - 1) {
+            currentStep++;
+            renderStep();
+          } else {
+            completeOnboarding();
+          }
+        });
+
+        document.getElementById('onboard-skip').addEventListener('click', completeOnboarding);
+      }
+
+      function completeOnboarding() {
+        localStorage.setItem('stockholmes-onboarded', 'true');
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 500);
+      }
+
+      document.body.appendChild(overlay);
+      renderStep();
+    })();
+
 
   </script>
 

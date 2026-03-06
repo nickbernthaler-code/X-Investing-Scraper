@@ -475,7 +475,7 @@ body,
 .cf-track {
   position: relative;
   width: 100%;
-  height: 360px;
+  height: 420px;
   perspective: 1000px;
 
   /* Soft edge fade — premium look, no hard clipping */
@@ -668,8 +668,8 @@ body,
    INFLUENCER CARDS
 ==================================================================== */
 .influencer-card {
-  width: 220px;
-  height: 300px;
+  width: 230px;
+  height: 370px;
   border-radius: 24px;
   padding: 28px 20px;
   display: flex;
@@ -2159,4 +2159,526 @@ footer {
   padding-top: 4rem;
   padding-bottom: 3rem;
   margin-top: 2rem;
+}
+
+
+/* ====================================================================
+   #2: ENHANCED SCROLL REVEALS — cascading sections with stagger
+   Each child element fades in sequentially for a cinematic feel
+==================================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children — each fades in with increasing delay */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.reveal-stagger.revealed > *:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger.revealed > *:nth-child(2) { transition-delay: 0.15s; }
+.reveal-stagger.revealed > *:nth-child(3) { transition-delay: 0.25s; }
+.reveal-stagger.revealed > *:nth-child(4) { transition-delay: 0.35s; }
+.reveal-stagger.revealed > *:nth-child(5) { transition-delay: 0.45s; }
+.reveal-stagger.revealed > *:nth-child(6) { transition-delay: 0.55s; }
+
+.reveal-stagger.revealed > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ====================================================================
+   #3: SPARKLINE DRAW ANIMATION — lines draw themselves on load
+   Uses SVG stroke-dashoffset trick to animate line drawing
+==================================================================== */
+.stock-sparkline polyline {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: sparkline-draw 1.5s ease-out forwards;
+}
+
+/* Stagger sparklines in the carousel so they draw one after another */
+.cf-slide:nth-child(1) .stock-sparkline polyline { animation-delay: 0s; }
+.cf-slide:nth-child(2) .stock-sparkline polyline { animation-delay: 0.1s; }
+.cf-slide:nth-child(3) .stock-sparkline polyline { animation-delay: 0.2s; }
+.cf-slide:nth-child(4) .stock-sparkline polyline { animation-delay: 0.3s; }
+.cf-slide:nth-child(5) .stock-sparkline polyline { animation-delay: 0.4s; }
+
+@keyframes sparkline-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+
+/* ====================================================================
+   #4: LIGHT MODE POLISH — updated for aurora, nav, and new styles
+   Apple-clean light mode that matches the dramatic dark aesthetic
+==================================================================== */
+
+/* Aurora mesh — very subtle pastel version for light mode */
+[data-theme="light"] .aurora-mesh {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 60%,
+      rgba(5, 150, 105, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 75% 30%,
+      rgba(124, 58, 237, 0.03) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 50% at 50% 80%,
+      rgba(180, 83, 9, 0.02) 0%, transparent 50%);
+}
+[data-theme="light"] .aurora-mesh-secondary { opacity: 0; }
+
+/* Hero wrapper — white bg feel */
+[data-theme="light"] .hero-wrapper {
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fb 100%);
+}
+
+/* Nav — clean white with soft border */
+[data-theme="light"] .nav-fey {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Nav buttons — light mode */
+[data-theme="light"] .nav-btn-primary {
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(5, 150, 105, 0.2);
+}
+[data-theme="light"] .nav-btn-secondary {
+  color: var(--text);
+  opacity: 0.6;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+[data-theme="light"] .nav-btn-secondary:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* Metric values — richer colors on light */
+[data-theme="light"] .metric-value {
+  opacity: 0.9;
+}
+[data-theme="light"] .metric-label {
+  opacity: 0.5;
+}
+
+/* Showcase card 3D hover — softer shadow on light */
+[data-theme="light"] .showcase-card:hover .showcase-card-inner {
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    0 20px 60px rgba(0, 0, 0, 0.06);
+}
+
+/* Stock card shadows — clean layered on light */
+[data-theme="light"] .stock-card {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 16px 36px rgba(0, 0, 0, 0.05);
+}
+[data-theme="light"] .stock-card:hover {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 8px 20px rgba(0, 0, 0, 0.08),
+    0 24px 48px rgba(0, 0, 0, 0.06);
+}
+
+/* Influencer card shadows — light mode */
+[data-theme="light"] .influencer-card {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 16px 36px rgba(0, 0, 0, 0.05);
+}
+
+
+/* ====================================================================
+   #5: MOBILE RESPONSIVE — protect the dramatic layout on small screens
+   Hero, nav, typography, and spacing all scale down gracefully
+==================================================================== */
+
+/* Tablets and below */
+@media (max-width: 768px) {
+  /* Hero — reduce the massive padding */
+  .hero-wrapper { min-height: 70vh; }
+  .hero-wrapper section { padding-top: 6rem; padding-bottom: 4rem; }
+
+  /* Sections — less vertical spacing */
+  #sec-trending, #sec-influencers { padding-top: 3rem; padding-bottom: 3rem; }
+
+  /* Nav — compact */
+  .nav-fey { padding-left: 1rem; padding-right: 1rem; }
+  .nav-btn-secondary { display: none; }
+
+  /* Consensus grid — single column */
+  .consensus-grid { grid-template-columns: 1fr !important; }
+  .sentiment-gauge { width: 110px; height: 62px; }
+
+  /* Pricing grid — single column */
+  #sec-pricing .grid { grid-template-columns: 1fr !important; }
+
+  /* Footer — single column */
+  footer .grid { grid-template-columns: 1fr !important; }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+  /* Hero — scale down further */
+  .hero-wrapper { min-height: 60vh; }
+  .hero-wrapper section { padding-top: 4rem; padding-bottom: 3rem; }
+
+  /* Hero buttons — stack vertically on small phones */
+  .hero-wrapper .flex.items-center.justify-center.gap-4 {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .hero-wrapper .btn-pill { width: 100%; max-width: 280px; }
+
+  /* Metrics — 2x2 grid instead of row */
+  .metrics-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    text-align: center;
+  }
+  .metric-value { font-size: 28px; }
+
+  /* Section headings — smaller on phones */
+  h2.font-serif { font-size: 1.75rem !important; }
+
+  /* Signal cards — smaller padding */
+  .signal-card { padding: 14px 16px; }
+
+  /* Showcase cards — narrower */
+  .showcase-card { width: 280px; }
+  .showcase-card-inner { min-height: 320px; padding: 16px; }
+  .feature-showcase-track { padding: 0 16px; }
+
+  /* Command bar — full width */
+  .command-bar { width: calc(100vw - 24px); }
+
+  /* Nav — smaller logo text */
+  .nav-fey .font-serif { font-size: 1rem; }
+}
+
+
+/* ====================================================================
+   #6: ANALYST CARD STYLES — premium institutional look
+   Track record, thesis, accuracy badge — not social media profiles
+==================================================================== */
+
+/* Accuracy tier ring around influencer photo */
+.analyst-ring-gold {
+  box-shadow: 0 0 0 3px #d4a843, 0 4px 16px rgba(212, 168, 67, 0.3);
+}
+.analyst-ring-silver {
+  box-shadow: 0 0 0 3px #9294a8, 0 4px 16px rgba(146, 148, 168, 0.2);
+}
+.analyst-ring-bronze {
+  box-shadow: 0 0 0 3px #f87171, 0 4px 16px rgba(248, 113, 113, 0.2);
+}
+
+/* Track record bar — shows prediction accuracy visually */
+.track-record-bar {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-2);
+  overflow: hidden;
+  margin-top: 6px;
+}
+.track-record-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), #34d399);
+  transition: width 1s ease-out;
+}
+
+/* Analyst thesis — one-liner market stance */
+.analyst-thesis {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  padding: 6px 10px;
+  border-left: 2px solid var(--accent);
+  margin-top: 6px;
+  background: rgba(16, 185, 129, 0.04);
+  border-radius: 0 6px 6px 0;
+}
+
+/* Analyst tier label */
+.analyst-tier {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.analyst-tier-gold   { background: rgba(212, 168, 67, 0.15); color: #d4a843; }
+.analyst-tier-silver { background: rgba(146, 148, 168, 0.15); color: #9294a8; }
+.analyst-tier-bronze { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+
+[data-theme="light"] .analyst-thesis {
+  background: rgba(5, 150, 105, 0.04);
+  border-left-color: var(--accent);
+}
+[data-theme="light"] .track-record-fill {
+  background: linear-gradient(90deg, #059669, #10b981);
+}
+
+
+/* ====================================================================
+   #7: STOCK DETAIL MODAL — full-screen overlay with chart & sentiment
+   Replaces the inline detail panel with a dramatic modal
+==================================================================== */
+.stock-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: modal-fade-in 0.3s ease;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.stock-modal {
+  width: 90vw;
+  max-width: 720px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--glass-panel);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  padding: 36px;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(16, 185, 129, 0.05);
+  animation: modal-slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modal-slide-up {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Modal chart container — dark inset area for the chart */
+.modal-chart-area {
+  background: var(--bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+/* Sentiment breakdown bars inside modal */
+.modal-sentiment-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+.modal-sentiment-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  width: 60px;
+  flex-shrink: 0;
+}
+.modal-sentiment-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.modal-sentiment-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease-out;
+}
+
+/* Modal close button */
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.modal-close:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+[data-theme="light"] .stock-modal-overlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+[data-theme="light"] .stock-modal {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.15);
+}
+[data-theme="light"] .modal-chart-area {
+  background: #f8f9fb;
+  border-color: #e5e7eb;
+}
+[data-theme="light"] .modal-close {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+
+/* ====================================================================
+   #8: LIVE FEED ANIMATION — signal cards slide in from bottom
+   Cards animate in one at a time for a "real-time" feel
+==================================================================== */
+.signal-enter {
+  animation: signal-slide-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes signal-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Stagger signal cards on page load */
+.signal-card:nth-child(1) { animation-delay: 0s; }
+.signal-card:nth-child(2) { animation-delay: 0.12s; }
+.signal-card:nth-child(3) { animation-delay: 0.24s; }
+.signal-card:nth-child(4) { animation-delay: 0.36s; }
+
+
+/* ====================================================================
+   #9: ONBOARDING FLOW — full-screen steps with smooth transitions
+   Single action per screen, minimal and focused
+==================================================================== */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.onboarding-step {
+  text-align: center;
+  max-width: 480px;
+  padding: 40px;
+  animation: onboard-fade-in 0.6s ease both;
+}
+
+@keyframes onboard-fade-in {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.onboarding-step h2 {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.onboarding-step p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+/* Progress dots at bottom of onboarding */
+.onboard-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+.onboard-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.3s ease;
+}
+.onboard-dot-active {
+  background: var(--accent);
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* Skip button */
+.onboard-skip {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+.onboard-skip:hover { opacity: 1; }
+
+[data-theme="light"] .onboarding-overlay {
+  background: #ffffff;
+}
+
+
+/* ====================================================================
+   #1: COUNT-UP ANIMATION — numbers pulse when they finish counting
+==================================================================== */
+.count-up-done {
+  animation: count-pop 0.3s ease;
+}
+
+@keyframes count-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
