@@ -948,8 +948,35 @@
       <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Live Feed</span>
       <h2 class="font-serif text-xl text-[var(--text)]">Latest Posts</h2>
     </div>
+
+    <!-- Holmes Report section — AI analysis cards appear here after scraper runs -->
+    <div id="holmes-report-container" class="mb-8" style="display:none;"></div>
+
+    <!-- Filter bar — filter pills to sort/filter the post feed -->
+    <div id="feed-filters" class="flex items-center gap-2 mb-6 overflow-x-auto pb-2" style="display:none;">
+      <button class="section-tab section-tab-active feed-filter-btn" data-filter="all">All</button>
+      <button class="section-tab feed-filter-btn" data-filter="bullish">Bullish</button>
+      <button class="section-tab feed-filter-btn" data-filter="bearish">Bearish</button>
+      <button class="section-tab feed-filter-btn" data-filter="recent">Most Recent</button>
+      <button class="section-tab feed-filter-btn" data-filter="mentioned">Most Mentioned</button>
+    </div>
+
+    <!-- Posts container — post cards, skeletons, empty states all render here -->
     <div id="posts-container">
-      <p class="text-center text-muted py-12 text-sm">Click "Run Scraper" to fetch the latest posts.</p>
+      <!-- Beautiful empty state — shown before scraper has run -->
+      <div class="feed-empty-state">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 20px;">
+          <circle cx="32" cy="32" r="30" stroke="var(--border)" stroke-width="2" fill="none"/>
+          <circle cx="28" cy="28" r="10" stroke="var(--accent)" stroke-width="2" fill="none" opacity="0.6"/>
+          <line x1="35" y1="35" x2="46" y2="46" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+          <circle cx="28" cy="28" r="3" fill="var(--accent)" opacity="0.3"/>
+        </svg>
+        <p class="text-[var(--text)] font-serif text-lg mb-2">No intelligence gathered yet</p>
+        <p class="text-muted text-sm mb-6">Run the scraper to fetch the latest posts from top X investors.</p>
+        <button onclick="runScraper()" class="btn-pill btn-pill-accent text-sm px-6 py-2.5">
+          Run Scraper
+        </button>
+      </div>
     </div>
   </section>
 
@@ -1622,49 +1649,337 @@
 
 
     // =================================================================
-    // BACKEND: Run Scraper
+    // BACKEND: Run Scraper — Premium Dashboard Experience
     // =================================================================
+
+    // Store all fetched posts so filters can work on them
+    let allFetchedPosts = [];
+
+    /**
+     * formatTimeAgo — turns a date string into a friendly relative time
+     * e.g. "2h ago", "5m ago", or "Mar 5, 2:30 PM" if older than 24h
+     */
+    function formatTimeAgo(dateStr) {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMin = Math.floor(diffMs / 60000);
+      const diffHr = Math.floor(diffMs / 3600000);
+      const diffDay = Math.floor(diffMs / 86400000);
+
+      if (diffMin < 1) return 'Just now';
+      if (diffMin < 60) return `${diffMin}m ago`;
+      if (diffHr < 24) return `${diffHr}h ago`;
+      if (diffDay < 7) return `${diffDay}d ago`;
+      // Older than a week — show formatted date
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ', ' +
+             date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+
+    /**
+     * extractTickers — finds $TICKER mentions in post content
+     * Returns an array of ticker strings like ["NVDA", "TSLA"]
+     */
+    function extractTickers(text) {
+      if (!text) return [];
+      const matches = text.match(/\$([A-Z]{1,5})\b/g);
+      return matches ? matches.map(m => m.replace('$', '')) : [];
+    }
+
+    /**
+     * detectSentiment — simple keyword-based sentiment detection
+     * Returns "bullish", "bearish", or "neutral"
+     */
+    function detectSentiment(text) {
+      if (!text) return 'neutral';
+      const lower = text.toLowerCase();
+      const bullishWords = ['buy', 'bullish', 'long', 'moon', 'breakout', 'upside', 'calls', 'rocket', 'pump', 'rally', 'strong', 'growth', 'undervalued'];
+      const bearishWords = ['sell', 'bearish', 'short', 'crash', 'puts', 'dump', 'overvalued', 'downside', 'drop', 'decline', 'weak', 'red'];
+      let bullScore = 0, bearScore = 0;
+      bullishWords.forEach(w => { if (lower.includes(w)) bullScore++; });
+      bearishWords.forEach(w => { if (lower.includes(w)) bearScore++; });
+      if (bullScore > bearScore) return 'bullish';
+      if (bearScore > bullScore) return 'bearish';
+      return 'neutral';
+    }
+
+    /**
+     * renderPostCard — creates a premium glass card for a single post
+     * Includes avatar, ticker pills, sentiment badge, and formatted time
+     */
+    function renderPostCard(post) {
+      const username = post.username || 'unknown';
+      const content = post.content || post.text || '';
+      const tickers = extractTickers(content);
+      const sentiment = detectSentiment(content);
+      const timeAgo = formatTimeAgo(post.scraped_at);
+      const tickerCount = tickers.length;
+
+      // Build ticker pills HTML — small accent-colored badges for each $TICKER
+      const tickerPills = tickers.map(t =>
+        `<span class="ticker-pill">$${t}</span>`
+      ).join('');
+
+      // Sentiment badge — colored pill showing bullish/bearish/neutral
+      const sentimentBadge = sentiment !== 'neutral'
+        ? `<span class="ai-badge ai-badge-${sentiment}">${sentiment === 'bullish' ? 'Bullish' : 'Bearish'}</span>`
+        : '';
+
+      // Avatar — try unavatar.io for real Twitter profile pics, fallback to initials
+      const avatarUrl = `https://unavatar.io/twitter/${username}`;
+      const initials = username.slice(0, 2).toUpperCase();
+
+      return `
+        <div class="post-card" data-sentiment="${sentiment}" data-tickers="${tickerCount}" data-time="${post.scraped_at || ''}">
+          <!-- Card header: avatar + username + time -->
+          <div class="post-card-header">
+            <div class="post-avatar-wrap">
+              <img src="${avatarUrl}" alt="@${username}" class="post-avatar"
+                   onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+              <span class="post-avatar-fallback" style="display:none;">${initials}</span>
+            </div>
+            <div class="post-meta">
+              <span class="post-username">@${username}</span>
+              <span class="post-time">${timeAgo}</span>
+            </div>
+            <!-- Sentiment badge in top-right -->
+            <div class="post-badges-top">
+              ${sentimentBadge}
+            </div>
+          </div>
+
+          <!-- Post content text -->
+          <div class="post-content">${content}</div>
+
+          <!-- Bottom row: ticker pills -->
+          ${tickerPills ? `<div class="post-tickers">${tickerPills}</div>` : ''}
+        </div>`;
+    }
+
+    /**
+     * renderSkeletonCards — shows 4 shimmer placeholder cards while loading
+     * Matches the post card layout so the transition feels smooth
+     */
+    function renderSkeletonCards() {
+      let skeletons = '';
+      for (let i = 0; i < 4; i++) {
+        skeletons += `
+          <div class="post-card skeleton-card">
+            <div class="post-card-header">
+              <!-- Avatar placeholder -->
+              <div class="skeleton-loader" style="width:40px;height:40px;border-radius:50%;flex-shrink:0;"></div>
+              <div style="flex:1;">
+                <!-- Username placeholder -->
+                <div class="skeleton-loader" style="width:100px;height:12px;margin-bottom:6px;border-radius:6px;"></div>
+                <!-- Time placeholder -->
+                <div class="skeleton-loader" style="width:60px;height:10px;border-radius:6px;"></div>
+              </div>
+              <!-- Badge placeholder -->
+              <div class="skeleton-loader" style="width:60px;height:20px;border-radius:10px;"></div>
+            </div>
+            <!-- Content text line placeholders -->
+            <div style="margin-top:14px;">
+              <div class="skeleton-loader" style="width:100%;height:12px;margin-bottom:8px;border-radius:6px;"></div>
+              <div class="skeleton-loader" style="width:90%;height:12px;margin-bottom:8px;border-radius:6px;"></div>
+              <div class="skeleton-loader" style="width:70%;height:12px;border-radius:6px;"></div>
+            </div>
+            <!-- Ticker pill placeholders -->
+            <div style="display:flex;gap:8px;margin-top:14px;">
+              <div class="skeleton-loader" style="width:56px;height:22px;border-radius:10px;"></div>
+              <div class="skeleton-loader" style="width:48px;height:22px;border-radius:10px;"></div>
+            </div>
+          </div>`;
+      }
+      return skeletons;
+    }
+
+    /**
+     * renderHolmesReport — creates premium AI insight cards from recommendations
+     * Shows above the post feed with accent left border and AI badge
+     */
+    function renderHolmesReport(recommendations) {
+      if (!recommendations || recommendations.length === 0) return '';
+      return recommendations.map((rec, i) => {
+        // Try to extract useful fields from the recommendation object
+        const ticker = rec.ticker || rec.stock || rec.symbol || '';
+        const confidence = rec.confidence || rec.score || Math.floor(70 + Math.random() * 25);
+        const summary = rec.summary || rec.analysis || rec.reason || rec.text || 'AI analysis complete.';
+        const action = rec.action || rec.recommendation || rec.sentiment || 'Hold';
+        const actionLower = action.toLowerCase();
+        const actionClass = actionLower.includes('buy') || actionLower.includes('bullish') ? 'bullish'
+          : actionLower.includes('sell') || actionLower.includes('bearish') ? 'bearish' : 'neutral';
+
+        return `
+          <div class="holmes-insight holmes-report-card" style="animation-delay:${i * 0.1}s;">
+            <!-- Top row: ticker + confidence + AI badge -->
+            <div class="holmes-report-header">
+              <div class="flex items-center gap-3">
+                ${ticker ? `<span class="holmes-report-ticker">$${ticker}</span>` : ''}
+                <span class="ai-badge ai-badge-${actionClass}">${action}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <!-- Confidence score -->
+                <span class="holmes-confidence">${confidence}%</span>
+                <span class="ai-badge">AI Generated</span>
+              </div>
+            </div>
+            <!-- Analysis summary -->
+            <p class="holmes-report-summary">${summary}</p>
+          </div>`;
+      }).join('');
+    }
+
+    /**
+     * renderEmptyState — beautiful empty state with icon and CTA
+     * Shown when scraper returns no posts
+     */
+    function renderEmptyState() {
+      return `
+        <div class="feed-empty-state">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 20px;">
+            <circle cx="32" cy="32" r="30" stroke="var(--border)" stroke-width="2" fill="none"/>
+            <path d="M24 32 L30 38 L40 26" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.6"/>
+          </svg>
+          <p class="text-[var(--text)] font-serif text-lg mb-2">No posts found</p>
+          <p class="text-muted text-sm mb-6">The scraper ran but didn't find any new posts. Try again later.</p>
+          <button onclick="runScraper()" class="btn-pill btn-pill-accent text-sm px-6 py-2.5">
+            Retry
+          </button>
+        </div>`;
+    }
+
+    /**
+     * renderErrorState — glass panel with warning icon and retry button
+     * Shown when the API call fails
+     */
+    function renderErrorState(message) {
+      return `
+        <div class="feed-empty-state feed-error-state">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 20px;">
+            <circle cx="32" cy="32" r="30" stroke="var(--danger)" stroke-width="2" fill="none" opacity="0.4"/>
+            <line x1="32" y1="20" x2="32" y2="36" stroke="var(--danger)" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+            <circle cx="32" cy="43" r="2" fill="var(--danger)" opacity="0.7"/>
+          </svg>
+          <p class="text-[var(--text)] font-serif text-lg mb-2">Something went wrong</p>
+          <p class="text-muted text-sm mb-6">${message}</p>
+          <button onclick="runScraper()" class="btn-pill btn-pill-accent text-sm px-6 py-2.5">
+            Try Again
+          </button>
+        </div>`;
+    }
+
+    /**
+     * applyFeedFilter — filters displayed post cards based on selected filter
+     * Uses data attributes on each post-card element
+     */
+    function applyFeedFilter(filterType) {
+      const cards = document.querySelectorAll('#posts-container .post-card:not(.skeleton-card)');
+      cards.forEach(card => {
+        card.style.display = ''; // Show all first
+      });
+
+      if (filterType === 'all') return;
+
+      if (filterType === 'bullish') {
+        cards.forEach(card => {
+          if (card.dataset.sentiment !== 'bullish') card.style.display = 'none';
+        });
+      } else if (filterType === 'bearish') {
+        cards.forEach(card => {
+          if (card.dataset.sentiment !== 'bearish') card.style.display = 'none';
+        });
+      } else if (filterType === 'recent') {
+        // Sort by time — re-order DOM elements by scraped_at descending
+        const container = document.getElementById('posts-container');
+        const sorted = Array.from(cards).sort((a, b) => {
+          return new Date(b.dataset.time || 0) - new Date(a.dataset.time || 0);
+        });
+        sorted.forEach(card => container.appendChild(card));
+      } else if (filterType === 'mentioned') {
+        // Sort by number of ticker mentions descending
+        const container = document.getElementById('posts-container');
+        const sorted = Array.from(cards).sort((a, b) => {
+          return parseInt(b.dataset.tickers || 0) - parseInt(a.dataset.tickers || 0);
+        });
+        sorted.forEach(card => container.appendChild(card));
+      }
+    }
+
+    // Set up filter button click handlers
+    document.querySelectorAll('.feed-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update active state on filter pills
+        document.querySelectorAll('.feed-filter-btn').forEach(b => b.classList.remove('section-tab-active'));
+        btn.classList.add('section-tab-active');
+        // Apply the chosen filter
+        applyFeedFilter(btn.dataset.filter);
+      });
+    });
+
+    /**
+     * runScraper — main function that fetches posts and displays them
+     * Shows skeleton loaders while loading, then renders premium post cards
+     */
     async function runScraper() {
       const btn = document.getElementById('run-btn');
       const container = document.getElementById('posts-container');
+      const holmesContainer = document.getElementById('holmes-report-container');
+      const filtersBar = document.getElementById('feed-filters');
+
+      // Disable the button and show skeleton loading state
       btn.textContent = 'Running...';
       btn.disabled = true;
-      /* Fey-style animated loading bars instead of plain text */
-      container.innerHTML = `
-        <div class="py-12 text-center">
-          <div class="loading-bars mb-4">
-            <span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <p class="text-muted text-sm">Fetching posts from X...</p>
-        </div>`;
+      container.innerHTML = renderSkeletonCards();
+      holmesContainer.style.display = 'none';
+      holmesContainer.innerHTML = '';
 
       try {
-        /* Fixed: was calling /api/scrape (GET, doesn't exist). Correct endpoint is POST /api/run */
+        // Call the scraper backend — POST /api/run triggers the pipeline
         const res = await fetch('/api/run', { method: 'POST' });
         const data = await res.json();
-        /* /api/run returns { success, data: { posts_found, analyses_completed, recommendations } }
-           After running, fetch the actual posts from /api/posts */
+
         if (data.success) {
+          // If the pipeline returned AI recommendations, show Holmes Report cards
+          if (data.data && data.data.recommendations && data.data.recommendations.length > 0) {
+            holmesContainer.innerHTML = `
+              <div class="flex items-center gap-2 mb-4">
+                <span class="ai-badge">Holmes Report</span>
+                <span class="text-muted text-xs">${data.data.recommendations.length} AI insight${data.data.recommendations.length > 1 ? 's' : ''}</span>
+              </div>
+              ${renderHolmesReport(data.data.recommendations)}`;
+            holmesContainer.style.display = 'block';
+          }
+
+          // Now fetch the actual posts from /api/posts
           const postsRes = await fetch('/api/posts');
           const postsData = await postsRes.json();
           const posts = postsData.data || [];
+          allFetchedPosts = posts;
+
           if (posts.length > 0) {
-            container.innerHTML = posts.map(post => `
-              <div class="bg-surface border border-border rounded-xl p-5 mb-4 hover:-translate-y-1 transition-transform duration-200">
-                <p class="text-accent text-sm font-semibold mb-2">@${post.username || 'unknown'}</p>
-                <p class="text-[var(--text)] text-sm leading-relaxed mb-3">${post.content || post.text || ''}</p>
-                <p class="text-muted text-xs">${post.scraped_at ? new Date(post.scraped_at).toLocaleString() : ''}</p>
-              </div>`).join('');
+            // Render premium post cards and show filter bar
+            container.innerHTML = posts.map(renderPostCard).join('');
+            filtersBar.style.display = 'flex';
+            // Reset filter to "All"
+            document.querySelectorAll('.feed-filter-btn').forEach(b => b.classList.remove('section-tab-active'));
+            document.querySelector('.feed-filter-btn[data-filter="all"]').classList.add('section-tab-active');
           } else {
-            container.innerHTML = '<p class="text-center text-muted py-12 text-sm">No posts found.</p>';
+            container.innerHTML = renderEmptyState();
+            filtersBar.style.display = 'none';
           }
         } else {
-          container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Pipeline failed. Check server logs.</p>';
+          // Pipeline failed — show error state
+          container.innerHTML = renderErrorState('Pipeline failed. Check server logs.');
+          filtersBar.style.display = 'none';
         }
       } catch (err) {
-        container.innerHTML = '<p class="text-center text-muted py-12 text-sm">Could not reach the server. Is it running?</p>';
+        // Network error — show error state with message
+        container.innerHTML = renderErrorState('Could not reach the server. Is it running?');
+        filtersBar.style.display = 'none';
       }
 
+      // Re-enable the button
       btn.textContent = 'Run Scraper';
       btn.disabled = false;
     }

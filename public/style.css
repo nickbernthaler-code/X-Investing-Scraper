@@ -568,7 +568,7 @@ body,
   pointer-events: none;
 }
 
-/* Active stock card — emerald glow */
+/* Active stock card — emerald glow (enhanced version in ENHANCED STOCK CARDS below) */
 .stock-active {
   border-color: rgba(16, 185, 129, 0.3);
   box-shadow:
@@ -897,28 +897,10 @@ body,
 
 
 /* ====================================================================
-   FEY-INSPIRED: Gradient shimmer border on card hover
-   Conic gradient creates a rotating-light effect on the border
+   FEY-INSPIRED: Card hover effects
+   Base hover for stock/influencer cards — overridden in ENHANCED sections below
+   Glass panel hover — defined in ENHANCED PRICING CARDS section below
 ==================================================================== */
-.stock-card:hover,
-.influencer-card:hover {
-  border-color: var(--border);
-  box-shadow:
-    inset 1px 1px 1px var(--card-inset),
-    0 1px 2px  var(--card-shadow),
-    0 8px 16px var(--card-shadow),
-    0 24px 48px var(--card-shadow);
-  transform: translateY(-2px);
-}
-
-/* Glass panel hover — subtle lift */
-.glass-panel:hover {
-  border-color: var(--border);
-  box-shadow:
-    inset 1px 1px 0px var(--card-inset),
-    0 8px 32px var(--card-shadow);
-  transition: all 0.25s ease;
-}
 
 
 /* ====================================================================
@@ -950,34 +932,11 @@ body,
 /* ====================================================================
    FEY-INSPIRED: Scroll reveal — sections fade in + slide up on scroll
    Elements start invisible, get .revealed when they enter the viewport
+   NOTE: Enhanced version with better easing is in the "ENHANCED SCROLL
+   REVEALS" section below. This base version is kept for reference but
+   overridden by the later, more dramatic cubic-bezier version.
 ==================================================================== */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-
-.reveal.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Stagger children — each child fades in slightly later */
-.reveal-stagger > * {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-.reveal-stagger.revealed > *:nth-child(1) { transition-delay: 0s; }
-.reveal-stagger.revealed > *:nth-child(2) { transition-delay: 0.1s; }
-.reveal-stagger.revealed > *:nth-child(3) { transition-delay: 0.2s; }
-.reveal-stagger.revealed > *:nth-child(4) { transition-delay: 0.3s; }
-.reveal-stagger.revealed > *:nth-child(5) { transition-delay: 0.35s; }
-
-.reveal-stagger.revealed > * {
-  opacity: 1;
-  transform: translateY(0);
-}
+/* (Base reveal styles are defined in "ENHANCED SCROLL REVEALS" later) */
 
 
 /* ====================================================================
@@ -1101,6 +1060,8 @@ body,
 
 /* ====================================================================
    FEY-INSPIRED: Metrics strip — big number stats below hero
+   NOTE: Final sizes are set in the "DRAMATICALLY LARGER METRICS" section below.
+   This block defines layout only; font sizes are overridden later.
 ==================================================================== */
 .metrics-strip {
   display: flex;
@@ -1111,25 +1072,6 @@ body,
 
 .metric-item {
   text-align: center;
-}
-
-.metric-value {
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.1;
-  font-variant-numeric: tabular-nums;
-}
-
-.metric-label {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-top: 4px;
-  font-weight: 500;
-}
-
-@media (max-width: 640px) {
-  .metrics-strip { gap: 24px; }
-  .metric-value { font-size: 28px; }
 }
 
 
@@ -2053,8 +1995,8 @@ body,
 
 
 /* ====================================================================
-   ENHANCED STOCK CARDS — more dramatic shadows, larger radius
-   Cards should feel like they're floating in space
+   ENHANCED STOCK CARDS — override border-radius & shadows from base
+   (Base layout is in the STOCK CARDS section above)
 ==================================================================== */
 .stock-card {
   border-radius: 28px;
@@ -2087,6 +2029,7 @@ body,
     0 32px 64px rgba(0, 0, 0, 0.4);
 }
 
+/* Enhanced influencer-card — override border-radius & shadows from base */
 .influencer-card {
   border-radius: 28px;
   box-shadow:
@@ -2100,6 +2043,7 @@ body,
 
 /* ====================================================================
    ENHANCED PRICING CARDS — taller, more premium feel
+   Override glass-panel border-radius from base (16px -> 20px)
 ==================================================================== */
 .glass-panel {
   border-radius: 20px;
@@ -2138,7 +2082,8 @@ body,
 
 
 /* ====================================================================
-   ENHANCED GRADIENT DIVIDERS — more dramatic glow
+   ENHANCED GRADIENT DIVIDERS — override base gradient-divider
+   Wider max-width, taller, and more dramatic glow color
 ==================================================================== */
 .gradient-divider {
   max-width: 800px;
@@ -2804,7 +2749,7 @@ footer {
 
 /* ====================================================================
    #5: SCROLL-LINKED TAB HIGHLIGHTING — active tab tracks scroll
-   The .section-tab-active class is now toggled by JS on scroll
+   Override transition from base section-tab with smoother cubic-bezier
 ==================================================================== */
 .section-tab {
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -3238,4 +3183,365 @@ footer {
 @media (max-width: 640px) {
   .compare-grid { grid-template-columns: 1fr; }
   .compare-modal { padding: 20px; }
+}
+
+
+/* ====================================================================
+   PREMIUM POST FEED CARDS — glass cards for scraped X posts
+   Each card shows avatar, username, content, ticker pills, sentiment
+==================================================================== */
+
+/* Post card — glass panel with hover lift effect */
+.post-card {
+  background: var(--glass-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow:
+    inset 0.5px 0.5px 0px var(--card-inset),
+    0 2px 8px var(--card-shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  animation: post-card-in 0.4s ease both;
+}
+
+/* Stagger the card entry animations */
+.post-card:nth-child(1) { animation-delay: 0s; }
+.post-card:nth-child(2) { animation-delay: 0.05s; }
+.post-card:nth-child(3) { animation-delay: 0.1s; }
+.post-card:nth-child(4) { animation-delay: 0.15s; }
+.post-card:nth-child(5) { animation-delay: 0.2s; }
+.post-card:nth-child(6) { animation-delay: 0.25s; }
+
+@keyframes post-card-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.post-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border);
+  box-shadow:
+    inset 0.5px 0.5px 0px var(--card-inset),
+    0 4px 16px var(--card-shadow),
+    0 0 20px rgba(16, 185, 129, 0.03);
+}
+
+/* Skeleton card (loading state) — no hover effects */
+.post-card.skeleton-card {
+  animation: none;
+}
+.post-card.skeleton-card:hover {
+  transform: none;
+  box-shadow: inset 0.5px 0.5px 0px var(--card-inset), 0 2px 8px var(--card-shadow);
+}
+
+/* Card header — avatar + username + time in a row */
+.post-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+/* Avatar — circular image or initials fallback */
+.post-avatar-wrap {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--card-border);
+}
+
+.post-avatar-fallback {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+/* Username and timestamp */
+.post-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-username {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--secondary);
+  letter-spacing: -0.01em;
+}
+
+.post-time {
+  display: block;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Top-right badges area */
+.post-badges-top {
+  flex-shrink: 0;
+}
+
+/* Post content text */
+.post-content {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* Ticker pills row at bottom of card */
+.post-tickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+/* Individual ticker pill — small accent badge */
+.ticker-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  border-radius: 10px;
+  padding: 3px 10px;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+}
+
+.ticker-pill:hover {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* Light mode post card */
+[data-theme="light"] .post-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+[data-theme="light"] .post-card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06), 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+[data-theme="light"] .ticker-pill {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.06);
+  border-color: rgba(5, 150, 105, 0.18);
+}
+[data-theme="light"] .post-username {
+  color: #7c3aed;
+}
+
+
+/* ====================================================================
+   FEED EMPTY STATE — beautiful centered message with icon
+   Used when no posts loaded yet, no results, or error
+==================================================================== */
+.feed-empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  background: var(--glass-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px var(--card-shadow);
+}
+
+/* Error variant — subtle red tint on the border */
+.feed-error-state {
+  border-color: rgba(248, 113, 113, 0.2);
+}
+
+[data-theme="light"] .feed-empty-state {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+[data-theme="light"] .feed-error-state {
+  border-color: rgba(220, 38, 38, 0.15);
+}
+
+
+/* ====================================================================
+   HOLMES REPORT CARDS — premium AI insight cards above the feed
+   Glass card with accent left border and slide-in animation
+==================================================================== */
+.holmes-report-card {
+  margin-bottom: 12px;
+  animation: post-card-in 0.4s ease both;
+}
+
+.holmes-report-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+/* Big bold ticker in the Holmes Report */
+.holmes-report-ticker {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Confidence score — emerald number */
+.holmes-confidence {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Summary text in Holmes Report */
+.holmes-report-summary {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+
+/* ====================================================================
+   COMPREHENSIVE MOBILE POLISH — all sections at 375px and below
+   Makes sure everything looks great on phones
+==================================================================== */
+
+/* --- Small phones (375px and below) --- */
+@media (max-width: 375px) {
+  /* Hero text — prevent overflow, scale down */
+  h1.font-serif { font-size: 2rem !important; line-height: 1.1 !important; }
+
+  /* Nav — tighter spacing */
+  .nav-fey { padding: 12px 10px; gap: 6px; }
+  .nav-fey .font-serif { font-size: 0.9rem; }
+
+  /* Metrics — smaller numbers */
+  .metric-value { font-size: 24px !important; }
+  .metrics-strip { gap: 16px !important; }
+
+  /* Section headings */
+  h2.font-serif { font-size: 1.5rem !important; }
+
+  /* Post cards — less padding on tiny screens */
+  .post-card { padding: 14px; }
+  .post-content { font-size: 13px; }
+
+  /* Showcase cards — narrower */
+  .showcase-card { width: 260px; }
+  .showcase-card-inner { padding: 14px; min-height: 280px; }
+
+  /* Signal cards */
+  .signal-card { padding: 12px 14px; }
+}
+
+/* --- Tablets (up to 768px) — additional fixes --- */
+@media (max-width: 768px) {
+  /* Carousel cards — prevent clipping by adding padding */
+  .cf-container { overflow: visible; }
+  .cf-slides { padding: 20px 0; }
+
+  /* Stock cards in carousel — slightly smaller so they fit */
+  .stock-card { width: 170px; height: 250px; padding: 16px; }
+  .stock-card .stock-ticker { font-size: 24px; }
+  .stock-card .stock-price { font-size: 16px; }
+
+  /* Influencer cards — smaller on tablets */
+  .influencer-card { width: 190px; height: 310px; padding: 20px 16px; }
+
+  /* Comparison modal — scrollable */
+  .compare-modal { max-height: 90vh; padding: 20px; }
+  .compare-grid { grid-template-columns: 1fr; }
+
+  /* Toast notifications — don't overlap command bar */
+  .toast-container { bottom: 90px; right: 12px; left: 12px; }
+  .toast { min-width: auto; max-width: none; }
+
+  /* Testimonials — single column on tablets */
+  .testimonial-card { padding: 20px; }
+
+  /* Footer columns — stack on mobile */
+  footer .grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+
+  /* Pricing cards — single column (already handled, reinforce) */
+  #sec-pricing .grid { grid-template-columns: 1fr !important; }
+
+  /* Feed filters — scrollable row */
+  #feed-filters { -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #feed-filters::-webkit-scrollbar { display: none; }
+
+  /* Holmes report header — stack on mobile */
+  .holmes-report-header { flex-direction: column; align-items: flex-start; }
+}
+
+/* --- Phones (up to 480px) — tightest layout --- */
+@media (max-width: 480px) {
+  /* Feed section — less horizontal padding */
+  #sec-feed { padding-left: 12px; padding-right: 12px; }
+
+  /* Post card avatar — slightly smaller */
+  .post-avatar, .post-avatar-fallback { width: 36px; height: 36px; }
+  .post-avatar-wrap { width: 36px; height: 36px; }
+  .post-avatar-fallback { font-size: 12px; }
+
+  /* Post card padding */
+  .post-card { padding: 16px; margin-bottom: 10px; }
+
+  /* Ticker pills — smaller */
+  .ticker-pill { font-size: 10px; padding: 2px 8px; }
+
+  /* Holmes insight cards — tighter */
+  .holmes-insight { padding: 14px; }
+  .holmes-report-ticker { font-size: 16px; }
+
+  /* Feed empty state — less padding */
+  .feed-empty-state { padding: 32px 16px; }
+
+  /* Ensure minimum font size for readability */
+  body { font-size: 14px; }
+  .post-content { font-size: 13px; line-height: 1.6; }
+  .post-username { font-size: 12px; }
+  .post-time { font-size: 10px; }
+
+  /* Signal card text readability */
+  .signal-card { font-size: 13px; }
+
+  /* Testimonials — tighter */
+  .testimonial-quote { font-size: 13px; }
+  .testimonial-card { padding: 16px; }
+
+  /* Section tabs / filter pills — smaller on phones */
+  .section-tab { font-size: 11px; padding: 5px 10px; }
+
+  /* Consensus cards */
+  .consensus-card { padding: 16px; }
+  .consensus-grid { gap: 12px; }
 }
