@@ -127,7 +127,7 @@
         </h1>
         <!-- Subheadline — explains the core loop simply -->
         <p class="text-[var(--text-secondary)] text-lg sm:text-xl max-w-2xl mx-auto mb-14 leading-relaxed opacity-80">
-          Add your favourite X investors &rarr; StockHolmes filters their posts &rarr; AI analyses every pick against your portfolio.
+          Add your favourite X investors &rarr; AI extracts every stock they mention &rarr; tracks performance over time &rarr; smarter recommendations based on who's actually right.
         </p>
         <!-- Two CTAs: primary action + learn more -->
         <div class="flex items-center justify-center gap-4 flex-wrap">
@@ -172,12 +172,12 @@
   <section id="sec-how" class="px-8 lg:px-12 py-24 sm:py-32 max-w-5xl mx-auto reveal">
     <div class="text-center mb-16">
       <p class="text-xs uppercase tracking-[0.25em] text-[var(--text-secondary)] mb-5 font-medium opacity-70">How It Works</p>
-      <h2 class="font-serif text-4xl sm:text-5xl text-[var(--text)] mb-5">Three steps to <span class="gradient-text-emerald">smarter investing</span></h2>
-      <p class="text-[var(--text-secondary)] text-lg max-w-xl mx-auto opacity-80">No setup. No noise. Just signal.</p>
+      <h2 class="font-serif text-4xl sm:text-5xl text-[var(--text)] mb-5">Four steps to <span class="gradient-text-emerald">smarter investing</span></h2>
+      <p class="text-[var(--text-secondary)] text-lg max-w-xl mx-auto opacity-80">No setup. No noise. Just signal — and proof it works.</p>
     </div>
 
-    <!-- 3-step flow — clear visual progression -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- 4-step flow — clear visual progression -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
       <!-- Step 1: Choose Your Investors -->
       <div class="how-step-card tilt-card">
@@ -254,6 +254,33 @@
             <div class="h-full bg-accent rounded-full" style="width:85%;"></div>
           </div>
           <p class="text-[var(--text-secondary)] text-xs">New opportunity — not in your portfolio</p>
+        </div>
+      </div>
+
+      <!-- Step 4: Track & Compare -->
+      <div class="how-step-card tilt-card">
+        <div class="how-step-number" style="background:#f59e0b;color:#000;">4</div>
+        <div class="how-step-icon" style="color:#f59e0b;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <h3 class="font-serif text-xl text-[var(--text)] mb-2">Track &amp; Compare</h3>
+        <p class="text-[var(--text-secondary)] text-sm leading-relaxed">Every stock your investors mention gets logged with its price. Watch how each call performs over time — who's hot, who's not.</p>
+        <!-- Mini mockup: performance preview -->
+        <div class="how-step-mockup mt-5">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[var(--text)] text-sm">$NVDA</span>
+            <span class="text-accent text-sm font-bold">+14.3%</span>
+          </div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[var(--text)] text-sm">$AAPL</span>
+            <span class="text-accent text-sm font-bold">+5.1%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-[var(--text)] text-sm">$TSLA</span>
+            <span class="text-[#ef4444] text-sm font-bold">-2.8%</span>
+          </div>
         </div>
       </div>
     </div>
@@ -504,7 +531,7 @@
         <span class="text-xs font-bold uppercase tracking-widest text-[#a78bfa]">AI Investment Assistant</span>
       </div>
       <h2 class="font-serif text-4xl sm:text-5xl text-[var(--text)] mb-4">Not just what's being said.<br><span style="color:#a78bfa;">Is it worth acting on?</span></h2>
-      <p class="text-[var(--text-secondary)] text-lg max-w-xl mx-auto opacity-80">Every post gets analysed by AI. Sentiment, confidence scores, market data cross-referencing — personalised to your portfolio.</p>
+      <p class="text-[var(--text-secondary)] text-lg max-w-xl mx-auto opacity-80">Every post gets analysed by AI. Sentiment, confidence scores, market context, and each investor's <a href="#sec-performance" class="underline" style="color:#a78bfa;">past track record</a> — all weighed against your portfolio.</p>
     </div>
 
     <!-- AI Analysis cards -->
@@ -660,29 +687,70 @@
 
 
   <!-- ============================================================
-       PERFORMANCE TRACKER — see how every mentioned ticker performed
-       Shows price at mention vs current price with P/L
+       PERFORMANCE TRACKER — the full stock tracking & AI analysis hub
+       3 layers: (1) Extracted tickers (2) Price tracking (3) AI insights
   ============================================================ -->
   <section id="sec-performance" class="px-6 lg:px-12 py-24 sm:py-32 max-w-5xl mx-auto reveal">
-    <div class="mb-8">
-      <span class="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">Performance</span>
-      <h2 class="font-serif text-3xl sm:text-4xl text-[var(--text)] mt-4 mb-2">Ticker Performance <span class="gradient-text-emerald">Tracker</span></h2>
-      <p class="text-[var(--text-secondary)] text-sm max-w-xl">See how every stock mentioned by your tracked investors performed since they called it. Run the scraper first to start tracking.</p>
+
+    <!-- Section header — explains clearly what this section does -->
+    <div class="text-center mb-12">
+      <div class="flex items-center justify-center gap-3 mb-3">
+        <div class="live-dot" style="background:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,0.6);"></div>
+        <span class="text-xs font-bold uppercase tracking-widest" style="color:#f59e0b;">Stock Performance Tracker</span>
+      </div>
+      <h2 class="font-serif text-4xl sm:text-5xl text-[var(--text)] mb-4">Every stock. Every call.<br><span style="color:#f59e0b;">Tracked from day one.</span></h2>
+      <p class="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto opacity-80">
+        When your tracked investors mention a stock, we record the price instantly. Then we track how it performs — so you can see who makes great calls and who doesn't. AI uses this history to make smarter future recommendations.
+      </p>
+    </div>
+
+    <!-- 3-layer explainer — shows how the system works -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-12">
+      <!-- Layer 1: Extract -->
+      <div class="glass-panel rounded-xl p-5">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center flex-shrink-0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <h3 class="text-[var(--text)] font-bold text-sm">1. Stocks Identified</h3>
+        </div>
+        <p class="text-[var(--text-secondary)] text-xs leading-relaxed">AI reads every post from your tracked X users and pulls out every $TICKER symbol mentioned — $TSLA, $AAPL, $NVDA, etc.</p>
+      </div>
+      <!-- Layer 2: Track -->
+      <div class="glass-panel rounded-xl p-5">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background:rgba(245,158,11,0.15);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3 class="text-[var(--text)] font-bold text-sm">2. Price Logged</h3>
+        </div>
+        <p class="text-[var(--text-secondary)] text-xs leading-relaxed">The moment a stock is mentioned, we record its live market price. This becomes the reference point to measure performance.</p>
+      </div>
+      <!-- Layer 3: AI Analyse -->
+      <div class="glass-panel rounded-xl p-5">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 rounded-full bg-[#a78bfa]/15 flex items-center justify-center flex-shrink-0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3 class="text-[var(--text)] font-bold text-sm">3. AI Learns & Recommends</h3>
+        </div>
+        <p class="text-[var(--text-secondary)] text-xs leading-relaxed">AI factors in market sentiment, your portfolio, and each investor's track record to weight future recommendations more accurately.</p>
+      </div>
     </div>
 
     <!-- Summary stats bar — shows overall performance at a glance -->
     <div id="perf-summary" class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8" style="display:none;">
       <div class="glass-panel rounded-xl p-4 text-center">
         <p class="text-2xl font-bold text-[var(--text)] tabular-nums" id="perf-total">0</p>
-        <p class="text-xs text-[var(--text-secondary)] mt-1">Total Calls</p>
+        <p class="text-xs text-[var(--text-secondary)] mt-1">Stocks Tracked</p>
       </div>
       <div class="glass-panel rounded-xl p-4 text-center">
         <p class="text-2xl font-bold text-accent tabular-nums" id="perf-winners">0</p>
-        <p class="text-xs text-[var(--text-secondary)] mt-1">Winners</p>
+        <p class="text-xs text-[var(--text-secondary)] mt-1">Good Calls</p>
       </div>
       <div class="glass-panel rounded-xl p-4 text-center">
         <p class="text-2xl font-bold text-[#ef4444] tabular-nums" id="perf-losers">0</p>
-        <p class="text-xs text-[var(--text-secondary)] mt-1">Losers</p>
+        <p class="text-xs text-[var(--text-secondary)] mt-1">Bad Calls</p>
       </div>
       <div class="glass-panel rounded-xl p-4 text-center">
         <p class="text-2xl font-bold tabular-nums" id="perf-avg" style="color:var(--text);">0%</p>
@@ -690,21 +758,38 @@
       </div>
     </div>
 
-    <!-- Filter tabs — filter by user or result -->
+    <!-- AI Insight box — shows what AI does with this data -->
+    <div id="perf-ai-insight" class="glass-panel rounded-xl p-5 mb-8 border-l-4" style="border-left-color:#a78bfa;display:none;">
+      <div class="flex items-center gap-2 mb-2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <span class="text-sm font-bold" style="color:#a78bfa;">AI Insight</span>
+      </div>
+      <p class="text-[var(--text-secondary)] text-sm" id="perf-ai-text">
+        Based on the tracked performance data, AI is learning which investors make the best calls. This data is combined with current market sentiment and your portfolio preferences to generate smarter, more personalised recommendations over time.
+      </p>
+    </div>
+
+    <!-- Filter tabs — filter by result -->
     <div class="flex items-center gap-2 mb-6 flex-wrap">
-      <button class="feed-filter-btn section-tab-active perf-filter-btn" data-perf-filter="all">All</button>
+      <button class="feed-filter-btn section-tab-active perf-filter-btn" data-perf-filter="all">All Stocks</button>
       <button class="feed-filter-btn perf-filter-btn" data-perf-filter="winners">Winners</button>
       <button class="feed-filter-btn perf-filter-btn" data-perf-filter="losers">Losers</button>
     </div>
 
-    <!-- Performance table/cards -->
+    <!-- Performance cards container -->
     <div id="perf-container">
       <!-- Empty state shown before any data -->
-      <div class="feed-empty-state" style="padding:32px;">
-        <p class="text-[var(--text)] font-serif text-base mb-2">No performance data yet</p>
-        <p class="text-muted text-sm mb-4">Run the scraper to start tracking ticker mentions. We'll record the price and show you how each call performs over time.</p>
+      <div class="feed-empty-state" style="padding:40px;">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" style="margin:0 auto 16px;opacity:0.4;">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        <p class="text-[var(--text)] font-serif text-lg mb-2">No stocks tracked yet</p>
+        <p class="text-muted text-sm mb-2 max-w-md mx-auto">When you run the scraper, every $TICKER your investors mention gets logged here with its price. Come back later to see how each call performed.</p>
+        <p class="text-muted text-xs opacity-60">Tip: Add investors above, then click "Run Scraper" to start.</p>
       </div>
     </div>
+
+    <p class="text-[var(--muted)] text-xs text-center mt-6">Performance data is based on price at time of mention vs. current market price. Past performance does not guarantee future results. Not financial advice.</p>
   </section>
 
   <hr class="gradient-divider my-4">
@@ -1442,10 +1527,12 @@
     /**
      * loadPerformance() — Fetches performance data from the API and renders it.
      * Each row shows: ticker, who mentioned it, price then vs now, and P/L.
+     * Also generates a dynamic AI insight based on the data.
      */
     async function loadPerformance() {
       const container = document.getElementById('perf-container');
       const summary = document.getElementById('perf-summary');
+      const aiInsight = document.getElementById('perf-ai-insight');
       if (!container) return;
 
       try {
@@ -1453,11 +1540,7 @@
         const data = await res.json();
 
         if (!data.success || !data.data || data.data.length === 0) {
-          container.innerHTML = `
-            <div class="feed-empty-state" style="padding:32px;">
-              <p class="text-[var(--text)] font-serif text-base mb-2">No performance data yet</p>
-              <p class="text-muted text-sm">Run the scraper to start tracking ticker mentions.</p>
-            </div>`;
+          // Keep the empty state that's already in the HTML
           return;
         }
 
@@ -1471,6 +1554,22 @@
           ? (withPerf.reduce((sum, m) => sum + parseFloat(m.performance_percent), 0) / withPerf.length).toFixed(2)
           : 0;
 
+        // Find the best and worst performing calls
+        const sorted = [...withPerf].sort((a, b) => parseFloat(b.performance_percent) - parseFloat(a.performance_percent));
+        const bestCall = sorted[0];
+        const worstCall = sorted[sorted.length - 1];
+
+        // Find which user has the best average track record
+        const userStats = {};
+        withPerf.forEach(m => {
+          if (!userStats[m.username]) userStats[m.username] = { total: 0, sum: 0 };
+          userStats[m.username].total++;
+          userStats[m.username].sum += parseFloat(m.performance_percent);
+        });
+        const bestUser = Object.entries(userStats)
+          .map(([user, s]) => ({ user, avg: (s.sum / s.total).toFixed(2), count: s.total }))
+          .sort((a, b) => b.avg - a.avg)[0];
+
         // Show the summary bar
         if (summary) {
           summary.style.display = '';
@@ -1482,6 +1581,26 @@
           avgEl.style.color = avgReturn >= 0 ? 'var(--accent)' : '#ef4444';
         }
 
+        // Show the AI insight box with a dynamic, data-driven message
+        if (aiInsight && withPerf.length > 0) {
+          aiInsight.style.display = '';
+          const aiText = document.getElementById('perf-ai-text');
+          // Build a smart summary based on the actual data
+          let insight = `Tracking <strong>${mentions.length} stock calls</strong> from your investors. `;
+          if (bestUser) {
+            insight += `<strong>@${bestUser.user}</strong> has the best track record with an average return of <strong>${bestUser.avg >= 0 ? '+' : ''}${bestUser.avg}%</strong> across ${bestUser.count} calls. `;
+          }
+          if (bestCall) {
+            insight += `Best call so far: <strong>$${bestCall.ticker}</strong> at +${bestCall.performance_percent}%. `;
+          }
+          if (winners.length > losers.length) {
+            insight += `Overall sentiment is positive — ${winners.length} out of ${withPerf.length} calls are in profit. AI will weigh these investors more heavily in future recommendations.`;
+          } else {
+            insight += `${losers.length} out of ${withPerf.length} calls are currently down. AI will factor in market conditions and your portfolio preferences before recommending any of these.`;
+          }
+          aiText.innerHTML = insight;
+        }
+
         // --- Render each mention as a card ---
         container.innerHTML = mentions.map(m => {
           const perf = parseFloat(m.performance_percent);
@@ -1491,7 +1610,7 @@
           const timeAgo = formatTimeAgo(m.mentioned_at);
 
           return `
-            <div class="perf-row" data-perf-result="${isUp ? 'winner' : 'loser'}">
+            <div class="perf-row" data-perf-result="${isUp ? 'winner' : 'loser'}" data-perf-user="${m.username}">
               <div class="flex items-center gap-3 min-w-0">
                 <!-- Ticker logo -->
                 <img src="https://assets.parqet.com/logos/symbol/${m.ticker}" alt="${m.ticker}"
@@ -1505,24 +1624,24 @@
                   <div class="flex items-center gap-2 mt-0.5">
                     <img src="https://unavatar.io/twitter/${m.username}" alt="" class="w-4 h-4 rounded-full"
                       onerror="this.style.display='none'">
-                    <span class="text-[var(--text-secondary)] text-xs">@${m.username}</span>
+                    <span class="text-[var(--text-secondary)] text-xs">Called by @${m.username}</span>
                     <span class="text-[var(--text-secondary)] text-xs opacity-60">&middot; ${timeAgo}</span>
                   </div>
                 </div>
               </div>
-              <!-- Price comparison -->
+              <!-- Price comparison: then vs now vs P/L -->
               <div class="flex items-center gap-4 sm:gap-6 flex-shrink-0">
                 <div class="text-right hidden sm:block">
-                  <p class="text-[var(--text-secondary)] text-xs">Then</p>
+                  <p class="text-[var(--text-secondary)] text-xs">Price when called</p>
                   <p class="text-[var(--text)] text-sm tabular-nums font-medium">$${m.price_at_mention ? m.price_at_mention.toFixed(2) : '—'}</p>
                 </div>
                 <div class="text-right hidden sm:block">
-                  <p class="text-[var(--text-secondary)] text-xs">Now</p>
+                  <p class="text-[var(--text-secondary)] text-xs">Price now</p>
                   <p class="text-[var(--text)] text-sm tabular-nums font-medium">$${m.current_price ? m.current_price.toFixed(2) : '—'}</p>
                 </div>
-                <div class="text-right" style="min-width:70px;">
-                  <p class="text-xs" style="color:${perfColor};">${perfIcon} P/L</p>
-                  <p class="text-sm font-bold tabular-nums" style="color:${perfColor};">
+                <div class="text-right" style="min-width:80px;">
+                  <p class="text-xs font-medium" style="color:${perfColor};">${perfIcon} ${isUp ? 'Profit' : 'Loss'}</p>
+                  <p class="text-base font-bold tabular-nums" style="color:${perfColor};">
                     ${m.performance_percent !== null ? (isUp ? '+' : '') + m.performance_percent + '%' : '—'}
                   </p>
                 </div>
