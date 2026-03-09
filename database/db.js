@@ -4,11 +4,12 @@
  * lowdb stores all data in a local JSON file (db.json).
  * It's simple, requires no setup, and works with any Node version.
  *
- * Data is organized into 4 collections:
+ * Data is organized into 5 collections:
  *   - posts: scraped X posts
  *   - analysis: AI analysis results
  *   - portfolio: user's stock positions
  *   - tracked_accounts: X accounts to monitor
+ *   - ticker_mentions: tracks every ticker mentioned by X users with price at mention time
  */
 
 const low = require('lowdb');
@@ -25,6 +26,7 @@ db.defaults({
   analysis: [],
   portfolio: [],
   tracked_accounts: [],
+  ticker_mentions: [],  // Stores every ticker mentioned by X users with price snapshots
 }).write();
 
 console.log('📦 Database connected (db.json)');

@@ -12,6 +12,7 @@ const db = require('../database/db');
 // Import agents
 const orchestrator = require('../agents/orchestrator');
 const portfolio = require('../agents/portfolio');
+const marketData = require('../agents/marketData');
 const uxResearcher = require('../agents/uxResearcher');
 const uxDesigner = require('../agents/uxDesigner');
 const instagramPoster = require('../agents/instagramPoster');
@@ -20,6 +21,18 @@ const instagramPoster = require('../agents/instagramPoster');
 // GET /api/health → confirms the server is running
 router.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'X Investing Scraper is running' });
+});
+
+// --- Live Market Data ---
+// GET /api/market-data → returns real-time stock prices from Yahoo Finance
+// The frontend calls this on page load to replace hardcoded stock prices
+router.get('/market-data', async (req, res) => {
+  try {
+    const snapshot = await marketData.getSnapshot();
+    res.json({ success: true, data: snapshot });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // --- Run Full Pipeline ---
@@ -95,6 +108,74 @@ router.post('/accounts', (req, res) => {
     }).write();
 
     res.json({ success: true, message: `Now tracking @${username}` });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// --- Performance Tracker ---
+// GET /api/performance → returns all ticker mentions with current prices
+// so the frontend can show how each mentioned ticker performed over time
+router.get('/performance', async (req, res) => {
+  try {
+    // Get all saved ticker mentions from the database
+    const mentions = db.get('ticker_mentions').value() || [];
+
+    if (mentions.length === 0) {
+      return res.json({ success: true, data: [] });
+    }
+
+    // Get unique tickers so we only fetch each price once
+    const uniqueTickers = [...new Set(mentions.map(m => m.ticker))];
+
+    // Fetch current prices for all mentioned tickers
+    const currentPrices = {};
+    for (const ticker of uniqueTickers) {
+      try {
+        const quote = await marketData.getQuote(ticker);
+        currentPrices[ticker] = {
+          price: quote.price,
+          change_percent: quote.change_percent,
+          name: quote.name,
+        };
+      } catch (err) {
+        // If we can't get the price, skip it
+        currentPrices[ticker] = { price: null, name: ticker };
+      }
+    }
+
+    // Build the response: each mention gets its current price + performance calc
+    const performance = mentions.map(m => {
+      const current = currentPrices[m.ticker] || {};
+      const currentPrice = current.price;
+      const priceAtMention = m.price_at_mention;
+
+      // Calculate how much the stock moved since the mention (percentage)
+      let performancePercent = null;
+      let performanceDollar = null;
+      if (currentPrice && priceAtMention) {
+        performancePercent = ((currentPrice - priceAtMention) / priceAtMention * 100).toFixed(2);
+        performanceDollar = (currentPrice - priceAtMention).toFixed(2);
+      }
+
+      return {
+        id: m.id,
+        ticker: m.ticker,
+        username: m.username,
+        price_at_mention: priceAtMention,
+        current_price: currentPrice,
+        company_name: current.name || m.ticker,
+        mentioned_at: m.mentioned_at,
+        performance_percent: performancePercent,
+        performance_dollar: performanceDollar,
+        is_mock: m.is_mock,
+      };
+    });
+
+    // Sort by most recent first
+    performance.sort((a, b) => new Date(b.mentioned_at) - new Date(a.mentioned_at));
+
+    res.json({ success: true, data: performance });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
